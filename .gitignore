@@ -1,0 +1,8 @@
+# Ignore Webstorm specifics
+/.idea/
+
+# Ignore node_modules
+/node_modules/
+
+# Ignore static production build to GITHUB
+/build/
