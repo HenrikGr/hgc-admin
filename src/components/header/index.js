@@ -48,13 +48,11 @@ const styles = {
  * Header component
  * @param title
  * @param classes
- * @param userId
+ * @param isAuthenticated
  * @returns {*}
  * @constructor
  */
-function Header({ title, classes, userId }) {
-  const isAuthenticated = userId !== '';
-
+function Header({ title, classes, isAuthenticated }) {
   return(
     <div className={ classes.root }>
       <AppBar position="static">
@@ -79,7 +77,7 @@ function Header({ title, classes, userId }) {
 Header.propTypes = {
   title: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired,
-  userId: PropTypes.string,
+  isAuthenticated: PropTypes.bool,
 };
 
 /**
@@ -88,8 +86,8 @@ Header.propTypes = {
  */
 Header.defaultProps = {
   title: 'HGC AB - ' + process.env.NODE_ENV,
+  isAuthenticated: false,
 };
-
 
 /**
  * Export component
