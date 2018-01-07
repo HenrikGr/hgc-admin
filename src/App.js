@@ -22,7 +22,7 @@ import IndexPage from '../src/pages/index'
 import LandingPage from '../src/pages/landing'
 import DashboardPage from '../src/pages/dashboard'
 import LoginPage from '../src/pages/login'
-import SignUpPage from '../src/pages/signup'
+import RegisterUser from './pages/register-user'
 import ContactsPage from '../src/pages/contacts'
 import AccountPage from '../src/pages/account'
 
@@ -60,7 +60,7 @@ const App = () => (
     <div>
       <IndexPage/>
       <Route exact path="/" component={LandingPage}/>
-      <Route path="/signup" component={SignUpPage}/>
+      <Route path="/register-user" component={RegisterUser}/>
       <Route path="/login" component={LoginPage}/>
       <Route path="/contacts" component={ContactsPage}/>
       <Route path="/account" component={AccountPage}/>
