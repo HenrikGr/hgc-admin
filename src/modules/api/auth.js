@@ -28,72 +28,79 @@ import 'whatwg-fetch';
 import { status, json } from './fetch-utils';
 import { API_URL } from './config'
 import AppError from './error'
+import validator from '../utils/validator'
 
 /**
- *
- * @param url
- * @param authToken
+ * Get user id information based on an access token
+ * @param authToken: string
  * @returns {Promise<any>}
  */
-export const getUser = (url, authToken) => {
-  return new Promise( function( resolve, reject ) {
-    let options = {
+export function getUserId(authToken)  {
+  return new Promise((resolve, reject) => {
+    fetch(API_URL + '/api', {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer" + authToken
       }
-    };
-
-    fetch(API_URL + url, options)
-      .then(status)
+    }).then(status)
       .then(json)
       .then((json) => {
         resolve(json);
       }).catch((error) => {
         reject(error);
       });
-  })
-
-};
+  });
+}
 
 /**
- * SignUpp API
+ * Create a user record
  * @param url
  * @param username
  * @param password
  * @returns {Promise<any>}
  */
-export const signUp = (url, username, password) => {
+export function registerUser(url, username, password)  {
   return new Promise((resolve, reject) => {
-    let options = {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-      },
-      body: 'username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password)
-    };
 
-    fetch(API_URL + url, options)
-      .then(status)
-      .then(json)
-      .then((json) => {
-        resolve(json);
-      }).catch((error) => {
-      reject(error);
+    // Client side validation
+    validator.validate({ username: username, password: password }).then((data) => {
+
+      fetch(API_URL + url, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+        },
+        body: 'username=' + encodeURIComponent(data.username) + '&password=' + encodeURIComponent(data.password)
+      }).then(status)         // Check status code 400+ or 500+
+        .then(json)
+        .then((json) => {
+          // Check for application errors, ie status 200 and errors
+          if (json.errors) {
+            return Promise.reject(json);
+          } else {
+            resolve(json);
+          }
+        }).catch((errors) => {
+        reject(errors);
+      });
+
+    }).catch((errors) => {
+      reject(errors);             // Validation errors
     });
-  })
 
-};
+  });
+}
 
 /**
- *
- * @param url
+ * Authenticate (log in) a user.
+ * This is really a wrapper function to first get the auth token and
+ * after that get the user id string from the database.
  * @param username
  * @param password
  * @returns {Promise<any>}
  */
-export const logIn = (url, username, password) => {
+export function logIn(url, username, password) {
   return new Promise((resolve, reject) => {
     let options = {
       method: 'POST',
@@ -108,7 +115,7 @@ export const logIn = (url, username, password) => {
       .then(json)                 // Get the response as json
       .then((json) => {
         if (json.errors) return Promise.reject(json);
-        if (json.authToken) return getUser('/api', json.authToken);
+        if (json.authToken) return getUserId(json.authToken);
         return Promise.reject( new AppError('Authorization token missing') );
       }).then((user) => {
         resolve(user)
@@ -117,7 +124,4 @@ export const logIn = (url, username, password) => {
     });
 
   });
-};
-
-
-
+}
