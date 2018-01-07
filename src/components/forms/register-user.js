@@ -35,9 +35,8 @@ import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
 import { FormControl, FormLabel, FormHelperText } from 'material-ui/Form';
 import Visibility from 'material-ui-icons/Visibility';
 import VisibilityOff from 'material-ui-icons/VisibilityOff';
-import validator from '../../modules/utils/validator'
 import { isEmpty } from '../../modules/utils/helper'
-import { signUp } from "../../modules/api/auth";
+import API from "../../modules/api";
 
 /*
 xs, extra-small: 0dp or larger
@@ -76,7 +75,7 @@ const styles = theme => ({
 /**
  * SignUpForm component
  */
-class SignUpForm extends React.Component {
+class RegisterUser extends React.Component {
 
   /**
    * Default props
@@ -95,7 +94,7 @@ class SignUpForm extends React.Component {
     password: '',
     showPassword: false,
     errors: {},
-    message: 'Sign up',
+    message: 'Register user',
   };
 
   /**
@@ -104,7 +103,11 @@ class SignUpForm extends React.Component {
    * @returns {function(*)}
    */
   handleChange = prop => event => {
-    this.setState({ [prop]: event.target.value });
+    this.setState({
+      [prop]: event.target.value,
+      errors: {},
+      message: 'Register user'
+    });
   };
 
   /**
@@ -121,21 +124,17 @@ class SignUpForm extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
 
-    // Client side validation
-    validator.validate({ username: this.state.username, password: this.state.password }).then((data) => {
-
-      signUp('/auth/signup', data.username, data.password ).then((data) => {
+      API.registerUser('/api/users', this.state.username, this.state.password ).then((json) => {
         // Dispatch setUser action
-        this.props.setUser(data);
+        this.props.setUser(json.data);
         // Set redirectFlag to true, will be used in next render
         // to decide where to go.
-        this.setState({ redirectToReferrer: true })
-      }).catch((error) => {
-        this.setState(error);         // Authentication error
+        //this.setState({ redirectToReferrer: true })
+        this.setState({ message: json.message })
+      }).catch((errors) => {
+        this.setState(errors);
       });
-    }).catch((error) => {
-      this.setState(error);             // Validation errors
-    });
+
   };
 
   render() {
@@ -211,4 +210,4 @@ class SignUpForm extends React.Component {
   }
 }
 
-export default withStyles(styles)(SignUpForm);
+export default withStyles(styles)(RegisterUser);
