@@ -22,7 +22,7 @@ import Header from '../components/header'
 
 // Function that map the user branch of the global state to a user props
 const mapStateToProps = (state) => ({
-  userId: state.userId,
+  isAuthenticated: state.user.isAuthenticated,
 });
 
 // Inject Redux state to the header component
