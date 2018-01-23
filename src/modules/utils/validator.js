@@ -1,22 +1,23 @@
-/*
+/**
  * Description: Module providing a validator object to validate input forms
  *
- * The validator object is built upon a strategy pattern, meaning we will be able to add validation function and types
- * on th fly.
+ * The validator object is built upon a strategy pattern, meaning we will be
+ * able to add validation function and types on the fly.
  *
  * There are some validation function defined such as;
  * - isNonEmpty, checks for non-empty values.
  * - isNumber, checks if a value is a number.
  * - isAlphaNum, checks if a value containing only letters and numbers.
  *
- * The validator object also supports a configuration concept where we can pre-define validation types and function
- * to input field names. This pre-definition is done via the config property og the validation object.
+ * The validator object also supports a configuration concept where we can
+ * pre-define validation types and function to input field names.
+ * This pre-definition is done via the config property og the validation object.
  *
- * Author:  Henrik
- * File:    
- * Version: 0.0.1
- *
- * Created: 2016-10-14
+ * @author:   Henrik Grönvall
+ * @version:  0.0.1
+ * @copyright:  Copyright (c) 2017 HGC AB
+ * @license: The MIT License (MIT)
+ * @link: https://opensource.org/licenses/MIT
  */
 
 // Import constants
@@ -58,7 +59,6 @@ const validator = {
           // Run the validation function
           if (!checker.validate(data[key])) {
             isValid = false;
-            result.message = 'Validation failed';
             result.errors[key] = checker.instructions;
           }
         }
@@ -111,9 +111,7 @@ validator.config = {
   username:'isNonEmpty',
   password:'isPassword',
   name:'isNonEmpty',
-  company:'isNonEmpty',
-  email:'isNonEmpty',
-  phone:'isNonEmpty',
+  user: 'isNonEmpty',
 };
 
 
