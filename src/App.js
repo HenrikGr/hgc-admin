@@ -3,9 +3,7 @@
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
- * @link:
  * @copyright:  Copyright (c) 2017 HGC AB
- *
  * @license: The MIT License (MIT)
  * @link: https://opensource.org/licenses/MIT
  */
@@ -21,10 +19,10 @@ import withRoot from '../src/components/withRoot';
 import IndexPage from '../src/pages/index'
 import LandingPage from '../src/pages/landing'
 import DashboardPage from '../src/pages/dashboard'
-import LoginPage from '../src/pages/login'
-import RegisterUser from './pages/register-user'
-import ContactsPage from '../src/pages/contacts'
-import AccountPage from '../src/pages/account'
+import LoginUserPage from './pages/login-user'
+import RegisterUserPage from './pages/register-user'
+import RegisterClientPage from './pages/register-client'
+import GetClientPage from './pages/get-client'
 
 // application state
 import store from '../src/modules/state/store'
@@ -32,6 +30,9 @@ import { isEmpty } from '../src/modules/utils/helper'
 
 /**
  * Protected route handler
+ * NOTE: We do an assumption that Redux state will contain a
+ * user object for the current user. We do check if the user object
+ * is empty and assumes the user is not authenticated if so.
  * @param Component
  * @param rest
  * @returns {*}
@@ -39,7 +40,7 @@ import { isEmpty } from '../src/modules/utils/helper'
  */
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route {...rest} render={props => (
-    !isEmpty(store.getState().userId) ? (
+    !isEmpty(store.getState().user) ? (
       <Component {...props}/>
     ) : (
       <Redirect to={{
@@ -60,11 +61,11 @@ const App = () => (
     <div>
       <IndexPage/>
       <Route exact path="/" component={LandingPage}/>
-      <Route path="/register-user" component={RegisterUser}/>
-      <Route path="/login" component={LoginPage}/>
-      <Route path="/contacts" component={ContactsPage}/>
-      <Route path="/account" component={AccountPage}/>
+      <Route path="/login" component={LoginUserPage}/>
       <PrivateRoute path="/dashboard" component={DashboardPage}/>
+      <Route path="/register-user" component={RegisterUserPage}/>
+      <Route path="/register-client" component={RegisterClientPage}/>
+      <PrivateRoute path="/get-client" component={GetClientPage}/>
     </div>
   </Router>
 );

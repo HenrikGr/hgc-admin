@@ -9,6 +9,7 @@
  * @license: The MIT License (MIT)
  * @link: https://opensource.org/licenses/MIT
  */
+// Module dependencies
 import { connect } from 'react-redux'
 import { setUser } from "../modules/state/actions";
 import RegisterUser from '../components/forms/register-user'

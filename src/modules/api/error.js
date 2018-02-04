@@ -1,24 +1,26 @@
-/*!
- * Description: Module to take care of application errors.
+/**
+ * Description:
  *
- * This object is used to create application specific errors of response status is not valid.
- *
- * The REST API respond with a status code 422 if there is an "undefined" error.
- *
- * Author:  Henrik
- * File:    
- * Version: 0.0.1
- *
- * Created: 2016-08-02
+ * @author:   Henrik Grönvall
+ * @version:  0.0.1
+ * @copyright:  Copyright (c) 2017 HGC AB
+ * @license: The MIT License (MIT)
+ * @link: https://opensource.org/licenses/MIT
  */
 
-// Create a new object, that inherits from the Error constructor
-function AppError( message, code ) {
-  this.errors = {
-    message: message,
-    code: code || 401,
-  };
-  this.message = 'Application error';
+/**
+ * Create a new object, that inherits from the Error constructor
+ * @param status
+ * @param code
+ * @param more_info
+ * @param message
+ * @constructor
+ */
+function AppError(status, code, more_info, message) {
+  this.status = status;
+  this.code = code;
+  this.more_info = more_info;
+  this.message = message || 'App Error';
 }
 AppError.prototype = Object.create( Error.prototype );
 AppError.prototype.constructor = AppError;

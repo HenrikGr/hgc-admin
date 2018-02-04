@@ -15,7 +15,9 @@
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
+ * @link:
  * @copyright:  Copyright (c) 2017 HGC AB
+ *
  * @license: The MIT License (MIT)
  * @link: https://opensource.org/licenses/MIT
  */
@@ -35,15 +37,6 @@ import Visibility from 'material-ui-icons/Visibility';
 import VisibilityOff from 'material-ui-icons/VisibilityOff';
 import { isEmpty } from '../../modules/utils/helper'
 import API from "../../modules/api";
-import {createUser} from "../../modules/api/users";
-
-/*
-xs, extra-small: 0dp or larger
-sm, small: 600dp or larger
-md, medium: 960dp or larger
-lg, large: 1280dp or larger
-xl, xlarge: 1920dp or larger
- */
 
 const styles = theme => ({
   root: {
@@ -123,7 +116,7 @@ class RegisterUser extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
 
-      API.createUser(this.state.username, this.state.password ).then((json) => {
+      API.registerUser('/api/users', this.state.username, this.state.password ).then((json) => {
         // Dispatch setUser action
         this.props.setUser(json.data);
         // Set redirectFlag to true, will be used in next render

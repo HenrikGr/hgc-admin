@@ -34,9 +34,14 @@
 
 
 
-export const setUser = (userId) => ({
+export const setUser = (user) => ({
   type: 'SET_USER',
-  userId
+  user
+});
+
+export const setClient = (client) => ({
+  type: 'SET_CLIENT',
+  client
 });
 
 

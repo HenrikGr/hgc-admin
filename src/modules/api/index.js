@@ -1,11 +1,13 @@
 
-import { signUp, logIn, getUser } from "./auth";
-
+import { authenticate } from "./auth";
+import { createClient, getClientByName } from "./client";
+import { createUser } from "./users";
 
 const API = {
-  signUp,
-  logIn,
-  getUser,
+  authenticate,
+  createUser,
+  createClient,
+  getClientByName,
 };
 
 

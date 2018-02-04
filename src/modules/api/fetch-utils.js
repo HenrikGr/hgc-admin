@@ -1,4 +1,4 @@
-/*!
+/**
  * Description: Fetch utility module
  *
  * This module contains helper function for the fetch API.
@@ -15,6 +15,7 @@
  *
  * Created: 2016-08-24
  */
+
 // Polyfill
 import 'whatwg-fetch';
 
@@ -23,18 +24,30 @@ import AppError from './error';
 
 
 /**
+ * Parses the JSON returned by a network request
+ * @param response, A response from a network request
+ * @returns {Promise<any>}, The parsed JSON, status from the response
+ */
+export function parseJSON(response) {
+  return new Promise((resolve) => response.json()
+    .then((json) => resolve({
+      status: response.status,
+      ok: response.ok,
+      json,
+    })));
+}
+
+/**
  * Helper function to deal with response statuses
  * @param response
  * @returns {Promise.<*>}
  */
 export function status(response) {
-  
-  // Handle responses that are ok
-  if ( (response.status >= 200 && response.status < 300) ) {
+  if ((response.status >= 200 && response.status < 300)) {
     return Promise.resolve(response)
   }
   else {
-    return Promise.reject(new AppError(response.statusText, response.status));
+    return Promise.reject(new AppError(response.status, response.code, response.more_info, response.statusText));
   }
 }
 
@@ -47,7 +60,6 @@ export function json(response) {
   return response.json();
 }
 
-
 /**
  * Helper function to convert response stream to blob
  * @param response
@@ -57,8 +69,29 @@ export function blob(response) {
   return response.blob();
 }
 
+/**
+ * Helper function to convert a stream to an array buffer
+ * @param response
+ * @returns {ArrayBuffer | Promise<ArrayBuffer>}
+ */
 export function arrayBuffer(response) {
   return response.arrayBuffer();
+}
+
+/**
+ * Takes a string and base64 encode it.
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
+ * @param str
+ * @returns {string}
+ */
+export function strToBase64(str) {
+  // first we use encodeURIComponent to get percent-encoded UTF-8,
+  // then we convert the percent encodings into raw bytes which
+  // can be fed into btoa.
+  return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+    function toSolidBytes(match, p1) {
+      return String.fromCharCode('0x' + p1);
+    }));
 }
 
 /**

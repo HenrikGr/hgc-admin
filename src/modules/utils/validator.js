@@ -39,7 +39,7 @@ const validator = {
       let isValid = true;
 
       let result = {
-        errors: {}
+        error: {}
       };
 
       for (key in data) {
@@ -53,19 +53,19 @@ const validator = {
       
           // No validation function for this type
           if (!checker) {
-            reject(new AppError('Error in validation, no checker for ' + type, 422));
+            reject(new AppError('Error in validation, no checker for ' + type));
           }
       
           // Run the validation function
           if (!checker.validate(data[key])) {
             isValid = false;
-            result.errors[key] = checker.instructions;
+            result.error[key] = checker.instructions;
           }
         }
       }
   
       if (!isValid) {
-        reject(result);
+        reject(result.error);
       } else {
         resolve(data);
       }

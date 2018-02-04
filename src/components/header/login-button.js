@@ -43,7 +43,7 @@ function LoginButton(props) {
       component={ Link }
       to='/login'
       raised
-      color="accent"
+      color="secondary"
       className={ props.classes.button }
     >
       Login

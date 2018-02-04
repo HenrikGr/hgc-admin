@@ -11,17 +11,17 @@
  */
 import { connect } from 'react-redux'
 import { setUser } from "../modules/state/actions";
-import LoginForm from '../components/forms/login'
+import LoginUserForm from '../components/forms/login-user'
 
 // Map state to props
 const mapStateToProps = (state) => ({
-  userId: state.userId,
+  user: state.user,
 });
 
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    storeUser: (user) => {
+    setUser: (user) => {
       dispatch(setUser(user));
     }
   }
@@ -29,9 +29,9 @@ const mapDispatchToProps = (dispatch) => {
 
 
 // Bind state and dispatch action to component.
-const LoginPage = connect(
+const ListUserPage = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(LoginForm);
+)(LoginUserForm);
 
-export default LoginPage;
+export default ListUserPage;

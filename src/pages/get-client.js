@@ -9,27 +9,27 @@
  * @license: The MIT License (MIT)
  * @link: https://opensource.org/licenses/MIT
  */
-import React from 'react'
 import { connect } from 'react-redux'
-
-const AccountComponent = ({user}) => (
-  <div>
-    <h2>{user.name}</h2>
-  </div>
-);
-
+import { setClient } from "../modules/state/actions";
+import GetClientForm from '../components/forms/get-client'
 
 // Map state to props
 const mapStateToProps = (state) => ({
-  user: state.user,
+  client: state.client,
 });
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setClient: (client) => {
+      dispatch(setClient(client));
+    }
+  }
+};
 
 // Bind state and dispatch action to component.
-const AccountPage = connect(
+const GetClientPage = connect(
   mapStateToProps,
-)(AccountComponent);
+  mapDispatchToProps,
+)(GetClientForm);
 
-
-
-export default AccountPage;
+export default GetClientPage;

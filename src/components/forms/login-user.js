@@ -26,7 +26,6 @@
  * Module dependencies
  */
 import React from 'react';
-import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
@@ -36,17 +35,8 @@ import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
 import { FormControl, FormLabel, FormHelperText } from 'material-ui/Form';
 import Visibility from 'material-ui-icons/Visibility';
 import VisibilityOff from 'material-ui-icons/VisibilityOff';
-import validator from '../../modules/utils/validator'
-import { logIn } from '../../modules/api/auth'
+import API from '../../modules/api'
 import { isEmpty } from '../../modules/utils/helper'
-
-/*
-xs, extra-small: 0dp or larger
-sm, small: 600dp or larger
-md, medium: 960dp or larger
-lg, large: 1280dp or larger
-xl, xlarge: 1920dp or larger
- */
 
 const styles = theme => ({
   root: {
@@ -75,9 +65,9 @@ const styles = theme => ({
 
 
 /**
- * LoginForm component
+ * LoginUserForm component
  */
-class LoginForm extends React.Component {
+class LoginUserForm extends React.Component {
 
   /**
    * Default props
@@ -94,8 +84,7 @@ class LoginForm extends React.Component {
     username: '',
     password: '',
     showPassword: false,
-    errors: {},
-    message: 'Authenticate',
+    error: {},
   };
 
   /**
@@ -104,7 +93,10 @@ class LoginForm extends React.Component {
    * @returns {function(*)}
    */
   handleChange = prop => event => {
-    this.setState({ [prop]: event.target.value });
+    this.setState({
+      [prop]: event.target.value,
+      error: {}
+    });
   };
 
   /**
@@ -121,38 +113,20 @@ class LoginForm extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
 
-    // Client side validation
-    validator.validate({ username: this.state.username, password: this.state.password }).then((data) => {
-
-      // Authenticate
-      logIn('/auth/login', data.username, data.password).then((data) => {
-
-        // Store user information in global state (Redux)
-        this.props.storeUser(data);
-
-        // Set redirectFlag to true, will be used in next render
-        this.setState({redirectToReferrer: true})
-
-      }).catch((error) => {
-        this.setState(error);         // Authentication error
-      });
-
+    API.authenticate(this.state.username, this.state.password).then((json) => {
+      this.props.setUser(Object.assign({}, json.data, {isAuth: true}));
+      this.setState({ redirectToReferrer: true })
     }).catch((error) => {
-      this.setState(error);             // Validation errors
+      this.setState({error});
     });
+
   };
 
   render() {
     const { classes } = this.props;
-    const isError = !isEmpty(this.state.errors);
-    const emailMessage = isError && this.state.errors.username ? this.state.errors.username : '';
-    const passwordMessage = isError && this.state.errors.password ? this.state.errors.password : '';
-
-    // The local state redirectToReferer is set after authentication success
-    // We will redirect if authenticated and we will redirect to either the
-    // location.state or to the dashboard
-    // The location state is set by the PrivateRouter component if we are trying to access
-    // a route that requires authentication.
+    const isError = !isEmpty(this.state.error);
+    const emailMessage = isError && this.state.error.username ? this.state.error.username : '';
+    const passwordMessage = isError && this.state.error.password ? this.state.error.password : '';
     const { from } = this.props.location.state || { from: { pathname: '/dashboard' } };
     if (this.state.redirectToReferrer) {
       return (<Redirect to={from}/>)
@@ -165,7 +139,7 @@ class LoginForm extends React.Component {
             component="legend"
             error={ isError }
           >
-            { this.state.message }
+            Authenticate
           </FormLabel>
           <FormControl
             className={ classes.formControl }
@@ -203,22 +177,13 @@ class LoginForm extends React.Component {
             />
             <FormHelperText>{ passwordMessage }</FormHelperText>
           </FormControl>
-          <Button type="submit" raised color="accent" className={ classes.button }>
+          <Button type="submit" raised color="primary" className={ classes.button }>
             Login
           </Button>
-          <Button
-            component={Link}
-            to='/signup'
-            color="accent"
-            className={ classes.button }
-          >
-            Sign up
-          </Button>
-
         </form>
       </div>
     );
   }
 }
 
-export default withStyles(styles)(LoginForm);
+export default withStyles(styles)(LoginUserForm);

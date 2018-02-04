@@ -48,22 +48,22 @@ const styles = {
  * Header component
  * @param title
  * @param classes
- * @param isAuthenticated
+ * @param isAuth
  * @returns {*}
  * @constructor
  */
-function Header({ title, classes, isAuthenticated }) {
+function Header({ title, classes, isAuth }) {
   return(
     <div className={ classes.root }>
       <AppBar position="static">
         <Toolbar>
           <HomeButton
-            isAuthenticated={ isAuthenticated }
+            isAuthenticated={ isAuth }
           />
           <Typography type="title" color="inherit" className={ classes.flex }>
             {title}
           </Typography>
-          { isAuthenticated ? ( <MenuButton/> ) : ( <LoginButton/> )}
+          { isAuth ? ( <MenuButton/> ) : ( <LoginButton/> )}
         </Toolbar>
       </AppBar>
     </div>
@@ -77,7 +77,7 @@ function Header({ title, classes, isAuthenticated }) {
 Header.propTypes = {
   title: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired,
-  isAuthenticated: PropTypes.bool,
+  isAuth: PropTypes.bool,
 };
 
 /**
@@ -86,7 +86,7 @@ Header.propTypes = {
  */
 Header.defaultProps = {
   title: 'HGC AB - ' + process.env.NODE_ENV,
-  isAuthenticated: false,
+  isAuth: false,
 };
 
 /**

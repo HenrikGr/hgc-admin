@@ -46,7 +46,7 @@ function HomeButton( props ) {
       component={ Link }
       to={props.isAuthenticated ? '/dashboard' : '/'}
       className={ props.classes.button }
-      color="contrast"
+      color="inherit"
       aria-label="Menu"
     >
       <MenuIcon />

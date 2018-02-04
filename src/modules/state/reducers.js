@@ -21,26 +21,48 @@
 // Module dependencies
 import { combineReducers } from 'redux';
 
-// Import stateHistory object
-//import stateHistory from './statehistory';
-
 // Default state
 const defaults = {
   STATE: [],
-  userId: '',
+  USER: {},
+  CLIENT: {},
 };
 
-const userReducer = (state = defaults.userId, action) => {
+/**
+ * user reducer.
+ * @param state
+ * @param action
+ * @returns {*}
+ */
+const userReducer = (state = defaults.USER, action) => {
   switch (action.type) {
     case 'SET_USER':
-      return action.userId;
+      return action.user;
 
     default:
       return state;
   }
 };
 
+/**
+ * user reducer.
+ * @param state
+ * @param action
+ * @returns {*}
+ */
+const clientReducer = (state = defaults.CLIENT, action) => {
+  switch (action.type) {
+    case 'SET_CLIENT':
+      return action.client;
+
+    default:
+      return state;
+  }
+};
+
+
 // Combine reducers
 export default combineReducers({
-  userId: userReducer,
+  user: userReducer,
+  client: clientReducer,
 });

@@ -12,9 +12,7 @@
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
- * @link:
  * @copyright:  Copyright (c) 2017 HGC AB
- *
  * @license: The MIT License (MIT)
  * @link: https://opensource.org/licenses/MIT
  */
@@ -65,7 +63,7 @@ export default class MenuButton extends Component {
           aria-owns={ open ? 'menu-appbar' : null }
           aria-haspopup="true"
           onClick={ this.handleMenu }
-          color="contrast"
+          color="inherit"
         >
           <MoreVert/>
         </IconButton>
@@ -79,24 +77,24 @@ export default class MenuButton extends Component {
         >
           <MenuItem
             component={ Link }
-            to='/contacts'
+            to='/register-user'
             onClick={ this.handleRequestClose }
           >
-            Contacts
+            Register user
           </MenuItem>
           <MenuItem
             component={ Link }
-            to='/account'
+            to='/register-client'
             onClick={ this.handleRequestClose }
           >
-            My account
+            Register client
           </MenuItem>
           <MenuItem
             component={ Link }
-            to='/logout'
+            to='/get-client'
             onClick={ this.handleRequestClose }
           >
-            Log out
+            Get client
           </MenuItem>
         </Menu>
       </div>

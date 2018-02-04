@@ -12,43 +12,38 @@
 import 'whatwg-fetch';
 
 // Import fetch helper functions.
-import { status, json } from './fetch-utils';
+import { parseJSON } from './fetch-utils';
 import validator from '../utils/validator'
 const API_URL = process.env.REACT_APP_API_URL;
 const API_AUTHENTICATE_URL = API_URL + '/api/login';
 
-
-
 /**
- * Authenticate a user by username and password
- *
+ * Authenticate a user
  * @param username
  * @param password
  * @returns {Promise<any>}
  */
 export function authenticate(username, password) {
-  return new Promise( ( resolve, reject ) => {
-
-    // Client side validation
+  return new Promise((resolve, reject) => {
     validator.validate({ username: username, password: password }).then((data) => {
-
         fetch(API_AUTHENTICATE_URL, {
           method: 'POST',
-          headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
-          body: 'username=' + encodeURIComponent(data.username) + '&password=' + encodeURIComponent(data.password),
-          mode: 'no-cors' // 'cors' by default
-        }).then(status)
-          .then(json)
-          .then((json) => {
-            resolve(json);
-          })
-          .catch((errors) => {
-            reject(errors);
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+            //"Authorization": 'Basic MWZiY2VmZjBhZWUwOTQxOTM0YzgxYmEyOWNiNzQ1NGM6YjAyNDZlNjhiZGMzZWI3MzhkNGU4NTcyYzFjOWZmODQ1OThlNjdiZDUzMzc1OWNjZmU0MGQwZmIxOGNhMTQ1Nw=='
+          },
+          body: 'username=' + encodeURIComponent(data.username) +
+            '&password=' + encodeURIComponent(data.password) +
+            '&grant_type=client_credentials'
+        }).then(parseJSON)
+          .then((response) => {
+            if (response.ok) {
+              return resolve(response.json);
+            }
+            return reject(response.json);
           });
-
-    }).catch((errors) => {      // Validation errors
-      reject(errors);
+    }).catch((error) => {      // Validation errors
+      reject(error);
     });
-
   });
 }
