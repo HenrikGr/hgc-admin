@@ -5,7 +5,6 @@
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
- * @link: https://opensource.org/licenses/MIT
  */
 
 // React & React Router
@@ -16,13 +15,10 @@ import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 import withRoot from '../src/components/withRoot';
 
 // Pages
-import IndexPage from '../src/pages/index'
-import LandingPage from '../src/pages/landing'
-import DashboardPage from '../src/pages/dashboard'
-import LoginUserPage from './pages/login-user'
-import RegisterUserPage from './pages/register-user'
-import RegisterClientPage from './pages/register-client'
-import GetClientPage from './pages/get-client'
+import IndexPage from './pages/IndexPage'
+import LandingPage from './pages/LandingPage'
+import DashboardPage from './pages/DashboardPage'
+import LoginFormPage from './pages/LoginFormPage'
 
 // application state
 import store from '../src/modules/state/store'
@@ -40,7 +36,7 @@ import { isEmpty } from '../src/modules/utils/helper'
  */
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route {...rest} render={props => (
-    !isEmpty(store.getState().user) ? (
+    !isEmpty(store.getState().session) ? (
       <Component {...props}/>
     ) : (
       <Redirect to={{
@@ -61,11 +57,8 @@ const App = () => (
     <div>
       <IndexPage/>
       <Route exact path="/" component={LandingPage}/>
-      <Route path="/login" component={LoginUserPage}/>
+      <Route path="/login" component={LoginFormPage}/>
       <PrivateRoute path="/dashboard" component={DashboardPage}/>
-      <Route path="/register-user" component={RegisterUserPage}/>
-      <Route path="/register-client" component={RegisterClientPage}/>
-      <PrivateRoute path="/get-client" component={GetClientPage}/>
     </div>
   </Router>
 );
