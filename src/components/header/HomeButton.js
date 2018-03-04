@@ -1,18 +1,12 @@
 /**
- * Description
- *
- * The Header component renders the application header that will contain
- * a login button or a personal profile menu for the authenticated user
- *
- *
+ * Description: The Header component renders the application header
+ * that will contain a login button or a personal profile menu for
+ * the authenticated user
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
- * @link:
  * @copyright:  Copyright (c) 2017 HGC AB
- *
  * @license: The MIT License (MIT)
- * @link: https://opensource.org/licenses/MIT
  */
 
 // React & Router
@@ -25,7 +19,6 @@ import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 import { withStyles } from 'material-ui/styles';
 
-// Component styles
 const styles = {
   button: {
     marginLeft: -12,
@@ -36,16 +29,17 @@ const styles = {
 /**
  * IconButton component that routes to / if not authenticated
  * or /dashboard if authenticated.
- * @param props
+ * @param isAuth
+ * @param classes
  * @returns {*}
  * @constructor
  */
-function HomeButton( props ) {
+function HomeButton({ isAuth, classes }) {
   return(
     <IconButton
       component={ Link }
-      to={props.isAuthenticated ? '/dashboard' : '/'}
-      className={ props.classes.button }
+      to={ isAuth ? '/dashboard' : '/'}
+      className={ classes.button }
       color="inherit"
       aria-label="Menu"
     >
@@ -56,12 +50,12 @@ function HomeButton( props ) {
 
 /**
  * Component props API
- * @type {{isAuthenticated, classes}}
+ * @type {{isAuth, classes}}
  */
 HomeButton.propTypes = {
-  isAuthenticated: PropTypes.bool.isRequired,
+  isAuth: PropTypes.bool.isRequired,
   classes: PropTypes.object.isRequired,
 };
 
-// Module export
+// Inject classes to the component
 export default withStyles(styles)(HomeButton);
