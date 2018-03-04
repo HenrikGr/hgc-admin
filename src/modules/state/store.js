@@ -1,21 +1,21 @@
-/*!
+/**
  * Description: The Redux store module
  *
- * The state object för this application will contain;
- * - user, object about the current user that is logged in.
- * - status, string describing the status of the app
- *
- * Author:  Henrik Grönvall
- * File:
- * Version: 0.0.1
- * Created on 2016-10-16
+ * @author:   Henrik Grönvall
+ * @version:  0.0.1
+ * @copyright:  Copyright (c) 2017 HGC AB
+ * @license: The MIT License (MIT)
  */
+
+// Module dependencies
 import { createStore, applyMiddleware, compose } from 'redux';
 import reducers from './reducers';
 import { logger, thunk } from './middleware';
 
+// Add Redux dev tools
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
 /**
  * Create the Redux store by calling Redux.createStore().
  */
-export default createStore(reducers, compose(applyMiddleware(logger, thunk),
-  window.devToolsExtension ? window.devToolsExtension() : f => f));
+export default createStore(reducers,composeEnhancers(applyMiddleware(logger, thunk)));
