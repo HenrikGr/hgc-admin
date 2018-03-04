@@ -29,6 +29,7 @@ import MoreVert from 'material-ui-icons/MoreVert';
  * MenuButton component
  */
 export default class MenuButton extends Component {
+
   state = {
     anchorEl: null, // HTMLElement from the IconButton
   };
@@ -77,24 +78,17 @@ export default class MenuButton extends Component {
         >
           <MenuItem
             component={ Link }
-            to='/register-user'
+            to='/profile'
             onClick={ this.handleRequestClose }
           >
-            Register user
+            Profile
           </MenuItem>
           <MenuItem
             component={ Link }
-            to='/register-client'
+            to='/logout'
             onClick={ this.handleRequestClose }
           >
-            Register client
-          </MenuItem>
-          <MenuItem
-            component={ Link }
-            to='/get-client'
-            onClick={ this.handleRequestClose }
-          >
-            Get client
+            Logout
           </MenuItem>
         </Menu>
       </div>
