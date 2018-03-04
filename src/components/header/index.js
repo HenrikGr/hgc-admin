@@ -27,11 +27,13 @@ import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 
 // custom components
-import HomeButton from './home-button'
-import MenuButton from './menu-button'
-import LoginButton from './login-button'
+import HomeButton from './HomeButton'
+import MenuButton from './MenuButton'
+import LoginButton from './LoginButton'
 
-// Component styles
+// helpers
+import { isEmpty } from "../../modules/utils/helper";
+
 const styles = {
   root: {
     width: '100%',
@@ -48,17 +50,18 @@ const styles = {
  * Header component
  * @param title
  * @param classes
- * @param isAuth
+ * @param session
  * @returns {*}
  * @constructor
  */
-function Header({ title, classes, isAuth }) {
+function Header({ title, classes, session }) {
+  const isAuth = !isEmpty((session));
   return(
     <div className={ classes.root }>
       <AppBar position="static">
         <Toolbar>
           <HomeButton
-            isAuthenticated={ isAuth }
+            isAuth={ isAuth }
           />
           <Typography type="title" color="inherit" className={ classes.flex }>
             {title}
@@ -77,7 +80,7 @@ function Header({ title, classes, isAuth }) {
 Header.propTypes = {
   title: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired,
-  isAuth: PropTypes.bool,
+  session: PropTypes.object.isRequired,
 };
 
 /**
@@ -86,10 +89,7 @@ Header.propTypes = {
  */
 Header.defaultProps = {
   title: 'HGC AB - ' + process.env.NODE_ENV,
-  isAuth: false,
 };
 
-/**
- * Export component
- */
+// Inject classes to the component
 export default withStyles(styles)(Header);
