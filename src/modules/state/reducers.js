@@ -1,5 +1,5 @@
-/*!
- * Description:
+/**
+ * Description: Reducers
  *
  * GENERAL
  * Reducers are pure JavaScript functions that:
@@ -13,48 +13,53 @@
  * which makes it easy to implement simple reducers that are concerned
  * with only a portion of the overall application state.
  *
- * Author:  Henrik Grönvall
- * File:
- * Version: 0.0.1
- * Created on 2016-10-16
+ * @author:   Henrik Grönvall
+ * @version:  0.0.1
+ * @copyright:  Copyright (c) 2017 HGC AB
+ * @license: The MIT License (MIT)
  */
+
 // Module dependencies
 import { combineReducers } from 'redux';
 
 // Default state
 const defaults = {
-  STATE: [],
-  USER: {},
-  CLIENT: {},
+  status: 'Start the application',
+  session: {},
+  user: {},
 };
 
 /**
- * user reducer.
+ * Status reducer to log all fetch actions
  * @param state
  * @param action
- * @returns {*}
+ * @returns {string}
  */
-const userReducer = (state = defaults.USER, action) => {
+const statusReducer = (state = defaults.status, action) => {
   switch (action.type) {
-    case 'SET_USER':
-      return action.user;
-
+    case 'FETCH_STARTED':
+      return 'Fetching...';
+    case 'FETCH_COMPLETE':
+      return 'Fetch complete';
+    case 'FETCH_FAILED':
+      return 'Fetch failed ' + (action.error ? action.error : '');
     default:
       return state;
   }
 };
 
 /**
- * user reducer.
+ * Session reducer to manage session information (token)
  * @param state
  * @param action
  * @returns {*}
  */
-const clientReducer = (state = defaults.CLIENT, action) => {
+const sessionReducer = (state = defaults.session, action) => {
   switch (action.type) {
-    case 'SET_CLIENT':
-      return action.client;
-
+    case 'SET_SESSION':
+      return action.token;
+    case 'REMOVE_SESSION':
+      return {};
     default:
       return state;
   }
@@ -63,6 +68,6 @@ const clientReducer = (state = defaults.CLIENT, action) => {
 
 // Combine reducers
 export default combineReducers({
-  user: userReducer,
-  client: clientReducer,
+  status: statusReducer,
+  session: sessionReducer,
 });
