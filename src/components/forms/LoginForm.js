@@ -1,36 +1,33 @@
 /**
- * Description
+ * Description LoginForm component
  *
- * The LoginForm component is a controlled component rendering 2 fields to
- * provide authentication service.
+ * The LoginForm component is a controlled component rendering 2 fields,
+ * username and password to provide authentication service.
  *
- * The local state consists of
- * - redirectToReferer, a boolean flag indicating authentication success and redirection.
+ * The local component state consists of
+ * - redirectToReferer, a boolean flag indicating redirection after successful
+ *   authentication.
  * - username, a string variable keeping track of user input
  * - password, a string variable keeping track of user input
- * - showPassword, a boolean flag to toggle is password input should be visible
- * - errors, an object holding validation or authentication error messages
- * - message, a string holding general information
- *
+ * - showPassword, a boolean flag to toggle if password input should be visible
+ * - error, an object holding validation or authentication error messages
+ * - loading, a boolean flag indicating if linear progress should be visible
+ *   during authentication against the backend
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
- * @link:
  * @copyright:  Copyright (c) 2017 HGC AB
- *
  * @license: The MIT License (MIT)
- * @link: https://opensource.org/licenses/MIT
  */
 
-/**
- * Module dependencies
- */
+// Module dependencies
 import React from 'react';
 import { Redirect } from 'react-router'
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button'
 import IconButton from 'material-ui/IconButton'
+import { LinearProgress } from 'material-ui/Progress';
 import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
 import { FormControl, FormLabel, FormHelperText } from 'material-ui/Form';
 import Visibility from 'material-ui-icons/Visibility';
@@ -40,6 +37,14 @@ import { isEmpty } from '../../modules/utils/helper'
 
 const styles = theme => ({
   root: {
+    display: 'flex',
+    flexDirection:'column',
+  },
+  progress: {
+    flexGrow: 1,
+    height: '5px'
+  },
+  formWrapper: {
     display: 'flex',
     justifyContent:'center',
   },
@@ -65,26 +70,25 @@ const styles = theme => ({
 
 
 /**
- * LoginUserForm component
+ * LoginForm component
  */
-class LoginUserForm extends React.Component {
-
-  /**
-   * Default props
-   */
+class LoginForm extends React.Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    formLabel: PropTypes.string.isRequired,
   };
 
-  /**
-   * Initial state
-   */
+  static defaultProps = {
+    formLabel: 'Log in'
+  };
+
   state = {
     redirectToReferrer: false,
     username: '',
     password: '',
     showPassword: false,
     error: {},
+    loading: false,
   };
 
   /**
@@ -93,10 +97,7 @@ class LoginUserForm extends React.Component {
    * @returns {function(*)}
    */
   handleChange = prop => event => {
-    this.setState({
-      [prop]: event.target.value,
-      error: {}
-    });
+    this.setState({ [prop]: event.target.value, error: {} });
   };
 
   /**
@@ -113,20 +114,28 @@ class LoginUserForm extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
 
-    API.authenticate(this.state.username, this.state.password).then((json) => {
-      this.props.setUser(Object.assign({}, json.data, {isAuth: true}));
-      this.setState({ redirectToReferrer: true })
-    }).catch((error) => {
-      this.setState({error});
-    });
+    this.setState({loading: true}, () => {
+      // Authenticate username and password - receives an access token/error
+      API.authenticate(this.state.username, this.state.password).then((token) => {
+        this.props.setSession(token);
+        this.setState({ redirectToReferrer: true })
+      }).catch((error) => {
+        this.setState({error, loading: false});
+      });
+    })
 
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, formLabel } = this.props;
     const isError = !isEmpty(this.state.error);
     const emailMessage = isError && this.state.error.username ? this.state.error.username : '';
     const passwordMessage = isError && this.state.error.password ? this.state.error.password : '';
+    const label = isError && this.state.error.message ?
+      formLabel + ' - ' + this.state.error.message :
+      formLabel;
+
+    // Redirect after successful login
     const { from } = this.props.location.state || { from: { pathname: '/dashboard' } };
     if (this.state.redirectToReferrer) {
       return (<Redirect to={from}/>)
@@ -134,12 +143,16 @@ class LoginUserForm extends React.Component {
 
     return (
       <div className={ classes.root }>
+        <div className={ classes.progress }>
+          {this.state.loading ? (<LinearProgress color="secondary"/>): null}
+        </div>
+        <div className={ classes.formWrapper }>
         <form className={ classes.form } onSubmit={ this.handleSubmit }>
           <FormLabel
             component="legend"
             error={ isError }
           >
-            Authenticate
+            {label}
           </FormLabel>
           <FormControl
             className={ classes.formControl }
@@ -177,13 +190,14 @@ class LoginUserForm extends React.Component {
             />
             <FormHelperText>{ passwordMessage }</FormHelperText>
           </FormControl>
-          <Button type="submit" raised color="primary" className={ classes.button }>
+          <Button type="submit" variant="raised" color="primary" className={ classes.button }>
             Login
           </Button>
         </form>
+      </div>
       </div>
     );
   }
 }
 
-export default withStyles(styles)(LoginUserForm);
+export default withStyles(styles)(LoginForm);
