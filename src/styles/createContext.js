@@ -11,16 +11,10 @@
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
- * @link:
  * @copyright:  Copyright (c) 2017 HGC AB
- *
  * @license: The MIT License (MIT)
- * @link: https://opensource.org/licenses/MIT
  */
 
-/**
- * Module dependencies
- */
 import { create, SheetsRegistry } from 'jss';
 import preset from 'jss-preset-default';
 import { createMuiTheme } from 'material-ui/styles';
