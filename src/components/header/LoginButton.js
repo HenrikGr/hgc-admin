@@ -4,15 +4,10 @@
  * The Header component renders the application header that will contain
  * a login button or a personal profile menu for the authenticated user
  *
- *
- *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
- * @link:
  * @copyright:  Copyright (c) 2017 HGC AB
- *
  * @license: The MIT License (MIT)
- * @link: https://opensource.org/licenses/MIT
  */
 
 // React & Router
@@ -24,7 +19,6 @@ import PropTypes from "prop-types";
 import Button from 'material-ui/Button'
 import { withStyles } from 'material-ui/styles';
 
-// Component styles
 const styles = {
   button: {
     margin: 8,
@@ -42,7 +36,7 @@ function LoginButton(props) {
     <Button
       component={ Link }
       to='/login'
-      raised
+      variant="raised"
       color="secondary"
       className={ props.classes.button }
     >
@@ -59,5 +53,5 @@ LoginButton.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-
+// Inject classes to the component
 export default withStyles(styles)(LoginButton)
