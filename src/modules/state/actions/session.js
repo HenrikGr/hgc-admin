@@ -1,7 +1,5 @@
 /**
- * Description: Session action creators - used to manage session information
- * in the store. Session information is based on access tokens returned
- * when authorized.
+ * Description
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
@@ -10,57 +8,79 @@
  */
 
 // Module dependencies
-import { fetchStart, fetchComplete, fetchFailed } from './fetch';
-import API from '../../api'
+import API from "../../api";
 
-/**
- * Fetch a new access token based on the
- * refresh token stored in the state
- * @param dispatch
- * @param state
- */
-function fetchRefreshSession(dispatch, state)  {
-  const { refresh_token } = state.session;
-  dispatch(fetchStart());
-  API.refreshToken(refresh_token).then((json) => {
-    dispatch(fetchComplete(json));
-    dispatch(setSession(json));
-  }).catch((json) => {
-    dispatch(fetchFailed(json))
-  })
+const fetchBegin = status => ({
+  type: "FETCH_BEGIN",
+  status
+});
+
+const fetchStart = () => ({
+  type: "FETCH_SESSION_STARTED"
+});
+
+const fetchComplete = json => ({
+  type: "FETCH_SESSION_COMPLETE",
+  json
+});
+
+const fetchFailed = error => ({
+  type: "FETCH_SESSION_FAILED",
+  error
+});
+
+export function getAccessToken(username, password) {
+  return function(dispatch, getState) {
+    dispatch(fetchBegin("Get access token"));
+    dispatch(fetchStart());
+    return API.getAccessToken(username, password)
+      .then(json => {
+        dispatch(fetchComplete(json));
+      })
+      .catch(json => {
+        dispatch(fetchFailed(json));
+      });
+  };
 }
 
 /**
- * Thunk middleware to initiated the fetchRefreshSession
- * @returns {{type: string, fn: fetchRefreshSession}}
+ * Action creator to extend session fetching a new access token
+ * @returns {Function}
  */
-export function refreshSession() {
-  return {
-    type: 'BEGIN_FETCH',
-    fn: fetchRefreshSession,
-  }
+export function refreshAccessToken() {
+  return function(dispatch, getState) {
+    const { refresh_token } = getState().session;
+    dispatch(fetchBegin("Refresh access token"));
+    dispatch(fetchStart());
+    return API.refreshAccessToken(refresh_token)
+      .then(json => {
+        dispatch(fetchComplete(json));
+      })
+      .catch(json => {
+        dispatch(fetchFailed(json));
+      });
+  };
 }
 
 /**
- * Remove the session (token)
- * @returns {{type: string, token: {}}}
- */
-export function removeSession() {
-  return {
-    type: 'REMOVE_SESSION',
-    token: {},
-  }
-}
-
-/**
- * Set the session (token)
+ * Action creator used after authentication
  * @param token
  * @returns {{type: string, token: *}}
  */
-export function setSession(token) {
+export function setToken(token) {
   return {
-    type: 'SET_SESSION',
+    type: "SET_SESSION",
     token
-  }
+  };
 }
 
+/**
+ * Remove token from session
+ * @returns {{type: string, token: {}}}
+ */
+export function removeAccessToken() {
+  return {
+    type: "REMOVE_SESSION",
+    token: {}
+  };
+}
