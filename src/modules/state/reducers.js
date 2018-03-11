@@ -20,54 +20,55 @@
  */
 
 // Module dependencies
-import { combineReducers } from 'redux';
+import { combineReducers } from "redux";
 
 // Default state
 const defaults = {
-  status: 'Start the application',
+  status: "Application started.",
   session: {},
-  user: {},
+  profile: {}
 };
 
-/**
- * Status reducer to log all fetch actions
- * @param state
- * @param action
- * @returns {string}
- */
 const statusReducer = (state = defaults.status, action) => {
   switch (action.type) {
-    case 'FETCH_STARTED':
-      return 'Fetching...';
-    case 'FETCH_COMPLETE':
-      return 'Fetch complete';
-    case 'FETCH_FAILED':
-      return 'Fetch failed ' + (action.error ? action.error : '');
+    case "FETCH_BEGIN":
+      return action.status;
     default:
       return state;
   }
 };
 
-/**
- * Session reducer to manage session information (token)
- * @param state
- * @param action
- * @returns {*}
- */
 const sessionReducer = (state = defaults.session, action) => {
   switch (action.type) {
-    case 'SET_SESSION':
-      return action.token;
-    case 'REMOVE_SESSION':
+    case "FETCH_SESSION_STARTED":
+      return Object.assign({}, { isFetching: true });
+    case "FETCH_SESSION_COMPLETE":
+      return Object.assign({}, state, { isFetching: false }, action.json);
+    case "FETCH_SESSION_FAILED":
+      return Object.assign({}, { isFetching: false }, { error: action.error });
+    case "REMOVE_SESSION":
       return {};
     default:
       return state;
   }
 };
 
+const profileReducer = (state = defaults.profile, action) => {
+  switch (action.type) {
+    case "FETCH_PROFILE_STARTED":
+      return Object.assign({}, { isFetching: true });
+    case "FETCH_PROFILE_COMPLETE":
+      return Object.assign({}, state, { isFetching: false }, action.json);
+    case "FETCH_PROFILE_FAILED":
+      return Object.assign({}, { isFetching: false }, { error: action.error });
+    default:
+      return state;
+  }
+};
 
 // Combine reducers
 export default combineReducers({
   status: statusReducer,
   session: sessionReducer,
+  profile: profileReducer
 });
