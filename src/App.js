@@ -1,5 +1,5 @@
 /**
- * Description:
+ * Description: HGC OAUTH2 Client application
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
@@ -8,21 +8,28 @@
  */
 
 // React & React Router
-import React from 'react';
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Redirect,
+  Switch
+} from "react-router-dom";
 
 // material-ui global resets
-import withRoot from '../src/components/withRoot';
+import withRoot from "../src/components/withRoot";
 
 // Pages
-import IndexPage from './pages/IndexPage'
-import LandingPage from './pages/LandingPage'
-import DashboardPage from './pages/DashboardPage'
-import LoginFormPage from './pages/LoginFormPage'
+import IndexPage from "./pages/IndexPage";
+import LandingPage from "./pages/LandingPage";
+import DashboardPage from "./pages/DashboardPage";
+import LoginFormPage from "./pages/LoginFormPage";
+import ProfileFormPage from "./pages/ProfileFormPage";
+import NotFoundPage from "./pages/NotFound";
 
-// application state
-import store from '../src/modules/state/store'
-import { isEmpty } from '../src/modules/utils/helper'
+// application global state
+import store from "../src/modules/state/store";
+import { isEmpty } from "../src/modules/utils/helper";
 
 /**
  * Protected route handler
@@ -35,16 +42,21 @@ import { isEmpty } from '../src/modules/utils/helper'
  * @constructor
  */
 const PrivateRoute = ({ component: Component, ...rest }) => (
-  <Route {...rest} render={props => (
-    !isEmpty(store.getState().session) ? (
-      <Component {...props}/>
-    ) : (
-      <Redirect to={{
-        pathname: '/login',
-        state: { from: props.location }
-      }}/>
-    )
-  )}/>
+  <Route
+    {...rest}
+    render={props =>
+      !isEmpty(store.getState().session) ? (
+        <Component {...props} />
+      ) : (
+        <Redirect
+          to={{
+            pathname: "/login",
+            state: { from: props.location }
+          }}
+        />
+      )
+    }
+  />
 );
 
 /**
@@ -55,14 +67,17 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 const App = () => (
   <Router>
     <div>
-      <IndexPage/>
-      <Route exact path="/" component={LandingPage}/>
-      <Route path="/login" component={LoginFormPage}/>
-      <PrivateRoute path="/dashboard" component={DashboardPage}/>
+      <IndexPage />
+      <Switch>
+        <Route exact path="/" component={LandingPage} />
+        <Route exact path="/login" component={LoginFormPage} />
+        <PrivateRoute exact path="/dashboard" component={DashboardPage} />
+        <PrivateRoute exact path="/profile" component={ProfileFormPage} />
+        <Route path="*" component={NotFoundPage} />
+      </Switch>
     </div>
   </Router>
 );
 
 // Export Index page component wrapped with root settings
 export default withRoot(App);
-
