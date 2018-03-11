@@ -8,18 +8,15 @@
  * @link: https://opensource.org/licenses/MIT
  */
 
-import { authenticate, getMe, refreshToken } from "./auth";
-import { createClient, getClientByName } from "./client";
-import { createUser } from "./users";
+import { getAccessToken, refreshAccessToken } from "./auth";
+import { getProfile, updateProfile } from "./profile";
 
 // Export the whole API
 const API = {
-  authenticate,
-  getMe,
-  refreshToken,
-  createUser,
-  createClient,
-  getClientByName,
+  getAccessToken,
+  refreshAccessToken,
+  getProfile,
+  updateProfile
 };
 
 export default API;
