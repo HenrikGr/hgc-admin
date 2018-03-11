@@ -9,40 +9,36 @@
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
- * @link:
  * @copyright:  Copyright (c) 2017 HGC AB
- *
  * @license: The MIT License (MIT)
- * @link: https://opensource.org/licenses/MIT
  */
 
 // React
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
 // material-ui components
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
-import { withStyles } from 'material-ui/styles';
+import AppBar from "material-ui/AppBar";
+import Toolbar from "material-ui/Toolbar";
+import Typography from "material-ui/Typography";
+import { withStyles } from "material-ui/styles";
 
 // custom components
-import HomeButton from './HomeButton'
-import MenuButton from './MenuButton'
-import LoginButton from './LoginButton'
+import Session from "../session";
+import HomeButton from "./HomeButton";
 
 // helpers
 import { isEmpty } from "../../modules/utils/helper";
 
 const styles = {
   root: {
-    width: '100%',
+    width: "100%"
   },
   flex: {
-    flex: 1,
+    flex: 1
   },
   marginRight: {
-    marginRight: '24px'
+    marginRight: "24px"
   }
 };
 
@@ -55,18 +51,16 @@ const styles = {
  * @constructor
  */
 function Header({ title, classes, session }) {
-  const isAuth = !isEmpty((session));
-  return(
-    <div className={ classes.root }>
+  const isAuth = !isEmpty(session);
+  return (
+    <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <HomeButton
-            isAuth={ isAuth }
-          />
-          <Typography type="title" color="inherit" className={ classes.flex }>
+          <HomeButton isAuth={isAuth} />
+          <Typography type="title" color="inherit" className={classes.flex}>
             {title}
           </Typography>
-          { isAuth ? ( <MenuButton/> ) : ( <LoginButton/> )}
+          <Session />
         </Toolbar>
       </AppBar>
     </div>
@@ -80,7 +74,7 @@ function Header({ title, classes, session }) {
 Header.propTypes = {
   title: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired,
-  session: PropTypes.object.isRequired,
+  session: PropTypes.object.isRequired
 };
 
 /**
@@ -88,7 +82,8 @@ Header.propTypes = {
  * @type {{title: string}}
  */
 Header.defaultProps = {
-  title: 'HGC AB - ' + process.env.NODE_ENV,
+  title: "HGC AB - " + process.env.NODE_ENV,
+  session: {}
 };
 
 // Inject classes to the component
