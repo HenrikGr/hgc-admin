@@ -1,5 +1,5 @@
 /**
- * Description: LoginFormPage
+ * Description:
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
@@ -8,30 +8,28 @@
  */
 
 // Redux & app components
-import { connect } from 'react-redux'
-import LoginForm from '../components/forms/LoginForm'
+import { connect } from "react-redux";
+import LoginForm from "../components/forms/LoginForm";
 
 // Session action creators
-import { setSession } from "../modules/state/actions/session";
+import { getAccessToken } from "../modules/state/actions/session";
 
 // Map session state to props
-const mapStateToProps = (state) => ({
-  session: state.session,
+const mapStateToProps = state => ({
+  session: state.session
 });
 
 // Map session action creators to props
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    setSession: (token) => {
-      dispatch(setSession(token))
+    Login: (username, password) => {
+      dispatch(getAccessToken(username, password));
     }
-  }
+  };
 };
 
-// Inject state and action creators into the LoginForm component
-const LoginFormPage = connect(
-  mapStateToProps,
-  mapDispatchToProps)(LoginForm);
+// Inject state and action creators
+const LoginFormPage = connect(mapStateToProps, mapDispatchToProps)(LoginForm);
 
 // Export the page
 export default LoginFormPage;
