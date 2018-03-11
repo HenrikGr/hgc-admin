@@ -8,9 +8,10 @@
  */
 
 // Module dependencies
-import { createStore, applyMiddleware, compose } from 'redux';
-import reducers from './reducers';
-import { logger, thunk } from './middleware';
+import { createStore, applyMiddleware, compose } from "redux";
+import reducers from "./reducers";
+//import logger from "./middleware/logger";
+import thunk from "./middleware/thunk";
 
 // Add Redux dev tools
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -18,4 +19,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 /**
  * Create the Redux store by calling Redux.createStore().
  */
-export default createStore(reducers,composeEnhancers(applyMiddleware(logger, thunk)));
+export default createStore(
+  reducers,
+  composeEnhancers(applyMiddleware(thunk))
+);
