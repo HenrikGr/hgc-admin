@@ -1,9 +1,5 @@
 /**
- * Description: IndexPage component
- *
- * The component is connected to the session in the global state
- * and we are using render props to wrap the Header component and
- * pass session information into it.
+ * Description
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
@@ -12,38 +8,21 @@
  */
 
 // React & Redux
-import React from 'react';
-import { connect } from 'react-redux'
+import React from "react";
+import { connect } from "react-redux";
 
-// App components
-import Header from '../components/header'
-
-// Session component and action creators to handle the session
-import Session from '../components/session'
-import { removeSession, refreshSession } from "../modules/state/actions/session";
+// Header component
+import Header from "../components/header";
 
 // Map session state to props
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    session: state.session,
-  }
-};
-
-// Map session action creators as props
-const mapDispatchToProps = (dispatch) => {
-  return {
-    removeSession: () => {
-      dispatch(removeSession())
-    },
-    refreshSession: () => {
-      dispatch(refreshSession())
-    }
-  }
+    session: state.session
+  };
 };
 
 // Inject state and action creators
-const SessionComponent = connect(
-  mapStateToProps, mapDispatchToProps)(Session);
+const HeaderWithSession = connect(mapStateToProps)(Header);
 
 /**
  * IndexPage component
@@ -51,9 +30,5 @@ const SessionComponent = connect(
  * @constructor
  */
 export default function IndexPage() {
-  return(
-    <SessionComponent
-      render={ session => (<Header session={session}/>) }
-    />
-  )
+  return <HeaderWithSession />;
 }
