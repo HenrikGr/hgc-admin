@@ -17,21 +17,20 @@
  * @link: https://opensource.org/licenses/MIT
  */
 // React & Router
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom'
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
 // material-ui components
-import Menu, { MenuItem } from 'material-ui/Menu';
-import IconButton from 'material-ui/IconButton';
-import MoreVert from 'material-ui-icons/MoreVert';
+import Menu, { MenuItem } from "material-ui/Menu";
+import IconButton from "material-ui/IconButton";
+import MoreVert from "material-ui-icons/MoreVert";
 
 /**
  * MenuButton component
  */
 export default class MenuButton extends Component {
-
   state = {
-    anchorEl: null, // HTMLElement from the IconButton
+    anchorEl: null // HTMLElement from the IconButton
   };
 
   /**
@@ -40,7 +39,7 @@ export default class MenuButton extends Component {
    * and thus ensure the open flag will be tru on next render
    * @param event
    */
-  handleMenu = event => {
+  handleClick = event => {
     this.setState({ anchorEl: event.currentTarget });
   };
 
@@ -49,7 +48,7 @@ export default class MenuButton extends Component {
    * Sets the anchorEl to null to enforce the open flag to be false
    * on next render
    */
-  handleRequestClose = () => {
+  handleClose = event => {
     this.setState({ anchorEl: null });
   };
 
@@ -58,36 +57,28 @@ export default class MenuButton extends Component {
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
 
-    return(
+    return (
       <div>
         <IconButton
-          aria-owns={ open ? 'menu-appbar' : null }
+          aria-owns={open ? "menu-appbar" : null}
           aria-haspopup="true"
-          onClick={ this.handleMenu }
+          onClick={this.handleClick}
           color="inherit"
         >
-          <MoreVert/>
+          <MoreVert />
         </IconButton>
         <Menu
           id="menu-appbar"
-          anchorEl={ anchorEl }
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-          open={ open }
-          onClose={ this.handleRequestClose }
+          anchorEl={anchorEl}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          transformOrigin={{ vertical: "top", horizontal: "right" }}
+          open={open}
+          onClose={this.handleClose}
         >
-          <MenuItem
-            component={ Link }
-            to='/profile'
-            onClick={ this.handleRequestClose }
-          >
+          <MenuItem component={Link} to="/profile" onClick={this.handleClose}>
             Profile
           </MenuItem>
-          <MenuItem
-            component={ Link }
-            to='/logout'
-            onClick={ this.handleRequestClose }
-          >
+          <MenuItem component={Link} to="/logout" onClick={this.handleClose}>
             Logout
           </MenuItem>
         </Menu>
