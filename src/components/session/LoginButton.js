@@ -11,17 +11,17 @@
  */
 
 // React & Router
-import React from 'react';
-import { Link } from 'react-router-dom'
+import React from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 // material-ui
-import Button from 'material-ui/Button'
-import { withStyles } from 'material-ui/styles';
+import Button from "material-ui/Button";
+import { withStyles } from "material-ui/styles";
 
 const styles = {
   button: {
-    margin: 8,
+    margin: 8
   }
 };
 
@@ -32,13 +32,13 @@ const styles = {
  * @constructor
  */
 function LoginButton(props) {
-  return(
+  return (
     <Button
-      component={ Link }
-      to='/login'
+      component={Link}
+      to="/login"
       variant="raised"
       color="secondary"
-      className={ props.classes.button }
+      className={props.classes.button}
     >
       Login
     </Button>
@@ -50,8 +50,8 @@ function LoginButton(props) {
  * @type {{isAuthenticated, classes}}
  */
 LoginButton.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 // Inject classes to the component
-export default withStyles(styles)(LoginButton)
+export default withStyles(styles)(LoginButton);
