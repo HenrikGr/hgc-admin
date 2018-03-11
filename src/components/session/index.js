@@ -1,9 +1,5 @@
 /**
- * Description: Session component that will countdown
- * and check is session is going to be expired.
- *
- * The expired information is once passed in from the the global state as
- * a prop and then the component start the count down.
+ * Description
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
@@ -13,39 +9,52 @@
  */
 
 // React
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+
+// Import ui components for session states
+import LoginButton from "./LoginButton";
+import MenuButton from "./MenuButton";
+import RefreshSession from "./RefreshSession";
+
+import {
+  removeAccessToken,
+  refreshAccessToken
+} from "../../modules/state/actions/session";
 
 /**
  * Session component
  */
-export default class Session extends React.Component {
+class Session extends React.Component {
   static propTypes = {
-    display: PropTypes.bool,
+    session: PropTypes.object.isRequired,
+    removeSession: PropTypes.func.isRequired,
+    refreshSession: PropTypes.func.isRequired
   };
 
   static defaultProps = {
-    display: true,
+    session: {}
   };
 
   state = {
-    running: false,
-    expiresIn: 0,
-    granularity: 1000,    // 1 second
-    threshold: 5 * 60,    // 5 minutes
+    started: false,
+    refresh: false
   };
 
+  expiresIn = -1;
+  granularity = 1000; // 1 second
+  refreshThreshold = 20; // 5 minutes
   timerID = null;
 
   componentWillReceiveProps(nextProps, nextContext) {
     const { expires_in } = nextProps.session;
 
-    // If expired information is passed in and it has not started
-    // Store the expired information, flag it to start and start
-    if (expires_in > 0 && !this.state.running) {
-      this.setState({ expiresIn: expires_in, running: true }, () => {
-        this.start();
-      })
+    if (expires_in && !this.state.started) {
+      this.expiresIn = expires_in;
+      this.setState({ started: true, refresh: false }, () => {
+        this.timerID = setInterval(() => this.tick(), this.granularity);
+      });
     }
   }
 
@@ -53,86 +62,84 @@ export default class Session extends React.Component {
     clearInterval(this.timerID);
   }
 
-  /**
-   * Format hours, minutes and seconds to a readable string
-   * @param hours
-   * @param minutes
-   * @param seconds
-   * @returns {string}
-   */
-  formatExpiresIn = ({hours, minutes, seconds}) => {
-    hours = hours < 10 ? "0" + hours : hours;
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    seconds = seconds < 10 ? "0" + seconds : seconds;
-    return hours + ':' + minutes + ':' + seconds;
+  tick = () => {
+    switch (this.expiresIn) {
+      case this.refreshThreshold:
+        this.setState({ refresh: true }, () => {
+          this.expiresIn = this.expiresIn - 1;
+        });
+        break;
+
+      case 0:
+        this.stop();
+        break;
+
+      default:
+        this.expiresIn = this.expiresIn - 1;
+        break;
+    }
   };
 
-  /**
-   * Parse number of seconds into hour, minutes and seconds
-   * @param seconds
-   * @returns {{hours: number, minutes: number, seconds: number}}
-   */
-  parseHHMMSS = (seconds) => {
-    return {
-      'hours': Math.floor(seconds / 3600) % 24,
-      'minutes': Math.floor(seconds / 60) | 0,
-      'seconds': (seconds % 60) | 0
-    };
-  };
-
-  /**
-   * Start count down
-   * - set the timer
-   * - assign function to run every second
-   */
-  start = () => {
-    this.timerID = setInterval( () => this.tick(), this.state.granularity );
-  };
-
-  /**
-   * Stop count down
-   * - clear the timer
-   * - reset the component state
-   * - remove session information in global state
-   */
   stop = () => {
     clearInterval(this.timerID);
-    this.setState({running: false, expiresIn: 0}, () => {
+    this.expiresIn = -1;
+    this.setState({ refresh: false, started: false }, () => {
       this.props.removeSession();
-    })
+    });
   };
 
-  /**
-   * ReStart count down
-   * - clear the timer
-   * - reset the component state
-   * - refresh session information in global state
-   */
-  reStart = () => {
+  refresh = () => {
     clearInterval(this.timerID);
-    this.setState({running: false, expiresIn: 0}, () => {
+    this.expiresIn = -1;
+    this.setState({ started: false }, () => {
       this.props.refreshSession();
-    })
+    });
   };
 
-  /**
-   * Tick function called every second
-   */
-  tick() {
-
-    // Expires within 2 minutes
-    if (this.state.expiresIn <= 120) {
+  handleRefresh = action => {
+    if (action === "remove") {
       this.stop();
     } else {
-      // Count down by a second at the time and update expires information
-      const expiresIn = this.state.expiresIn === 0 ? 0 : this.state.expiresIn - 1;
-      this.setState({ expiresIn: expiresIn });
+      this.refresh();
     }
-  }
+  };
 
   render() {
     return (
-      this.props.render(this.props.session)
-    )
+      <div>
+        <RefreshSession
+          onClose={this.handleRefresh}
+          open={this.state.refresh}
+        />
+        {this.state.started || this.state.refresh ? (
+          <MenuButton />
+        ) : (
+          <LoginButton />
+        )}
+      </div>
+    );
   }
 }
+
+// Map session state to props
+const mapStateToProps = state => {
+  return {
+    session: state.session
+  };
+};
+
+// Map session action creators as props
+const mapDispatchToProps = dispatch => {
+  return {
+    removeSession: () => {
+      dispatch(removeAccessToken());
+    },
+    refreshSession: () => {
+      dispatch(refreshAccessToken());
+    }
+  };
+};
+
+// Inject state and action creators to the session component
+const SessionWithState = connect(mapStateToProps, mapDispatchToProps)(Session);
+export default SessionWithState;
