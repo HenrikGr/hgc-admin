@@ -22,10 +22,10 @@ function AppError(status, code, more_info, message) {
   this.more_info = more_info;
   this.message = message || 'App Error';
 }
-AppError.prototype = Object.create( Error.prototype );
+AppError.prototype = Object.create(Error.prototype);
 AppError.prototype.constructor = AppError;
 
 /**
  * Export application error class
  */
-export default AppError
+export default AppError;
