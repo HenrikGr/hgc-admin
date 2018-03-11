@@ -1,5 +1,5 @@
 /**
- * Description: Client side API for authentication
+ * Description:
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
@@ -8,72 +8,48 @@
  * @link: https://opensource.org/licenses/MIT
  */
 
-// Import fetch polyfill.
-import 'whatwg-fetch';
-
 // Import fetch helper functions.
-import { parseJSON } from './fetch-utils';
-import validator from '../utils/validator'
+import validator from "../utils/validator";
+import XHR, { errorHandler } from "./config";
 
 // Oauth 2 variables
-const API_URL = process.env.REACT_APP_API_URL;
-const API_CLIENT_ID = '1fbceff0aee0941934c81ba29cb7454c';
+const API_CLIENT_ID = "1fbceff0aee0941934c81ba29cb7454c";
 
 /**
- * Authenticate a user
+ * Get an access token
  * @param username
  * @param password
  * @returns {Promise<any>}
  */
-export function authenticate(username, password) {
-  return new Promise((resolve, reject) => {
-    validator.validate({ username: username, password: password })
-      .then((data) => {
-        fetch(API_URL + '/oauth/tokens', {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-          },
-          body: 'username=' + encodeURIComponent(data.username) +
-            '&password=' + encodeURIComponent(data.password) +
-            '&client_id=' + encodeURIComponent(API_CLIENT_ID) +
-            '&grant_type=' + encodeURIComponent('password')
-        }).then(parseJSON)
-          .then((response) => {
-            if (response.ok) {
-              return resolve(response.json);
-            }
-            return reject(response.json);
-          });
-      })
-      .catch((error) => {      // Validation errors
-        reject(error);
-      });
-  });
-}
+export function getAccessToken(username, password) {
+  return validator
+    .validate({ username: username, password: password })
+    .then(data => {
+      let body =
+        "username=" +
+        encodeURIComponent(data.username) +
+        "&password=" +
+        encodeURIComponent(data.password) +
+        "&client_id=" +
+        encodeURIComponent(API_CLIENT_ID) +
+        "&grant_type=" +
+        encodeURIComponent("password");
 
-/**
- * Get profile information about the logged in user
- * @param token
- * @returns {Promise<any>}
- */
-export function getMe(token) {
-  return new Promise((resolve, reject) => {
-    fetch(API_URL + '/oauth/me', {
-      method: 'GET',
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-        "Authorization": "Bearer " + token
-      }
-    }).then(parseJSON)
-      .then((response) => {
-        if (response.ok) {
-          return resolve(response.json);
+      return XHR.post("/oauth/tokens", body, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
         }
-        return reject(response.json);
-      });
-
-  })
+      })
+        .then(response => {
+          return Promise.resolve(response.data);
+        })
+        .catch(error => {
+          return Promise.reject(errorHandler(error));
+        });
+    })
+    .catch(error => {
+      return Promise.reject(error);
+    });
 }
 
 /**
@@ -81,25 +57,24 @@ export function getMe(token) {
  * @param refresh_token
  * @returns {Promise<any>}
  */
-export function refreshToken(refresh_token) {
-  return new Promise((resolve, reject) => {
-    fetch(API_URL + '/oauth/tokens', {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-        //"Authorization": "Bearer " + token
-      },
-      body: 'refresh_token=' + encodeURIComponent(refresh_token) +
-      '&client_id=' + encodeURIComponent(API_CLIENT_ID) +
-      '&grant_type=' + encodeURIComponent('refresh_token')
+export function refreshAccessToken(refresh_token) {
+  let body =
+    "refresh_token=" +
+    encodeURIComponent(refresh_token) +
+    "&client_id=" +
+    encodeURIComponent(API_CLIENT_ID) +
+    "&grant_type=" +
+    encodeURIComponent("refresh_token");
 
-    }).then(parseJSON)
-      .then((response) => {
-        if (response.ok) {
-          return resolve(response.json);
-        }
-        return reject(response.json);
-      });
-
+  return XHR.post("/oauth/tokens", body, {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
   })
+    .then(response => {
+      return Promise.resolve(response.data);
+    })
+    .catch(error => {
+      return Promise.reject(errorHandler(error));
+    });
 }
