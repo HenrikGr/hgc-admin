@@ -6,3 +6,5 @@
 
 # Ignore static production build to GITHUB
 /build/
+/.env.development
+/.env.production

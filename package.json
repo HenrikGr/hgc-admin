@@ -3,33 +3,35 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "axios": "^0.18.0",
     "cfenv": "^1.0.4",
     "classnames": "^2.2.5",
     "express": "^4.16.2",
-    "jss": "^9.6.0",
-    "jss-preset-default": "^4.1.0",
-    "material-ui": "^1.0.0-beta.31",
-    "material-ui-icons": "^1.0.0-beta.17",
+    "jss": "^9.8.0",
+    "jss-preset-default": "^4.3.0",
+    "material-ui": "^1.0.0-beta.35",
+    "material-ui-icons": "^1.0.0-beta.35",
     "prop-types": "15.6.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-jss": "^8.2.1",
-    "react-redux": "^5.0.6",
+    "react-jss": "^8.3.3",
+    "react-redux": "^5.0.7",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "1.1.0",
+    "react-scripts": "1.1.1",
     "recompose": "latest",
-    "redux": "^3.7.2"
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0"
   },
   "scripts": {
     "start": "node server.js",
-    "develope": "react-scripts start",
+    "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
   "engines": {
-    "node": "6.12.2",
+    "node": "8.9.4",
     "npm": "5.6.0"
   }
 }

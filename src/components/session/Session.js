@@ -39,12 +39,13 @@ class Session extends React.Component {
 
   state = {
     started: false,
-    refresh: false
+    refresh: false,
+    redirectToLogin: false
   };
 
   expiresIn = -1;
   granularity = 1000; // 1 second
-  refreshThreshold = 20; // 5 minutes
+  refreshThreshold = 5 * 60; // 5 minutes
   timerID = null;
 
   componentWillReceiveProps(nextProps, nextContext) {
@@ -71,21 +72,13 @@ class Session extends React.Component {
         break;
 
       case 0:
-        this.stop();
+        this.logout();
         break;
 
       default:
         this.expiresIn = this.expiresIn - 1;
         break;
     }
-  };
-
-  stop = () => {
-    clearInterval(this.timerID);
-    this.expiresIn = -1;
-    this.setState({ refresh: false, started: false }, () => {
-      this.props.removeSession();
-    });
   };
 
   refresh = () => {
@@ -96,9 +89,20 @@ class Session extends React.Component {
     });
   };
 
-  handleRefresh = action => {
-    if (action === "remove") {
-      this.stop();
+  logout = () => {
+    clearInterval(this.timerID);
+    this.expiresIn = -1;
+    this.setState(
+      { refresh: false, started: false, redirectToLogin: true },
+      () => {
+        this.props.removeSession();
+      }
+    );
+  };
+
+  handleDialog = action => {
+    if (action === "logout") {
+      this.logout();
     } else {
       this.refresh();
     }
@@ -107,12 +111,9 @@ class Session extends React.Component {
   render() {
     return (
       <div>
-        <RefreshSession
-          onClose={this.handleRefresh}
-          open={this.state.refresh}
-        />
+        <RefreshSession onClose={this.handleDialog} open={this.state.refresh} />
         {this.state.started || this.state.refresh ? (
-          <MenuButton />
+          <MenuButton onLogout={this.logout} />
         ) : (
           <LoginButton />
         )}

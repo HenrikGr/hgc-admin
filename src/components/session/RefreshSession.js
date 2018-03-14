@@ -46,7 +46,6 @@ class RefreshSession extends React.Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     onClose: PropTypes.func,
-    onRefresh: PropTypes.func
   };
 
   state = {
@@ -88,11 +87,11 @@ class RefreshSession extends React.Component {
             You session is going to expire.
           </Typography>
           <Typography variant="subheading" id="simple-modal-description">
-            Click refresh button to extend your session
+            Click refresh button to extend your session or close to log out.
           </Typography>
           <Button
             onClick={() => {
-              this.handleClose("remove");
+              this.handleClose("logout");
             }}
           >
             Logout

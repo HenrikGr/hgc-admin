@@ -43,9 +43,9 @@ const sessionReducer = (state = defaults.session, action) => {
     case "FETCH_SESSION_STARTED":
       return Object.assign({}, { isFetching: true });
     case "FETCH_SESSION_COMPLETE":
-      return Object.assign({}, state, { isFetching: false }, action.json);
+      return Object.assign({}, action.json);
     case "FETCH_SESSION_FAILED":
-      return Object.assign({}, { isFetching: false }, { error: action.error });
+      return Object.assign({}, { error: action.error });
     case "REMOVE_SESSION":
       return {};
     default:
@@ -58,9 +58,9 @@ const profileReducer = (state = defaults.profile, action) => {
     case "FETCH_PROFILE_STARTED":
       return Object.assign({}, { isFetching: true });
     case "FETCH_PROFILE_COMPLETE":
-      return Object.assign({}, state, { isFetching: false }, action.json);
+      return Object.assign({}, action.json);
     case "FETCH_PROFILE_FAILED":
-      return Object.assign({}, { isFetching: false }, { error: action.error });
+      return Object.assign({}, { error: action.error });
     default:
       return state;
   }

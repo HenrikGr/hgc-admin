@@ -52,6 +52,15 @@ export default class MenuButton extends Component {
     this.setState({ anchorEl: null });
   };
 
+  handleLogOut = event => {
+    const { onLogout } = this.props;
+    this.setState({ anchorEl: null }, () => {
+      if (onLogout) {
+        onLogout();
+      }
+    })
+  };
+
   render() {
     // Set the open flag
     const { anchorEl } = this.state;
@@ -78,7 +87,7 @@ export default class MenuButton extends Component {
           <MenuItem component={Link} to="/profile" onClick={this.handleClose}>
             Profile
           </MenuItem>
-          <MenuItem component={Link} to="/logout" onClick={this.handleClose}>
+          <MenuItem onClick={this.handleLogOut}>
             Logout
           </MenuItem>
         </Menu>

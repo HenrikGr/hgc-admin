@@ -1,34 +1,30 @@
 /**
  * Description
  *
- * The Header component renders the application header that will contain
- * - home button that will route to either / or /dashboard
- * - menu button or login button depending on if user is authenticated or not.
- *
- * The login button will route the user to the login page.
- *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
 
-// React
+// react
 import React from "react";
 import PropTypes from "prop-types";
 
 // material-ui components
 import AppBar from "material-ui/AppBar";
 import Toolbar from "material-ui/Toolbar";
+import IconButton from 'material-ui/IconButton';
+import MenuIcon from 'material-ui-icons/Menu';
 import Typography from "material-ui/Typography";
 import { withStyles } from "material-ui/styles";
 
 // custom components
-import Session from "../session";
-import HomeButton from "./HomeButton";
+import Session from "../session/Session";
 
 // helpers
 import { isEmpty } from "../../modules/utils/helper";
+import {Link} from "react-router-dom";
 
 const styles = {
   root: {
@@ -36,6 +32,10 @@ const styles = {
   },
   flex: {
     flex: 1
+  },
+  button: {
+    marginLeft: -12,
+    marginRight: 20,
   },
   marginRight: {
     marginRight: "24px"
@@ -56,7 +56,15 @@ function Header({ title, classes, session }) {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <HomeButton isAuth={isAuth} />
+          <IconButton
+            component={ Link }
+            to={ isAuth ? '/dashboard' : '/'}
+            className={ classes.button }
+            color="inherit"
+            aria-label="Menu"
+          >
+            <MenuIcon />
+          </IconButton>
           <Typography type="title" color="inherit" className={classes.flex}>
             {title}
           </Typography>

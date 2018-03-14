@@ -12,7 +12,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 // Header component
-import Header from "../components/header";
+import Header from "../components/appbar/Header";
 
 // Map session state to props
 const mapStateToProps = state => {
@@ -21,7 +21,7 @@ const mapStateToProps = state => {
   };
 };
 
-// Inject state and action creators
+// Inject state and action creators to the session component
 const HeaderWithSession = connect(mapStateToProps)(Header);
 
 /**

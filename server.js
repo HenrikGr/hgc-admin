@@ -19,7 +19,7 @@ const app = express();
 // Serve static resources from build directory
 app.use(express.static(__dirname + 'build'));
 
-// Serve index.html on refresh and this should work
+// Serve index.html on refresh and support client side routing
 app.get('/*', function (req, res) {
   res.sendFile('index.html', {root: 'build'});
 });

@@ -1,5 +1,5 @@
 /**
- * Description: HGC OAUTH2 Client application
+ * Description:
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
@@ -70,9 +70,9 @@ const App = () => (
       <IndexPage />
       <Switch>
         <Route exact path="/" component={LandingPage} />
-        <Route exact path="/login" component={LoginFormPage} />
-        <PrivateRoute exact path="/dashboard" component={DashboardPage} />
-        <PrivateRoute exact path="/profile" component={ProfileFormPage} />
+        <Route path="/login" component={LoginFormPage} />
+        <PrivateRoute path="/dashboard" component={DashboardPage} />
+        <PrivateRoute path="/profile" component={ProfileFormPage} />
         <Route path="*" component={NotFoundPage} />
       </Switch>
     </div>
