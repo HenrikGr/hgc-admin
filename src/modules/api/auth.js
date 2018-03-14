@@ -13,7 +13,7 @@ import validator from "../utils/validator";
 import XHR, { errorHandler } from "./config";
 
 // Oauth 2 variables
-const API_CLIENT_ID = "1fbceff0aee0941934c81ba29cb7454c";
+const API_CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
 
 /**
  * Get an access token
