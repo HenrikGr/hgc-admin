@@ -8,6 +8,7 @@
  */
 
 import React from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { withStyles } from "material-ui/styles";
 import Typography from "material-ui/Typography";
@@ -40,11 +41,21 @@ const styles = theme => ({
 });
 
 /**
- * RefreshSession modal component
+ * RefreshSessionDialog modal component
  */
-class RefreshSession extends React.Component {
+class RefreshSessionDialog extends React.Component {
+  /**
+   * Props API
+   */
   static propTypes = {
+    /**
+     * Classes, can be used to override css styles
+     */
     classes: PropTypes.object.isRequired,
+
+    /**
+     * Callback function to deal with closing modal dialog
+     */
     onClose: PropTypes.func,
   };
 
@@ -52,10 +63,17 @@ class RefreshSession extends React.Component {
     open: false
   };
 
-  componentWillReceiveProps(nextProps, nextContext) {
-    const { open } = nextProps;
-    if (open && !this.state.open) {
-      this.setState({ open: true });
+  /**
+   * Check if open props is passed in and the modal dialog should be opened.
+   * @param nextProps
+   * @param prevState
+   * @returns {*}
+   */
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.open && !prevState.open) {
+      return { open: true }
+    } else {
+      return { open: false }
     }
   }
 
@@ -63,10 +81,10 @@ class RefreshSession extends React.Component {
     this.setState({ open: true });
   };
 
-  handleClose = event => {
+  handleClose = action => {
     this.setState({ open: false });
     if (this.props.onClose) {
-      this.props.onClose(event);
+      this.props.onClose(action);
     }
   };
 
@@ -75,35 +93,33 @@ class RefreshSession extends React.Component {
 
     return (
       <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-        disableBackdropClick={true}
-        disableEscapeKeyDown={true}
-        open={this.state.open}
-        onClose={this.handleClose}
+        aria-labelledby="refresh session"
+        aria-describedby="refresh session modal dialog"
+        disableBackdropClick={ true }
+        disableEscapeKeyDown={ true }
+        open={ this.state.open }
+        onClose={ this.handleClose }
       >
         <div style={getModalStyle()} className={classes.paper}>
-          <Typography variant="title" id="modal-title">
+          <Typography variant="title" id="refresh-dialog-title">
             You session is going to expire.
           </Typography>
-          <Typography variant="subheading" id="simple-modal-description">
+          <Typography variant="subheading" id="refresh-dialog-description">
             Click refresh button to extend your session or close to log out.
           </Typography>
           <Button
-            onClick={() => {
-              this.handleClose("logout");
-            }}
+            component={ Link }
+            to="/login"
+            onClick={() => { this.handleClose("logout"); }}
           >
             Logout
           </Button>
           <Button
-            onClick={() => {
-              this.handleClose("refresh");
-            }}
+            onClick={() => { this.handleClose("refresh"); }}
           >
             Refresh
           </Button>
-          <RefreshSessionModal />
+          <RefreshSessionDialogWrapped />
         </div>
       </Modal>
     );
@@ -111,6 +127,6 @@ class RefreshSession extends React.Component {
 }
 
 // We need an intermediary variable for handling the recursive nesting.
-const RefreshSessionModal = withStyles(styles)(RefreshSession);
+const RefreshSessionDialogWrapped = withStyles(styles)(RefreshSessionDialog);
+export default RefreshSessionDialogWrapped;
 
-export default RefreshSessionModal;
