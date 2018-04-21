@@ -1,28 +1,28 @@
 /**
- * Description:
+ * Description: Entry point for the application
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
- * @link:
  * @copyright:  Copyright (c) 2017 HGC AB
- *
  * @license: The MIT License (MIT)
- * @link: https://opensource.org/licenses/MIT
  */
 
-/**
- * Module dependencies
- */
+// Module dependencies
 import React from 'react';
 import { render } from 'react-dom';
-import { Provider } from 'react-redux';
+import { BrowserRouter as Router, Route} from "react-router-dom";
+import { Provider } from 'react-redux'
+import store from './store/index'
+
+// Application root
 import App from './App';
-import store from '../src/modules/state/store'
 //import registerServiceWorker from './registerServiceWorker';
 
 render(
   <Provider store={store}>
-    <App/>
+    <Router>
+      <Route path="/" component={App} />
+    </Router>
   </Provider>,
   document.getElementById('root')
 );
