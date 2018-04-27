@@ -1,5 +1,5 @@
 /**
- * Description:
+ * Description: Application module
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
@@ -9,32 +9,28 @@
 
 // React & React Router
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Redirect,
-  Switch
-} from "react-router-dom";
+import { Route, Redirect, Switch } from "react-router-dom";
 
 // material-ui global resets
-import withRoot from "../src/components/withRoot";
+import withRoot from "./withRoot";
+
+// Header
+import Header from './view/compoments/header'
 
 // Pages
-import IndexPage from "./pages/IndexPage";
-import LandingPage from "./pages/LandingPage";
-import DashboardPage from "./pages/DashboardPage";
-import LoginFormPage from "./pages/LoginFormPage";
-import ProfileFormPage from "./pages/ProfileFormPage";
-import NotFoundPage from "./pages/NotFound";
-
-// application global state
-import store from "../src/modules/state/store";
-import { isEmpty } from "../src/modules/utils/helper";
+import LandingPage from "./view/pages/LandingPage";
+import DashboardPage from "./view/pages/DashboardPage";
+import LoginFormPage from "./view/pages/LoginPage";
+import ProfileFormPage from "./view/pages/ProfilePage";
+import UsersPage from './view/pages/UsersPage';
+import NotFoundPage from "./view/pages/NotFound";
+import { isEmpty } from "./utils/helper";
+import store from './store/index'
 
 /**
  * Protected route handler
  * NOTE: We do an assumption that Redux state will contain a
- * user object for the current user. We do check if the user object
+ * session object for the current user. We do check if the session object
  * is empty and assumes the user is not authenticated if so.
  * @param Component
  * @param rest
@@ -60,24 +56,23 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 );
 
 /**
- * Index page component
+ * Application component
  * @returns {*}
  * @constructor
  */
 const App = () => (
-  <Router>
-    <div>
-      <IndexPage />
+    <React.Fragment>
+      <Header/>
       <Switch>
-        <Route exact path="/" component={LandingPage} />
+        <Route exact={true} path="/" component={LandingPage} />
         <Route path="/login" component={LoginFormPage} />
-        <PrivateRoute path="/dashboard" component={DashboardPage} />
         <PrivateRoute path="/profile" component={ProfileFormPage} />
+        <PrivateRoute path="/dashboard" component={DashboardPage} />
+        <PrivateRoute path="/users" component={UsersPage} />
         <Route path="*" component={NotFoundPage} />
       </Switch>
-    </div>
-  </Router>
+    </React.Fragment>
 );
 
-// Export Index page component wrapped with root settings
+// Inject material ui theme, css baseline, palette etc...
 export default withRoot(App);
