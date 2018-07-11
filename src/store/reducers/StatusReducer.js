@@ -19,13 +19,12 @@
  * @license: The MIT License (MIT)
  */
 
-
 import defaults from './DefaultState'
 
 const statusReducer = (state = defaults.status, action) => {
   switch (action.type) {
     case "LOG_INFO":
-      return action.status;
+      return { ...state, text: action.text };
     default:
       return state;
   }

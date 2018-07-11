@@ -22,9 +22,6 @@
 // Import constants
 import { PASS_6TO20_ONE_UPP_LOW_NUM } from "./constants";
 
-// Import application error module
-import AppError from "../domain/error";
-
 /**
  * Validator object
  */
@@ -53,7 +50,7 @@ const validator = {
 
           // No validation function for this type
           if (!checker) {
-            return (new AppError("Error in validation, no checker for " + type));
+            return (new Error("Error in validation, no checker for " + type));
           }
 
           // Run the validation function
@@ -73,18 +70,17 @@ const validator = {
 };
 
 // checks against password rules
-validator.types.isPassword = {
+validator.types.isRegEx = {
   validate: function(value) {
-    return value.match(PASS_6TO20_ONE_UPP_LOW_NUM);
+    return value.toString().match(PASS_6TO20_ONE_UPP_LOW_NUM);
   },
   instructions:
     "Value must be 6-20 long and at least one numeric, one uppercase and one lowercase"
 };
 
-// checks for non-empty values
-validator.types.isNonEmpty = {
+validator.types.isRequired = {
   validate: function(value) {
-    return value !== "";
+    return value.toString() !== "";
   },
   instructions: "Value cannot be empty"
 };
@@ -106,16 +102,12 @@ validator.types.isAlphaNum = {
     "Value can only contain characters and numbers, no special symbols"
 };
 
+
 // Set up validation types to input field names.
 validator.config = {
-  username: "isNonEmpty",
-  password: "isPassword",
-  name: "isNonEmpty",
-  user: "isNonEmpty",
-  email: "isNonEmpty",
-  firstName: "isNonEmpty",
-  lastName: "isNonEmpty",
-  phone: "isNonEmpty"
+  username: "isRequired",
+  password: "isRegEx",
+  scope: "isRequired",
 };
 
 /**

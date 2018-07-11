@@ -4,7 +4,7 @@
  * The users actions consist of remote CRUD operations to retrieve users
  * information to the state.
  *
- * There is also helper action creators that describe the new state that should be set
+ * There is also helpers action creators that describe the new state that should be set
  * during the remote calls in case of start, success or failure.
  *
  * The remote calls using users service module that contains business logic
@@ -17,7 +17,17 @@
  */
 
 // Module dependencies
-import usersService from "../../domain/service/UsersService";
+import userService from "../../domain/service/User";
+
+/**
+ * Helper action creator to be used when there is a user validation error
+ * @param error
+ * @returns {{type: string, error: *}}
+ */
+const validationFailed = error => ({
+  type: "USER_VALIDATION_FAILED",
+  error
+});
 
 /**
  * Helper action creator to be used when starting remote call getUsers
@@ -64,11 +74,9 @@ const updateUsersComplete = users => ({
   users
 });
 
-const deleteUsersComplete = ids => ({
-  type: "DELETE_USERS_COMPLETE",
-  ids
+const resetError = () => ({
+  type: "RESET_ERROR"
 });
-
 
 
 /**
@@ -77,9 +85,9 @@ const deleteUsersComplete = ids => ({
  * @returns {Function}
  */
 const getUsers = params => {
-  return function(dispatch) {
+  return function(dispatch, getState) {
     dispatch(fetchStart(true));
-    usersService.getUsers(params)
+    userService.getUsers(params)
       .then(json => {
         dispatch(getUsersComplete(json));
       })
@@ -94,15 +102,20 @@ const getUsers = params => {
  * @param user
  */
 const createUser = user => {
-  return function(dispatch, getState) {
-    dispatch(fetchStart(true));
-    usersService.createUser(user)
-      .then(json => {
-        dispatch(createUserComplete(json));
-      })
-      .catch(err => {
-        dispatch(fetchFailed(err));
-      })
+  return function(dispatch) {
+    const error = userService.validateUser(user);
+    if (error.message) {
+      dispatch(validationFailed(error));
+    } else {
+      dispatch(fetchStart(true));
+      userService.createUser(user)
+        .then(json => {
+          dispatch(createUserComplete(json));
+        })
+        .catch(err => {
+          dispatch(fetchFailed(err));
+        })
+    }
   }
 };
 
@@ -114,14 +127,19 @@ const createUser = user => {
  */
 const updateUserById = (id, user) => {
   return function(dispatch, getState) {
-    dispatch(fetchStart(true));
-    usersService.updateUserById(id, user)
-      .then(json => {
-        dispatch(updateUserComplete(json));
-      })
-      .catch(err => {
-        dispatch(fetchFailed(err));
-      })
+    const error = userService.validateUser(user);
+    if (error.message) {
+      dispatch(validationFailed(error));
+    } else {
+      dispatch(fetchStart(true));
+      userService.updateUserById(id, user)
+        .then(json => {
+          dispatch(updateUserComplete(json));
+        })
+        .catch(err => {
+          dispatch(fetchFailed(err));
+        })
+    }
   }
 };
 
@@ -133,8 +151,8 @@ const updateUserById = (id, user) => {
 const deleteUserById = id => {
   return function(dispatch) {
     dispatch(fetchStart(true));
-    usersService.deleteUserById(id)
-      .then(json => {
+    userService.deleteUserById(id)
+      .then(() => {
         dispatch(deleteUserComplete(id));
       })
       .catch(err => {
@@ -152,22 +170,9 @@ const deleteUserById = id => {
 const updateUsersByIds = (ids, user) => {
   return function(dispatch, getState) {
     dispatch(fetchStart(true));
-    usersService.updateUsersByIds(ids, user)
+    userService.updateUsersByIds(ids, user)
       .then(json => {
         dispatch(updateUsersComplete(json));
-      })
-      .catch(err => {
-        dispatch(fetchFailed(err));
-      })
-  }
-};
-
-const deleteUsersByIds = ids => {
-  return function(dispatch) {
-    dispatch(fetchStart(true));
-    usersService.deleteUsersByIds(ids)
-      .then(json => {
-        dispatch(deleteUsersComplete(ids));
       })
       .catch(err => {
         dispatch(fetchFailed(err));
@@ -183,6 +188,7 @@ export const UsersActionFactory = (() => {
     updateUserById,
     deleteUserById,
     updateUsersByIds,
+    resetError,
   }
 });
 

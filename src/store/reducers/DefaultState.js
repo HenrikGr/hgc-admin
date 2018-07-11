@@ -7,12 +7,43 @@
  * @license: The MIT License (MIT)
  */
 
+import clientSchema from "../../domain/schemas/json/client";
+import userSchema  from "../../domain/schemas/json/user";
+import profileSchema  from "../../domain/schemas/json/profile";
+import ValidatorFactory from '../../domain/schemas'
+
+const UserDefaults = {};
+const ClientDefaults = {};
+const ProfileModel = {};
+
+const UserValidator = ValidatorFactory(userSchema);
+const ClientValidator = ValidatorFactory(clientSchema);
+const ProfileValidator = ValidatorFactory(profileSchema);
+
+UserValidator(UserDefaults);
+ClientValidator(ClientDefaults);
+ProfileValidator(ProfileModel);
+
+
 // Default state
 const defaults = {
   status: 'Application started',
   session: {},
-  profile: {},
-  users: {},
+  profile: ProfileModel,
+  users: {
+    schema: userSchema,
+    defaultUser: UserDefaults,
+    docs: [],
+    isFetching: false,
+    error: {}
+  },
+  clients:{
+    schema: clientSchema,
+    defaultClient: ClientDefaults,
+    docs: [],
+    isFetching: false,
+    error: {},
+  },
 };
 
 
@@ -49,9 +80,8 @@ export function updateElement(array, element) {
   return array.map(doc => {
     if (doc._id === element._id) {
       return element;
-    } else {
-      return doc;
     }
+    return doc;
   });
 }
 

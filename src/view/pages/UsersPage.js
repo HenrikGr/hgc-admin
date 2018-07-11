@@ -14,25 +14,26 @@
  * @license: The MIT License (MIT)
  */
 
+// react & redux
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
 import { connect } from "react-redux";
+import PropTypes from 'prop-types';
+
+// material-ui
+import { withStyles } from '@material-ui/core/styles';
 
 // custom container
-import DataGrid from '../compoments/tables/grid/DataGrid';
+import DataGrid from '../components/datagrid/DataGrid';
 
 // Action creators
 import actions from '../../store/actions/UsersAction'
-//import {isEmpty} from "../../utils/helper";
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
-  },
-  progress: {
-    flexGrow: 1,
-    height: "5px"
+    color: theme.palette.text.secondary,
+    width: '100%',
+    height: '100%',
   },
 });
 
@@ -40,9 +41,8 @@ const styles = theme => ({
  * Data model for the users data.
  */
 const model = [
-  { id: 'username', type: 'text', unique: true, visible: true, width: 200, disablePadding: true, label: 'User name' },
-  { id: 'password', type: 'password', visible: false, width: 200, disablePadding: true, label: 'Password' },
-  { id: 'scope', type: 'text', visible: true, width: 200, disablePadding: true, label: 'Scope(s)' },
+  { id: 'username', type: 'text', unique: true, required: true, visible: true, width: 200, disablePadding: false, label: 'User name' },
+  { id: 'scope', type: 'text', required: true, visible: true, width: 200, disablePadding: false, label: 'Scope(s)' },
   { id: 'admin', type: 'checkbox', visible: true, width: 40, disablePadding: true, label: 'Admin' },
   { id: 'active', type: 'checkbox', visible: true, width: 40, disablePadding: true, label: 'Active' },
 ];
@@ -59,63 +59,80 @@ class UsersPage extends React.Component {
      * Classes, can be used to override css styles
      */
     classes: PropTypes.object.isRequired,
-
     /**
-     * Data object
+     * Data object schema
      */
-    users: PropTypes.object.isRequired,
-
+    schema: PropTypes.object.isRequired,
+    /**
+     * Default data from schema
+     */
+    defaultItem: PropTypes.object.isRequired,
+    /**
+     * Data array
+     */
+    items: PropTypes.array.isRequired,
+    /**
+     * Loading indicator
+     */
+    isFetching: PropTypes.bool,
+    /**
+     * Error object
+     */
+    error: PropTypes.object,
     /**
      * Get all users
      */
-    getUsers: PropTypes.func.isRequired,
-
+    find: PropTypes.func.isRequired,
     /**
      * Create a new user
      */
-    createUser: PropTypes.func.isRequired,
-
+    create: PropTypes.func.isRequired,
     /**
      * Update user by id
      */
-    updateUserById: PropTypes.func.isRequired,
-
-    deleteUserById: PropTypes.func.isRequired,
-
+    update: PropTypes.func.isRequired,
     /**
-     * Update users by id
+     * Delete user by id
      */
-    updateUsersByIds: PropTypes.func.isRequired,
+    remove: PropTypes.func.isRequired,
+    /**
+     * Reset error in form
+     */
+    resetError: PropTypes.func.isRequired,
   };
 
   /**
-   * Get all users
+   * Get data on mount but only if we have not already loaded them
    */
   componentDidMount() {
-    this.props.getUsers({page: 0, sort: 'username'});
+    this.props.find({page: 0, sort: 'username'});
   }
 
   render() {
     const {
       classes,
-      users,
-      createUser,
-      updateUserById,
-      deleteUserById,
-      updateUsersByIds
+      defaultItem,
+      items,
+      isFetching,
+      error,
+      create,
+      update,
+      remove,
+      resetError
     } = this.props;
 
     return (
-      <div className={classes.root}>
+      <div className={ classes.root }>
         <DataGrid
-          defaultOrderBy="username"
-          defaultOrder="asc"
-          defaultModel={model}
-          rows={users.docs}
-          create={createUser}
-          updateById={updateUserById}
-          deleteById={deleteUserById}
-          updateByIds={updateUsersByIds}
+          defaultItem={ defaultItem }
+          model={ model }
+          isFetching={ isFetching }
+          error={ error }
+          rows={ items }
+          onCreate={ create }
+          onUpdate={ update }
+          onRemove={ remove }
+          onResetError={ resetError }
         />
       </div>
     );
@@ -124,32 +141,33 @@ class UsersPage extends React.Component {
 
 // Map state to props
 const mapStateToProps = state => ({
-  users: state.users
+  schema: state.users.schema,
+  defaultItem: state.users.defaultUser,
+  items: state.users.docs,
+  isFetching: state.users.isFetching,
+  error: state.users.error,
 });
 
 // Map action creators to props
 const mapDispatchToProps = dispatch => {
   return {
-    getUsers: (qp) => {
+    find: (qp) => {
       dispatch(actions.getUsers(qp));
     },
-    createUser: (user) => {
+    create: (user) => {
       dispatch(actions.createUser(user));
     },
-    updateUserById: (id, user) => {
+    update: (id, user) => {
       dispatch(actions.updateUserById(id, user));
     },
-    deleteUserById: (id) => {
+    remove: (id) => {
       dispatch(actions.deleteUserById(id));
     },
-    updateUsersByIds: (ids, user) => {
-      dispatch(actions.updateUsersByIds(ids, user))
+    resetError: () => {
+      dispatch(actions.resetError());
     }
   };
 };
 
 // Inject state and action creators to presentation layer
-const ConnectedUsersPage = connect(mapStateToProps, mapDispatchToProps)(UsersPage);
-
-
-export default withStyles(styles)(ConnectedUsersPage);
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(UsersPage));

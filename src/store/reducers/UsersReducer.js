@@ -27,7 +27,6 @@ import defaults, {
   appendElement,
   removeById,
   updateElement,
-  updateElements
 } from './DefaultState'
 
 /**
@@ -38,15 +37,15 @@ import defaults, {
  */
 const usersReducer = (state = defaults.users, action) => {
   switch (action.type) {
-    case "FETCH_USERS_STARTED":
-      return { ...state, isFetching: action.isFetching, error: {} };
-    case "FETCH_USERS_FAILED":
-      return { ...state, isFetching: false, error: action.error };
-    case "GET_USERS_COMPLETE":
-      return { ...state, docs: action.users.docs, isFetching: false, error: {} };
+    case "USER_VALIDATION_FAILED":
+      return { ...state, error: action.error };
 
-    case "UPDATE_USERS_COMPLETE":
-      return { ...state, docs: updateElements(state.docs, action.users), isFetching: false, error: {} };
+    case "FETCH_USERS_STARTED":
+      return { ...state, isFetching: action.isFetching };
+    case "FETCH_USERS_FAILED":
+      return { ...state, error: action.error, isFetching: false  };
+    case "GET_USERS_COMPLETE":
+      return { ...state, docs: action.users.docs, isFetching: false };
 
     case "CREATE_USER_COMPLETE":
       return { ...state, docs: appendElement(state.docs, action.user), isFetching: false, error: {} };
@@ -56,6 +55,9 @@ const usersReducer = (state = defaults.users, action) => {
 
     case "UPDATE_USER_COMPLETE":
       return { ...state, docs: updateElement(state.docs, action.user), isFetching: false, error: {} };
+
+    case "RESET_ERROR":
+      return { ...state, error: {}, isFetching: false };
 
     default:
       return state;

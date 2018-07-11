@@ -6,13 +6,21 @@
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
+
+// react
 import React from "react";
 import PropTypes from "prop-types";
-import { withStyles } from "material-ui/styles";
-import Card, { CardActions, CardContent, CardMedia } from "material-ui/Card";
-import Button from "material-ui/Button";
-import Typography from "material-ui/Typography";
 import { Link } from "react-router-dom";
+
+// material-ui
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
+
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import { withStyles } from "@material-ui/core/styles";
 
 const styles = {
   root: {
@@ -21,10 +29,10 @@ const styles = {
     marginTop: "80px"
   },
   card: {
-    maxWidth: 600
+    width: 800
   },
   media: {
-    height: 260
+    height: 400
   }
 };
 

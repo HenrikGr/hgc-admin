@@ -1,0 +1,36 @@
+{
+  "$id": "http://hgc.se/user.json",
+  "type": "object",
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "required": ["username", "scope"],
+  "additionalProperties": false,
+  "properties": {
+    "username": {
+      "$id": "/properties/username",
+      "title": "The Username Schema",
+      "type": "string",
+      "default": "",
+      "minLength": 6
+    },
+    "scope": {
+      "$id": "/properties/scope",
+      "title": "The Scope Schema",
+      "type": "string",
+      "default": "",
+      "minLength": 1
+    },
+    "admin": {
+      "$id": "/properties/admin",
+      "title": "The Admin Schema",
+      "default": false,
+      "type": "boolean"
+    },
+    "active": {
+      "$id": "/properties/active",
+      "title": "The Active Schema",
+      "default": false,
+      "type": "boolean"
+    }
+  }
+}

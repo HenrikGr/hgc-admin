@@ -8,19 +8,19 @@
  */
 
 // Module dependencies
-import { createStore, applyMiddleware, compose } from "redux";
-import rootReducers from "./reducers/RootReducers";
+import { createStore, applyMiddleware } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension/logOnlyInProduction';
+import reducer from "./reducers/RootReducers";
 import thunk from "./middleware/thunk";
 
-// Add Redux dev tools
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
 /**
- * Create the Redux store by calling Redux.createStore().
+ * Create store with root reducer, and using redux dev tools extension
+ * @see https://github.com/zalmoxisus/redux-devtools-extension
+ * @type {*}
  */
-const store = createStore(
-  rootReducers,
-  composeEnhancers(applyMiddleware(thunk))
-);
+const store = createStore(reducer, composeWithDevTools(
+  applyMiddleware(thunk),
+  // other store enhancers if any
+));
 
 export default store;

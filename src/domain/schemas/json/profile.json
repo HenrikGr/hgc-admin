@@ -1,0 +1,55 @@
+{
+  "$id": "http://hgc.se/profile.json",
+  "type": "object",
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "required": ["email"],
+  "additionalProperties": false,
+  "properties": {
+    "_id": {
+      "$id": "/properties/_id",
+      "title": "uuid of profile",
+      "type": "string",
+      "format": "uuid"
+    },
+    "firstName": {
+      "$id": "/properties/firstName",
+      "title": "First name",
+      "type": "string",
+      "default": "",
+      "minLength": 4
+    },
+    "lastName": {
+      "$id": "/properties/lastName",
+      "title": "Last name",
+      "type": "string",
+      "default": "",
+      "minLength": 4
+    },
+    "email": {
+      "$id": "/properties/email",
+      "title": "Email",
+      "type": "string",
+      "format": "email",
+      "default": ""
+    },
+    "phone": {
+      "$id": "/properties/phone",
+      "title": "Phone",
+      "type": "string",
+      "default": ""
+    },
+    "createdAt" : {
+      "$id": "/properties/createdAt",
+      "title": "Created date",
+      "type": "string",
+      "readOnly": true
+    },
+    "updatedAt" : {
+      "$id": "/properties/updatedAt",
+      "title": "Updated date",
+      "type": "string",
+      "readOnly": true
+    }
+  }
+}

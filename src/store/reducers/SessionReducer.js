@@ -33,7 +33,7 @@ import defaults from './DefaultState'
  */
 const sessionReducer = (state = defaults.session, action) => {
   switch (action.type) {
-    case "CREDENTIALS_VALIDATION_FAILED":
+    case "CREDENTIALS_FAILED":
     case "GET_SESSION_FAILED":
       return Object.assign({}, { error: action.error });
 
@@ -43,7 +43,7 @@ const sessionReducer = (state = defaults.session, action) => {
     case "GET_SESSION_COMPLETE":
       return Object.assign({}, action.json);
 
-    case "REMOVE_SESSION":
+    case "RESET_SESSION":
       return Object.assign({}, {});
 
     default:

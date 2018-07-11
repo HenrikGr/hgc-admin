@@ -15,11 +15,11 @@
  * @license: The MIT License (MIT)
  */
 
-// Redux & app components
+// Redux components
 import { connect } from "react-redux";
 
 // Presentation layer
-import ProfileForm from "../compoments/forms/ProfileForm";
+import ProfileForm from "../components/forms/ProfileForm";
 
 // Action creators used to update profile state
 import profileAction from "../../store/actions/ProfileActions";
@@ -42,7 +42,4 @@ const mapDispatchToProps = dispatch => {
 };
 
 // Inject state and action creators to presentation layer
-const ProfileFormPage = connect(mapStateToProps, mapDispatchToProps)(ProfileForm);
-
-// Export the container component
-export default ProfileFormPage;
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileForm);

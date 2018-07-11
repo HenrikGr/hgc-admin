@@ -16,11 +16,20 @@ import axios from 'axios';
  * @param error
  * @returns {*}
  */
-export const errorHandler = (error) => {
+export const errorHandler = error => {
   if (error.response) {
     // The request was made and the server responded with a status code
     // that falls out of the range of 2xx
-    return error.response.data;
+    let result = {
+      message: error.response.data.message,
+    };
+
+    for (let field in error.response.data.errors) {
+      result[field] = error.response.data.errors[field];
+    }
+
+    return result;
+
   } else if (error.request) {
     // The request was made but no response was received
     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -34,34 +43,32 @@ export const errorHandler = (error) => {
 
 /**
  * XHR Service factory function
- * @returns {{
- * getInstance: function(): AxiosInstance,
- * setAuthorizationHeader: setAuthorizationHeader,
- * removeAuthorizationHeader: removeAuthorizationHeader
- * }}
  * @constructor
  */
 const XHRServiceFactory = () => {
 
-  // Create a new instance of axios and configure the base API url
-  const instance = axios.create({
-    baseURL: process.env.REACT_APP_API_URL
-  });
-
-  instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+  let instance = null;
+  let baseURL = process.env.REACT_APP_API_URL;
+  let contentType = 'application/x-www-form-urlencoded';
 
   return {
-    getInstance: () => {
+    /**
+     * Create a new instance of axios and configure the base API url
+     * @returns {AxiosInstance}
+     */
+    getInstance() {
+      instance = axios.create({ baseURL });
+      instance.defaults.headers.post['Content-Type'] = contentType;
       return instance;
     },
-    setAuthorizationHeader: (token) => {
+    setAuthorizationHeader(token) {
       const { access_token } = token;
       instance.defaults.headers.common['Authorization'] = 'Bearer ' + access_token;
     },
-    removeAuthorizationHeader: () => {
+    removeAuthorizationHeader() {
       instance.defaults.headers.common['Authorization'] = '';
     }
   };
 };
 
-export default  XHRServiceFactory();
+export default XHRServiceFactory();

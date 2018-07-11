@@ -24,7 +24,8 @@ import { combineReducers } from "redux";
 import statusReducer from './StatusReducer';
 import sessionReducer from './SessionReducer';
 import profileReducer from './ProfileReducer';
-import usersReducer from './UsersReducer'
+import usersReducer from './UsersReducer';
+import clientsReducer from './ClientsReducer';
 
 /**
  * Combine different state branch reducers to one app reducer
@@ -32,9 +33,10 @@ import usersReducer from './UsersReducer'
  */
 const appReducer = combineReducers({
   status: statusReducer,
+  session: sessionReducer,
   profile: profileReducer,
   users: usersReducer,
-  session: sessionReducer,
+  clients: clientsReducer,
 });
 
 /**

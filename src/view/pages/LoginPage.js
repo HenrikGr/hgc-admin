@@ -19,7 +19,7 @@
 import { connect } from "react-redux";
 
 // Presentation layer
-import LoginForm from "../compoments/forms/LoginForm";
+import LoginForm from "../components/forms/LoginForm";
 
 // Action creators used to update session state
 import sessionAction from '../../store/actions/SessionAction';
@@ -33,15 +33,13 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => {
   return {
     Login: (username, password) => {
-      dispatch(sessionAction.getSession(username, password));
+      dispatch(sessionAction.getSession({username, password}));
+    },
+    ResetSession: () => {
+      dispatch(sessionAction.resetSession())
     }
   };
 };
 
 // Inject state and action creators to the presentation layer
-const LoginFormPage = connect(
-  mapStateToProps,
-  mapDispatchToProps)(LoginForm);
-
-// Export the container component
-export default LoginFormPage;
+export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);

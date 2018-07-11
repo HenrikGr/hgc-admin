@@ -16,7 +16,7 @@ const appEnv  = cfenv.getAppEnv();
 const app = express();
 
 // Serve static resources from build directory
-app.use(express.static(__dirname + 'build'));
+app.use(express.static('./build'));
 
 // Serve index.html on refresh and support client side routing
 app.get('/*', function (req, res) {

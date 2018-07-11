@@ -7,23 +7,25 @@
  * @license: The MIT License (MIT)
  */
 
+// Polyfills
+//import './utils/polyfills.js';
+
 // Module dependencies
 import React from 'react';
 import { render } from 'react-dom';
-import { BrowserRouter as Router, Route} from "react-router-dom";
-import { Provider } from 'react-redux'
 import store from './store/index'
 
 // Application root
-import App from './App';
+import Root from './view/theme/Root';
 //import registerServiceWorker from './registerServiceWorker';
 
+
+/**
+ * Render app
+ *
+ */
 render(
-  <Provider store={store}>
-    <Router>
-      <Route path="/" component={App} />
-    </Router>
-  </Provider>,
+  <Root store={store} />,
   document.getElementById('root')
 );
 

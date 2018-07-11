@@ -4,7 +4,7 @@
  * The profile actions consist of two remote CRUD operations to retrieve and update profile
  * information to the state.
  *
- * There is also helper action creators that describe the new state that should be set
+ * There is also helpers action creators that describe the new state that should be set
  * during the remote calls in case of start, success or failure.
  *
  * The remote calls using profile service module that contains business logic
@@ -17,7 +17,7 @@
  */
 
 // Business logic for profile data
-import profileService from "../../domain/service/ProfilesService";
+import profileService from "../../domain/service/Profile";
 
 /**
  * Helper action creator to be used when there is a client validation error
@@ -96,7 +96,7 @@ const updateProfileFailed = error => ({
 const getProfile = () => {
   return function(dispatch) {
     dispatch(getProfileStart(true));
-    return profileService.getProfile()
+    return profileService.findOrCreate()
       .then(json => {
         dispatch(getProfileComplete(json));
       })
@@ -113,21 +113,18 @@ const getProfile = () => {
  */
 const updateProfile = profile => {
   return function(dispatch, getState) {
-    const state = getState().profile;
-    if (profileService.hasChanged(state, profile)) {
-      const isValid = profileService.validateProfile(profile);
-      if (isValid.error) {
-        dispatch(validationFailed(isValid.error));
-      } else {
-        dispatch(updateProfileStart(true));
-        return profileService.updateProfile(profile)
-          .then(response => {
-            dispatch(updateProfileComplete(response));
-          })
-          .catch(error => {
-            dispatch(updateProfileFailed(error));
-          });
-      }
+    const error = profileService.validateProfile(profile);
+    if (error.message) {
+      dispatch(validationFailed(error));
+    } else {
+      dispatch(updateProfileStart(true));
+      return profileService.updateProfile(profile)
+        .then(response => {
+          dispatch(updateProfileComplete(response));
+        })
+        .catch(error => {
+          dispatch(updateProfileFailed(error));
+        });
     }
   };
 };
