@@ -15,7 +15,7 @@
  * @license: The MIT License (MIT)
  */
 
-// module dependencies.
+// react
 import React from "react";
 import PropTypes from "prop-types";
 
@@ -31,19 +31,11 @@ class SessionTimeout extends React.Component {
      * Number of seconds the timer should run when it starts
      * A value bigger than 0 starts the timer.
      */
-    duration: PropTypes.number,
+    duration: PropTypes.number.isRequired,
     /**
-     * Callback On start function
+     * callback function, can be used to redirect to a login page
      */
-    onStart: PropTypes.func,
-    /**
-     * Callback On refresh function, can be used to display a dialog to extend the session
-     */
-    onRefresh: PropTypes.func,
-    /**
-     * Callback On stop function, can be used to redirect to a login page
-     */
-    onStop: PropTypes.func,
+    onStopped: PropTypes.func.isRequired,
   };
 
   /**
@@ -64,24 +56,26 @@ class SessionTimeout extends React.Component {
 
   /**
    * Start the timer if duration prop > 0
-   * @param nextProps
-   * @param nextContext
+   * @param prevProps
+   * @param prevState
    */
-  componentWillReceiveProps(nextProps, nextContext) {
-    if (this.props.duration !== nextProps.duration) {
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.duration !== prevProps.duration) {
 
       // Stop timer
-      if (nextProps.duration === 0) {
+      if (this.props.duration === 0 && prevState.started) {
         clearInterval(this.timerID);
         this.expiresIn = -1;
         this.setState({ started: false, refresh: false });
       }
 
       // Start timer
-      if (nextProps.duration > 0) {
-        this.expiresIn = nextProps.duration;
-        this.setState({ started: true, refresh: false });
-        this.timerID = setInterval(() => this.tick(), this.granularity);
+      if (this.props.duration > 0 && !prevState.started) {
+        this.expiresIn = this.props.duration;
+        this.setState(state => {
+          this.timerID = setInterval(() => this.tick(), this.granularity);
+          return { ...state, started: true }
+        });
       }
     }
   }
@@ -105,12 +99,15 @@ class SessionTimeout extends React.Component {
         break;
 
       case 0:
+        const { onStopped } = this.props;
+
         clearInterval(this.timerID);
         this.expiresIn = -1;
         this.setState({ started: false, refresh: false });
-        const { onStop } = this.props;
-        if (onStop) {
-          onStop();
+
+        // Call callback function when session stopped
+        if (onStopped) {
+          onStopped();
         }
         break;
 
@@ -122,7 +119,7 @@ class SessionTimeout extends React.Component {
 
   /**
    * Use render props to expose the internal state to be
-   * used by other components
+   * used by children components
    * @returns {*}
    */
   render() {
