@@ -20,7 +20,6 @@ import ProfilePage from "../pages/ProfilePage";
 import LoginFormPage from "../pages/LoginPage";
 import LandingPage from "../pages/LandingPage";
 
-
 // Material ui
 import { withStyles } from "@material-ui/core/styles";
 import store from "../../store";
@@ -37,12 +36,12 @@ const styles = theme => ({
   }
 });
 
-
 /**
  * Protected route handler
  * NOTE: We do an assumption that Redux state will contain a
- * session object for the current user. We do check if the session object
- * is empty and assumes the user is not authenticated if so.
+ * session object for the current user. We do check if the token
+ * object of the session is empty and assumes the user is not
+ * authenticated if so.
  * @param Component
  * @param rest
  * @returns {*}
@@ -52,17 +51,14 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={ props => {
-      const session = store.getState().session;
-      const isAuth = !session.error && !isEmpty(session);
-
-      return( isAuth ?
+      const { token } = store.getState().session;
+      return( !isEmpty(token) ?
           (<Component {...props} />) :
           (<Redirect to={{ pathname: "/login", state: { from: props.location }}} />)
       )
     }}
   />
 );
-
 
 /**
  * Main component

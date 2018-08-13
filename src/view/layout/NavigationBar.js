@@ -9,6 +9,7 @@
 
 // React & React Router
 import React from "react";
+import PropTypes from "prop-types";
 
 // Material ui
 import Drawer from "@material-ui/core/Drawer";
@@ -18,6 +19,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Header from "../components/header/Header";
 import MenuList from "../components/lists/MenuList";
 
+// component styles
 const styles = theme => ({
   drawerPaper: {
     position: "relative",
@@ -28,33 +30,31 @@ const styles = theme => ({
 
 /**
  * NavigationBar
- * @param classes
- * @param session
- * @param removeSession
- * @param refreshSession
+ * @param {object} classes - style object used by material-ui withStyle HOC
+ * @param {object} token - token if user is authenticated
+ * @param {function} removeSession - function to remove session with token
+ * @param {function} refreshSession - used to refresh token when expired
  * @returns {*}
  * @constructor
  */
-function NavigationBar({ classes, session, removeSession, refreshSession }) {
-  const { expires_in } = session;
-  const expiresIn = expires_in ? expires_in : 0;
+function NavigationBar({ classes, token, removeSession, refreshSession }) {
+  const { expires_in } = token;
+  const expiresIn = expires_in ? expires_in : 0; // no token = 0
 
   return(
     <React.Fragment>
       <Header
-        isAuth={expiresIn > 0}
-        duration={expiresIn}
-        refreshSession={refreshSession}
-        removeSession={removeSession}
+        isAuth={ expiresIn > 0 }
+        duration={ expiresIn }
+        refreshSession={ refreshSession }
+        removeSession={ removeSession }
       />
       { expiresIn > 0 && (
         <Drawer
           variant="permanent"
-          classes={{
-            paper: classes.drawerPaper
-          }}
+          classes={{ paper: classes.drawerPaper }}
         >
-          <div className={classes.toolbar} />
+          <div className={ classes.toolbar } />
           <MenuList />
         </Drawer>
       )}
@@ -62,4 +62,16 @@ function NavigationBar({ classes, session, removeSession, refreshSession }) {
   )
 }
 
+/**
+ * Props API
+ * @type {{classes: *, token: *, removeSession: *, refreshSession: *}}
+ */
+NavigationBar.propTypes = {
+  classes: PropTypes.object.isRequired,
+  token: PropTypes.object.isRequired,
+  removeSession: PropTypes.func.isRequired,
+  refreshSession: PropTypes.func.isRequired,
+};
+
+// Inject styles
 export default withStyles(styles)(NavigationBar);

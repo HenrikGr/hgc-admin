@@ -1,5 +1,5 @@
 /**
- * Description: ApplicationLayout
+ * Description: ApplicationLayout component
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
@@ -9,6 +9,7 @@
 
 // React & React Router
 import React from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 // Material ui
@@ -18,9 +19,10 @@ import { withStyles } from "@material-ui/core/styles";
 import NavigationBar from './NavigationBar';
 import Main from './Main';
 
-// Session store actions
+// Session actions
 import sessionActions from "../../store/actions/SessionAction";
 
+// Component styles
 const styles = {
   root: {
     flexGrow: 1,
@@ -33,18 +35,18 @@ const styles = {
 
 /**
  * Application layout component
- * @param classes
- * @param session
- * @param removeSession
- * @param refreshSession
+ * @param {object} classes - style object used by material-ui withStyle HOC
+ * @param {object} token - token if user is authenticated
+ * @param {function} removeSession - function to remove session with token
+ * @param {function} refreshSession - used to refresh token when expired
  * @returns {*}
  * @constructor
  */
-function AppLayout({ classes, session, removeSession, refreshSession, ...props }) {
+function AppLayout({ classes, token, removeSession, refreshSession }) {
   return(
     <div className={classes.root}>
       <NavigationBar
-        session={ session }
+        token={ token }
         removeSession={ removeSession }
         refreshSession={ refreshSession }
       />
@@ -53,14 +55,33 @@ function AppLayout({ classes, session, removeSession, refreshSession, ...props }
   )
 }
 
-// Map session state to props
+/**
+ * Props API
+ * @type {{classes: *, token: *, removeSession: *, refreshSession: *}}
+ */
+AppLayout.propTypes = {
+  classes: PropTypes.object.isRequired,
+  token: PropTypes.object.isRequired,
+  removeSession: PropTypes.func.isRequired,
+  refreshSession: PropTypes.func.isRequired,
+};
+
+/**
+ * Map token state to props
+ * @param {object} state - global state
+ * @returns {{token: (defaults.session.token|{})}}
+ */
 const mapStateToProps = state => {
   return {
-    session: state.session,
+    token: state.session.token,
   };
 };
 
-// Map session action creators as props
+/**
+ * Map session actions to props
+ * @param {function} dispatch - function used to dispatch actions
+ * @returns {{removeSession: removeSession, refreshSession: refreshSession}}
+ */
 const mapDispatchToProps = dispatch => {
   return {
     removeSession: () => {
@@ -72,5 +93,5 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-// Connect Root with redux store
+// Inject state, actions and styles to component
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AppLayout));
