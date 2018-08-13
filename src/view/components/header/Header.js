@@ -26,6 +26,7 @@ import HeaderIcon from './HeaderIcon';
 import SessionTimeout from "./SessionTimeout";
 import RefreshSessionDialog from "./RefreshSessionDialog";
 
+// component styles
 const styles = theme => ({
   root: {
     zIndex: theme.zIndex.drawer + 1
@@ -56,11 +57,11 @@ class Header extends React.Component {
      */
     title: PropTypes.string.isRequired,
     /**
-     * Session object from global state
+     * Flag that indicate if user is authenticated or not
      */
     isAuth: PropTypes.bool.isRequired,
     /**
-     *
+     * Duration of the session token if user is authenticated
      */
     duration: PropTypes.number.isRequired,
     /**
@@ -68,7 +69,7 @@ class Header extends React.Component {
      */
     removeSession: PropTypes.func.isRequired,
     /**
-     * Function to extend session
+     * Function to extend session after duration has elapsed
      */
     refreshSession: PropTypes.func.isRequired
   };
@@ -91,7 +92,7 @@ class Header extends React.Component {
   };
 
   /**
-   * Event handler for extend the session
+   * Event handler for extend the session after token has expired
    */
   handleRefresh = () => {
     this.props.refreshSession();
@@ -110,12 +111,22 @@ class Header extends React.Component {
   };
 
   render() {
-    const { classes, title, isAuth, duration } = this.props;
+    const {
+      classes,
+      title,
+      isAuth,
+      duration
+    } = this.props;
 
     return (
-      <AppBar classes={{ root: classes.root }} position="fixed">
+      <AppBar
+        classes={{ root: classes.root }}
+        position="fixed"
+      >
         <Toolbar>
-          <HeaderIcon isAuth={ isAuth } />
+          <HeaderIcon
+            isAuth={ isAuth }
+          />
           <Typography
             variant="title"
             color="inherit"
@@ -125,7 +136,7 @@ class Header extends React.Component {
           </Typography>
           <SessionTimeout
             duration={ duration }
-            onStop={ this.handleLogOut }
+            onStopped={ this.handleLogOut }
             render={({ started, refresh }) => {
               return (
                 <React.Fragment>

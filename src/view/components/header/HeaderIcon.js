@@ -1,8 +1,5 @@
 /**
- * Description: Header component
- *
- * The component display a header which contains a home icon, title, and
- * login button or a menu depending on if the user is authenticated or not.
+ * Description: HeaderIcon component
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1

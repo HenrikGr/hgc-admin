@@ -59,7 +59,6 @@ class RefreshSessionDialog extends React.Component {
      * Classes, can be used to override css styles
      */
     classes: PropTypes.object.isRequired,
-
     /**
      * Callback function to deal with closing modal dialog
      */
@@ -84,10 +83,10 @@ class RefreshSessionDialog extends React.Component {
     }
   }
 
-  handleOpen = () => {
-    this.setState({ open: true });
-  };
-
+  /**
+   * Event handler when dialog closes
+   * @param action
+   */
   handleClose = action => {
     this.setState({ open: false });
     if (this.props.onClose) {

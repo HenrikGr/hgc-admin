@@ -15,7 +15,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
-
 // material-ui
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -63,7 +62,7 @@ class HeaderMenu extends Component {
   /**
    * onClick event handler for the IconButton component
    * Sets the anchorEl to the HTMLElement of the IconButton
-   * and thus ensure the open flag will be tru on next render
+   * and thus ensure the open flag will be true on next render
    * @param event
    */
   handleClick = event => {
@@ -74,19 +73,17 @@ class HeaderMenu extends Component {
    * Event handler responsible for closing the menu.
    * Sets the anchorEl to null to enforce the open flag to be false
    * on next render
-   * @param event
    */
-  handleClose = event => {
+  handleClose = () => {
     this.setState({ anchorEl: null });
   };
 
   /**
    * Event handler function when user logs out
-   * @param event
    */
-  handleLogOut = event => {
+  handleLogOut = () => {
     this.props.onLogout();
-    this.setState({ anchorEl: null });
+    this.handleClose();
   };
 
   render() {
@@ -96,7 +93,7 @@ class HeaderMenu extends Component {
 
     return (
       <div>
-        {!isAuth ? (
+        { !isAuth ? (
           <Button
             className={ classes.button }
             component={ Link }
