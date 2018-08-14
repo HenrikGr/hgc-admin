@@ -18,13 +18,13 @@ import PropTypes from 'prop-types';
 // material-ui
 import Grid from '@material-ui/core/Grid';
 
-// custom component
+// custom component - presentation layer
 import ErrorSnackbar from '../components/error/ErrorSnackbar'
 import LinearProgressbar from '../components/progress/LinearProgressbar'
+import ProfileForm from '../components/forms/ProfileForm';
 
 // Action creators used to update profile state
 import profileAction from "../../store/actions/ProfileActions";
-import ProfileForm from '../components/forms/ProfileForm';
 
 /**
  * ProfilePage
@@ -61,26 +61,14 @@ class ProfilePage extends React.Component {
     reset: PropTypes.func.isRequired,
   };
 
-  /**
-   * Fetch data on mount
-   */
   componentDidMount() {
     this.props.find();
   }
 
-  /**
-   * Handle input changes
-   * @param prop
-   * @returns {Function}
-   */
   handleChange = prop => event => {
     this.props.updateState({ [prop]: event.target.value });
   };
 
-  /**
-   * Handle submit of data
-   * @param event
-   */
   handleSubmit = event => {
     event.preventDefault();
     this.props.update(this.props.entity);
@@ -120,30 +108,12 @@ class ProfilePage extends React.Component {
   }
 }
 
-/**
- * Map global state data to props
- * @param state
- * @returns {{
- *  entity: (*|entity|{}),
- *  isFetching: *,
- *  error: *
- *  }}
- */
 const mapStateToProps = state => ({
   entity: state.profile.entity,
   isFetching: state.profile.isFetching,
   error: state.profile.error,
 });
 
-/**
- * Map global actions to props
- * @param dispatch
- * @returns {{
- *  find: find,
- *  update: update,
- *  handleChange: handleChange
- *  }}
- */
 const mapDispatchToProps = dispatch => {
   return {
     find: () => {
