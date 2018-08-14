@@ -1,5 +1,5 @@
 /**
- * Description:
+ * Description: Error component
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
@@ -71,7 +71,7 @@ class ErrorSnackbar extends React.Component {
    */
   static getDerivedStateFromProps(nextProps, prevState) {
     const { error } = nextProps;
-    if( error.message) {
+    if( error.message ) {
       return {
         open: true
       }
@@ -88,10 +88,8 @@ class ErrorSnackbar extends React.Component {
     if (reason === 'clickaway') {
       return;
     }
-    // Reset error
-    this.props.onResetError();
 
-    // Close snackbar
+    this.props.onResetError();
     this.setState({ open: false });
   };
 
@@ -101,7 +99,6 @@ class ErrorSnackbar extends React.Component {
 
   getMessage = error => {
     let msg = this.props.defaultMessage;
-
     for (const [key, value] of Object.entries(error)) {
       if (key === 'message') {
         msg = '<div style="text-align: center">' + value + '</div></br>';
@@ -130,7 +127,7 @@ class ErrorSnackbar extends React.Component {
           horizontal: 'center',
         }}
         open={ this.state.open }
-        autoHideDuration={ 4000 }
+        autoHideDuration={ 6000 }
         onClose={ this.handleClose }
         snackbarcontentprops={{ 'aria-describedby': 'message-id' }}
         message={ message }
@@ -150,4 +147,5 @@ class ErrorSnackbar extends React.Component {
   }
 }
 
+// Inject styles
 export default withStyles(styles)(ErrorSnackbar);
