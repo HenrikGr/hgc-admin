@@ -1,6 +1,5 @@
 /**
- * Description: Module exporting a withRoot function to set material ui theme provider,
- * css baseline and a palette used within tha application
+ * Description: Higher order function to injects material-ui.
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
