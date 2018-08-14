@@ -72,9 +72,6 @@ class LoginPage extends React.Component {
     toggleShowPassword: PropTypes.func.isRequired,
   };
 
-  /**
-   * Reset possible errors when navigation somewhere else
-   */
   componentWillUnmount() {
     const { error } = this.props;
     if (!isEmpty(error)) {
@@ -82,34 +79,19 @@ class LoginPage extends React.Component {
     }
   }
 
-  /**
-   * Handle global state updates from inputs
-   * @param prop
-   * @returns {Function}
-   */
   handleChange = prop => event => {
     this.props.updateState({ [prop]: event.target.value });
   };
 
-  /**
-   * Handle submit of data
-   * @param event
-   */
   handleSubmit = event => {
     event.preventDefault();
     this.props.update(this.props.entity);
   };
 
-  /**
-   * Handle visibility of password input
-   */
   handleShowPassword = () => {
     this.props.toggleShowPassword(!this.props.showPassword);
   };
 
-  /**
-   * Handle reset of global state (errors)
-   */
   handleReset = () => {
     this.props.reset();
   };
@@ -157,17 +139,6 @@ class LoginPage extends React.Component {
   }
 }
 
-/**
- * Map global state to props
- * @param state
- * @returns {{
- *  entity: *,
- *  showPassword: boolean,
- *  redirectToReferrer: boolean,
- *  isFetching: boolean,
- *  error: (session.error|{}|defaults.session.error)
- *  }}
- */
 const mapStateToProps = state => ({
   entity: state.session.entity,
   showPassword: state.session.showPassword,
@@ -176,16 +147,6 @@ const mapStateToProps = state => ({
   error: state.session.error,
 });
 
-/**
- * Map global actions to props
- * @param dispatch
- * @returns {{
- *  update: update,
- *  updateState: updateState,
- *  reset: reset,
- *  toggleShowPassword: toggleShowPassword
- *  }}
- */
 const mapDispatchToProps = dispatch => {
   return {
     update: (credentials) => {
