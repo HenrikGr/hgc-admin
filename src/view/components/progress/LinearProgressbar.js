@@ -1,12 +1,5 @@
 /**
- * Description: Users page component
- *
- * The UsersPage container components supply users state trough props and a CRUD
- * functions to be used to manage application state and perform remote calls to the
- * database.
- *
- * The users page using the DataGrid custom component and pass the data, CRUD methods and a
- * column model of the data to be rendered in the DataGrid.
+ * Description: LinearProgressbar component
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
@@ -14,6 +7,7 @@
  * @license: The MIT License (MIT)
  */
 
+// react
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -23,6 +17,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = {
   root: {
+    flexGrow: 1,
     height: "5px"
   },
 };
@@ -36,7 +31,7 @@ const styles = {
  */
 function LinearProgressbar({classes, isFetching}) {
   return(
-    <div className={ classes.progress }>
+    <div className={ classes.root }>
       { isFetching ? <LinearProgress color="secondary" /> : null }
     </div>
   )
@@ -54,6 +49,14 @@ LinearProgressbar.propTypes = {
    * Loading indicator
    */
   isFetching: PropTypes.bool.isRequired,
+};
+
+/**
+ * Default props
+ * @type {{isFetching: boolean}}
+ */
+LinearProgressbar.defaultProps = {
+  isFetching: false,
 };
 
 /**
