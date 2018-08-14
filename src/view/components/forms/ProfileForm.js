@@ -64,8 +64,7 @@ const styles = theme => ({
  * @returns {*}
  * @constructor
  */
-function ProfileForm({ classes, formLabel, entity, isFetching, onChange, onSubmit }) {
-
+function ProfileForm({classes, formLabel, entity, isFetching, onChange, onSubmit }) {
   return(
     <div className={classes.root}>
       <div className={classes.formWrapper}>
@@ -119,32 +118,14 @@ function ProfileForm({ classes, formLabel, entity, isFetching, onChange, onSubmi
 }
 
 /**
- * Props API
+ * Props type checking
  */
 ProfileForm.propTypes = {
-  /**
-   * Used to style the form
-   */
   classes: PropTypes.object.isRequired,
-  /**
-   * Form label
-   */
   formLabel: PropTypes.string.isRequired,
-  /**
-   * Data entity to be rendered as inputs
-   */
   entity: PropTypes.object.isRequired,
-  /**
-   * Flag indicating fetching state
-   */
   isFetching: PropTypes.bool.isRequired,
-  /**
-   * Callback function to handle input changes to external state
-   */
   onChange: PropTypes.func.isRequired,
-  /**
-   * Callback function to handle submit data
-   */
   onSubmit: PropTypes.func.isRequired
 };
 
