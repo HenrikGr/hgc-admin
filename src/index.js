@@ -14,16 +14,10 @@
 import React from 'react';
 import { render } from 'react-dom';
 import store from './store/index'
-
-// Application root
 import Root from './view/theme/Root';
 //import registerServiceWorker from './registerServiceWorker';
 
 
-/**
- * Render app
- *
- */
 render(
   <Root store={store} />,
   document.getElementById('root')
