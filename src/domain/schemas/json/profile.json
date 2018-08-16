@@ -1,36 +1,32 @@
 {
   "$id": "http://hgc.se/profile.json",
-  "type": "object",
-  "definitions": {},
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "required": ["email"],
+  "type": "object",
+  "required": ["firstName","lastName","email","phone"],
   "additionalProperties": false,
   "properties": {
     "_id": {
       "$id": "/properties/_id",
-      "title": "uuid of profile",
+      "title": "id of profile",
       "type": "string",
-      "format": "uuid"
+      "readOnly": true
     },
     "firstName": {
       "$id": "/properties/firstName",
       "title": "First name",
       "type": "string",
-      "default": "",
-      "minLength": 4
+      "default": ""
     },
     "lastName": {
       "$id": "/properties/lastName",
       "title": "Last name",
       "type": "string",
-      "default": "",
-      "minLength": 4
+      "default": ""
     },
     "email": {
       "$id": "/properties/email",
       "title": "Email",
       "type": "string",
-      "format": "email",
       "default": ""
     },
     "phone": {
@@ -39,15 +35,15 @@
       "type": "string",
       "default": ""
     },
-    "createdAt" : {
-      "$id": "/properties/createdAt",
-      "title": "Created date",
+    "updatedAt": {
+      "$id": "/properties/updatedAt",
+      "title": "Updated",
       "type": "string",
       "readOnly": true
     },
-    "updatedAt" : {
-      "$id": "/properties/updatedAt",
-      "title": "Updated date",
+    "createdAt": {
+      "$id": "/properties/createdAt",
+      "title": "Updated",
       "type": "string",
       "readOnly": true
     }
