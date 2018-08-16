@@ -10,34 +10,24 @@
 // React & React Router
 import React from "react";
 import PropTypes from "prop-types";
-
-// Material ui
-import Drawer from "@material-ui/core/Drawer";
-import { withStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
 
 // custom components
 import Header from "../components/header/Header";
-import MenuList from "../components/lists/MenuList";
+import DrawerMenu from "./DrawerMenu";
 
-// component styles
-const styles = theme => ({
-  drawerPaper: {
-    position: "relative",
-    width: "240px"
-  },
-  toolbar: theme.mixins.toolbar
-});
+// Session actions
+import sessionActions from "../../store/actions/SessionAction";
 
 /**
  * NavigationBar
- * @param {object} classes - style object used by material-ui withStyle HOC
  * @param {object} token - token if user is authenticated
  * @param {function} removeSession - function to remove session with token
  * @param {function} refreshSession - used to refresh token when expired
  * @returns {*}
  * @constructor
  */
-function NavigationBar({ classes, token, removeSession, refreshSession }) {
+function NavigationBar({ token, removeSession, refreshSession }) {
   const { expires_in } = token;
   const expiresIn = expires_in ? expires_in : 0; // no token = 0
 
@@ -49,29 +39,33 @@ function NavigationBar({ classes, token, removeSession, refreshSession }) {
         refreshSession={ refreshSession }
         removeSession={ removeSession }
       />
-      { expiresIn > 0 && (
-        <Drawer
-          variant="permanent"
-          classes={{ paper: classes.drawerPaper }}
-        >
-          <div className={ classes.toolbar } />
-          <MenuList />
-        </Drawer>
-      )}
+      { expiresIn > 0 && (<DrawerMenu />)}
     </React.Fragment>
   )
 }
 
-/**
- * Props API
- * @type {{classes: *, token: *, removeSession: *, refreshSession: *}}
- */
 NavigationBar.propTypes = {
-  classes: PropTypes.object.isRequired,
   token: PropTypes.object.isRequired,
   removeSession: PropTypes.func.isRequired,
   refreshSession: PropTypes.func.isRequired,
 };
 
-// Inject styles
-export default withStyles(styles)(NavigationBar);
+const mapStateToProps = state => {
+  return {
+    token: state.session.token,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    removeSession: () => {
+      dispatch(sessionActions.removeSession());
+    },
+    refreshSession: () => {
+      dispatch(sessionActions.refreshSession());
+    }
+  };
+};
+
+// Inject global state and styles
+export default connect(mapStateToProps, mapDispatchToProps)(NavigationBar);
