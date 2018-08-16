@@ -47,28 +47,28 @@ function PasswordField(props) {
   } = props;
 
   return(
+
     <FormControl className={ classes.root }>
       <InputLabel
         htmlFor={ id }
         required={ required }
       >
-        {label}
+        { label }
       </InputLabel>
       <Input
         id={ id }
-        disable={ disabled.toString() }
-        autoComplete="current-password"
-        type="password"
+        disabled={ disabled }
+        type={ showPassword ? 'text' : 'password' }
         value={ value }
         onChange={ onChange(id) }
         endAdornment={
           <InputAdornment position="end">
-            <IconButton onClick={ onShowPassword }>
-              { showPassword ? (
-                <VisibilityOff />
-              ) : (
-                <Visibility />
-              )}
+            <IconButton
+              aria-label="Toggle password visibility"
+              onClick={ onShowPassword }
+              onMouseDown={ onShowPassword }
+            >
+              { showPassword ? <VisibilityOff /> : <Visibility /> }
             </IconButton>
           </InputAdornment>
         }
