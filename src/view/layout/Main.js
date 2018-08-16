@@ -9,7 +9,13 @@
 
 // React & React Router
 import React from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
+
+// custom route handler
+import ProtectedRoute from './ProtectedRoute';
+
+// material-ui
+import { withStyles } from "@material-ui/core/styles";
 
 // Content pages
 import NotFoundPage from "../pages/NotFound";
@@ -19,11 +25,6 @@ import DashboardPage from "../pages/DashboardPage";
 import ProfilePage from "../pages/ProfilePage";
 import LoginFormPage from "../pages/LoginPage";
 import LandingPage from "../pages/LandingPage";
-
-// Material ui
-import { withStyles } from "@material-ui/core/styles";
-import store from "../../store";
-import { isEmpty } from "../../utils/helper";
 
 const styles = theme => ({
   content: {
@@ -37,30 +38,6 @@ const styles = theme => ({
 });
 
 /**
- * Protected route handler
- * NOTE: We do an assumption that Redux state will contain a
- * session object for the current user. We do check if the token
- * object of the session is empty and assumes the user is not
- * authenticated if so.
- * @param Component
- * @param rest
- * @returns {*}
- * @constructor
- */
-const PrivateRoute = ({ component: Component, ...rest }) => (
-  <Route
-    {...rest}
-    render={ props => {
-      const { token } = store.getState().session;
-      return( !isEmpty(token) ?
-          (<Component {...props} />) :
-          (<Redirect to={{ pathname: "/login", state: { from: props.location }}} />)
-      )
-    }}
-  />
-);
-
-/**
  * Main component
  * @param classes
  * @returns {*}
@@ -68,15 +45,15 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
  */
 function Main({ classes }) {
   return(
-    <main className={classes.content}>
+    <main className={ classes.content }>
       <Switch>
-        <Route exact={true} path="/" component={LandingPage} />
-        <Route path="/login" component={LoginFormPage} />
-        <PrivateRoute path="/dashboard" component={DashboardPage} />
-        <PrivateRoute path="/profile" component={ProfilePage} />
-        <PrivateRoute path="/users" component={UsersPage} />
-        <PrivateRoute path="/clients" component={ClientPage} />
-        <Route path="*" component={NotFoundPage} />
+        <Route exact={true} path="/" component={ LandingPage } />
+        <Route path="/login" component={ LoginFormPage } />
+        <ProtectedRoute path="/dashboard" component={ DashboardPage } />
+        <ProtectedRoute path="/profile" component={ ProfilePage } />
+        <ProtectedRoute path="/users" component={ UsersPage } />
+        <ProtectedRoute path="/clients" component={ ClientPage } />
+        <Route path="*" component={ NotFoundPage } />
       </Switch>
     </main>
   )
