@@ -47,7 +47,6 @@ function PasswordField(props) {
   } = props;
 
   return(
-
     <FormControl className={ classes.root }>
       <InputLabel
         htmlFor={ id }
