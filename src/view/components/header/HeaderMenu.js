@@ -1,9 +1,6 @@
 /**
  * Description: HeaderMenu component
  *
- * The component render either a login button or a menu dependent on if the user
- * is authenticated or not.
- *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
@@ -13,7 +10,6 @@
 // React & Router
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
 
 // material-ui
 import Menu from "@material-ui/core/Menu";
@@ -23,6 +19,9 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
+
+// custom links
+import { LogInLink, ProfileLink, HomeLink } from "../links";
 
 const styles = {
   button: {
@@ -96,8 +95,7 @@ class HeaderMenu extends Component {
         { !isAuth ? (
           <Button
             className={ classes.button }
-            component={ Link }
-            to="/login"
+            component={ LogInLink }
             variant="raised"
             color="secondary"
           >
@@ -122,16 +120,14 @@ class HeaderMenu extends Component {
               onClose={ this.handleClose }
             >
               <MenuItem
-                component={ Link }
-                to="/profile"
+                component={ ProfileLink }
                 onClick={ this.handleClose }
               >
                 Profile
               </MenuItem>
               <Divider />
               <MenuItem
-                component={ Link }
-                to="/login"
+                component={ HomeLink }
                 onClick={ this.handleLogOut }
               >
                 Logout
