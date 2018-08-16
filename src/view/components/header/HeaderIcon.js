@@ -10,12 +10,14 @@
 // react
 import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
 
 // material-ui components
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import { withStyles } from "@material-ui/core/styles";
+
+// custom links
+import { HomeLink, DashboardLink } from '../links'
 
 const styles = {
   icon: {
@@ -35,8 +37,7 @@ function HeaderIcon({ classes, isAuth }) {
   return(
     <IconButton
       className={ classes.icon }
-      component={ Link }
-      to={ isAuth ? "/dashboard" : "/" }
+      component={ isAuth ? DashboardLink : HomeLink }
       color="inherit"
       aria-label="Menu"
     >
