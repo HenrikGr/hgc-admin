@@ -7,39 +7,38 @@
  * @license: The MIT License (MIT)
  */
 
-import clientSchema from "../../domain/schemas/json/client";
-import userSchema  from "../../domain/schemas/json/user";
-import profileSchema  from "../../domain/schemas/json/profile";
-import ValidatorFactory from '../../domain/schemas'
-
-const UserDefaults = {};
-const ClientDefaults = {};
-const ProfileModel = {};
-
-const UserValidator = ValidatorFactory(userSchema);
-const ClientValidator = ValidatorFactory(clientSchema);
-const ProfileValidator = ValidatorFactory(profileSchema);
-
-UserValidator(UserDefaults);
-ClientValidator(ClientDefaults);
-ProfileValidator(ProfileModel);
-
+import CredentialsEntity from "../../domain/schemas/CredentialsEntity"
+import ProfileEntity from "../../domain/schemas/ProfileEntity"
+import UserEntity from "../../domain/schemas/UserEntity"
+import ClientEntity from "../../domain/schemas/ClientEntity"
 
 // Default state
 const defaults = {
   status: 'Application started',
-  session: {},
-  profile: ProfileModel,
+  session: {
+    token: {},
+    entity: CredentialsEntity.getDefaultEntity(),
+    showPassword: false,
+    redirectToReferrer: false,
+    isFetching: false,
+    error: {}
+  },
+  profile: {
+    entity: ProfileEntity.getDefaultEntity(),
+    uiModel: ProfileEntity.getUIModel(),
+    isFetching: false,
+    error: {}
+  },
   users: {
-    schema: userSchema,
-    defaultUser: UserDefaults,
-    docs: [],
+    entity: UserEntity.getDefaultEntity(),
+    entities: [],
     isFetching: false,
     error: {}
   },
   clients:{
-    schema: clientSchema,
-    defaultClient: ClientDefaults,
+    schema: ClientEntity.getSchema(),
+    defaultClient: ClientEntity.getDefaultEntity(),
+    uiModel: ClientEntity.getUIModel(),
     docs: [],
     isFetching: false,
     error: {},

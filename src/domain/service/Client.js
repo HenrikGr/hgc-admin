@@ -11,21 +11,17 @@
  * @license: The MIT License (MIT)
  */
 
+// query string parser
+import qs from 'qs';
+
 // XHR service
 import XHRService, { errorHandler } from "./XHRService";
 
 // Schema services
-import clientSchema from '../../domain/schemas/json/client';
-import ValidatorFactory, { schemaErrorHandler } from '../../domain/schemas';
-
-// query string parser
-import qs from 'qs';
+import ClientEntity from "../schemas/ClientEntity";
 
 // XHR instance
 const XHR = XHRService.getInstance();
-
-// Validator instance
-const Validator = ValidatorFactory(clientSchema);
 
 
 /**
@@ -34,10 +30,8 @@ const Validator = ValidatorFactory(clientSchema);
  * @returns {*}
  */
 function validateClient(client) {
-  // Clone client object in order to support filtering of id prop.
-  return !Validator(Object.assign({},client)) ? schemaErrorHandler(Validator.errors) : client;
+  return ClientEntity.isValid(client);
 }
-
 
 /**
  * Create client

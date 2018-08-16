@@ -16,8 +16,8 @@
 
 // react & redux
 import React from 'react';
-import { connect } from "react-redux";
 import PropTypes from 'prop-types';
+import { connect } from "react-redux";
 
 // material-ui
 import { withStyles } from '@material-ui/core/styles';
@@ -60,13 +60,9 @@ class UsersPage extends React.Component {
      */
     classes: PropTypes.object.isRequired,
     /**
-     * Data object schema
-     */
-    schema: PropTypes.object.isRequired,
-    /**
      * Default data from schema
      */
-    defaultItem: PropTypes.object.isRequired,
+    entity: PropTypes.object.isRequired,
     /**
      * Data array
      */
@@ -111,7 +107,7 @@ class UsersPage extends React.Component {
   render() {
     const {
       classes,
-      defaultItem,
+      entity,
       items,
       isFetching,
       error,
@@ -124,7 +120,7 @@ class UsersPage extends React.Component {
     return (
       <div className={ classes.root }>
         <DataGrid
-          defaultItem={ defaultItem }
+          defaultItem={ entity }
           model={ model }
           isFetching={ isFetching }
           error={ error }
@@ -141,9 +137,8 @@ class UsersPage extends React.Component {
 
 // Map state to props
 const mapStateToProps = state => ({
-  schema: state.users.schema,
-  defaultItem: state.users.defaultUser,
-  items: state.users.docs,
+  entity: state.users.entity,
+  items: state.users.entities,
   isFetching: state.users.isFetching,
   error: state.users.error,
 });

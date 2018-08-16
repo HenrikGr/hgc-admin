@@ -17,8 +17,8 @@
 
 // react & redux
 import React from 'react';
-import { connect } from "react-redux";
 import PropTypes from 'prop-types';
+import { connect } from "react-redux";
 
 // Material-ui
 import Grid from '@material-ui/core/Grid';
@@ -94,7 +94,6 @@ class ClientPage extends React.Component {
     selectedItem: this.props.defaultItem,
   };
 
-
   handleSelect = (event, value) => {
     const selectedItem = this.props.items.filter(item => ( item._id === value));
     this.setState({
@@ -109,17 +108,14 @@ class ClientPage extends React.Component {
     this.setState({ selectedItem });
   };
 
-
   handleReset = () => {
     const { defaultItem } = this.props;
     this.setState({ selectedId: '', selectedItem: Object.assign({}, defaultItem)});
   };
 
-
   handleCreate = () => {
     this.props.create(this.state.selectedItem)
   };
-
 
   handleUpdate = () => {
     this.props.update(this.state.selectedId, this.state.selectedItem)
@@ -175,8 +171,6 @@ class ClientPage extends React.Component {
   }
 }
 
-
-// Map state to props
 const mapStateToProps = state => ({
   schema: state.clients.schema,
   defaultItem: state.clients.defaultClient,
@@ -185,7 +179,6 @@ const mapStateToProps = state => ({
   error: state.clients.error,
 });
 
-// Map action creators to props
 const mapDispatchToProps = dispatch => {
   return {
     find: qp => {

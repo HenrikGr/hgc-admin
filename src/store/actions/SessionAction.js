@@ -17,36 +17,24 @@
  */
 
 // Business logic for session data
-import { sessionService } from '../../domain/service/Session';
+import sessionService from '../../domain/service/Session';
 
 /**
  * Helper action creator to be used when there is a client validation error
- * @param error
- * @returns {{type: string, error: *}}
+ * @param {object} error - ValidationError object
+ * @returns {{type: string, error: object}}
  */
 const validationFailed = error => ({
-  type: "CREDENTIALS_FAILED",
+  type: "CREDENTIALS_VALIDATION_FAILED",
   error
 });
 
 /**
  * Helper action creator to be used when starting remote call getSession
- * @param isFetching
- * @returns {{type: string, isFetching: *}}
+ * @returns {{type: string}}
  */
-const getSessionStart = isFetching => ({
-  type: "GET_SESSION_START",
-  isFetching
-});
-
-/**
- * Helper action creator to be used when remote call getSession succeed.
- * @param json
- * @returns {{type: string, json: *}}
- */
-const getSessionComplete = json => ({
-  type: "GET_SESSION_COMPLETE",
-  json
+const fetchSessionStart = () => ({
+  type: "FETCH_SESSION_START",
 });
 
 /**
@@ -54,35 +42,37 @@ const getSessionComplete = json => ({
  * @param error
  * @returns {{type: string, error: *}}
  */
-const getSessionFailed = error => ({
-  type: "GET_SESSION_FAILED",
+const fetchSessionFailed = error => ({
+  type: "FETCH_SESSION_FAILED",
   error
 });
 
 /**
- * Helper function to reset the session object
- * @returns {{type: string}}
+ * Helper action creator to be used when remote call getSession succeed.
+ * @param json
+ * @returns {{type: string, json: *}}
  */
-const resetSession = () => ({
-  type: "RESET_SESSION",
+const fetchSessionComplete = json => ({
+  type: "FETCH_SESSION_COMPLETE",
+  json
 });
 
 /**
  * Action creator - fetching session information, aka access_token
- * @param credentials
+ * @param {object} credentials - credential object
  * @returns {Function}
  */
-const getSession = (credentials) => {
+const getSession = credentials => {
   return function(dispatch) {
     const error = sessionService.validateCredentials(credentials);
     if (error.message) {
       dispatch(validationFailed(error));
     } else {
-      dispatch(getSessionStart(true));
-      return sessionService.getSession(credentials).then(json => {
-        dispatch(getSessionComplete(json))
+      dispatch(fetchSessionStart());
+      sessionService.getSession(credentials).then(json => {
+        dispatch(fetchSessionComplete(json))
       }).catch(err => {
-        dispatch(getSessionFailed(err))
+        dispatch(fetchSessionFailed(err))
       })
     }
   }
@@ -94,12 +84,12 @@ const getSession = (credentials) => {
  */
 const refreshSession = () => {
   return function(dispatch, getState) {
-    const { refresh_token } = getState().session;
-    dispatch(getSessionStart(true));
-    return sessionService.refreshSession(refresh_token).then(json => {
-      dispatch(getSessionComplete(json))
+    const { refresh_token } = getState().session.token;
+    dispatch(fetchSessionStart(true));
+    sessionService.refreshSession(refresh_token).then(json => {
+      dispatch(fetchSessionComplete(json))
     }).catch(err => {
-      dispatch(getSessionFailed(err))
+      dispatch(fetchSessionFailed(err))
     })
   }
 };
@@ -117,17 +107,41 @@ const removeSession = () => {
 };
 
 /**
+ * Action creator to be used when update input fields of the profile
+ * @param value
+ * @returns {{type: string, value: *}}
+ */
+const handleChange = value => ({
+  type: "HANDLE_CHANGE_CREDENTIALS",
+  value
+});
+
+const toggleShowPassword = show => ({
+  type: "SHOW_PASSWORD",
+  show
+});
+
+/**
+ * Action creator to reset error messages
+ */
+const resetError = () => ({
+  type: "RESET_ERROR"
+});
+
+/**
  * Exposed session interface
  * @constructor
  */
-export const SessionActionFactory = () => {
+function SessionActionFactory() {
   return {
     getSession,
     refreshSession,
     removeSession,
-    resetSession,
+    handleChange,
+    resetError,
+    toggleShowPassword,
   }
-};
+}
 
 // Export interface
-export default SessionActionFactory();
+export default new SessionActionFactory();

@@ -30,13 +30,23 @@ const validationFailed = error => ({
 });
 
 /**
- * Helper action creator to be used when starting remote call getProfile
+ * Helper action creator to be used when starting remote call getUsers
  * @param isFetching
  * @returns {{type: string, isFetching: *}}
  */
-const getProfileStart = isFetching => ({
-  type: "GET_PROFILE_START",
+const fetchStart = (isFetching) => ({
+  type: "FETCH_PROFILE_STARTED",
   isFetching
+});
+
+/**
+ * Helper action creator to be used when remote call getUsers fails
+ * @param error
+ * @returns {{type: string, error: *}}
+ */
+const fetchFailed = error => ({
+  type: "FETCH_PROFILE_FAILED",
+  error
 });
 
 /**
@@ -50,26 +60,6 @@ const getProfileComplete = json => ({
 });
 
 /**
- * Helper action creator to be used when remote call getProfile fails
- * @param error
- * @returns {{type: string, error: *}}
- */
-const getProfileFailed = error => ({
-  type: "GET_PROFILE_FAILED",
-  error
-});
-
-/**
- * Helper action creator to be used when starting remote call updateProfile
- * @param isFetching
- * @returns {{type: string, isFetching: *}}
- */
-const updateProfileStart = isFetching => ({
-  type: "UPDATE_PROFILE_START",
-  isFetching
-});
-
-/**
  * Helper action creator to be used when remote call updateProfile succeed.
  * @param json
  * @returns {{type: string, json: *}}
@@ -80,28 +70,23 @@ const updateProfileComplete = json => ({
 });
 
 /**
- * Helper action creator to be used when remote call updateProfile fails
- * @param error
- * @returns {{type: string, error: *}}
- */
-const updateProfileFailed = error => ({
-  type: "UPDATE_PROFILE_FAILED",
-  error
-});
-
-/**
  * Action creator - fetching profile information
  * @returns {Function}
  */
 const getProfile = () => {
-  return function(dispatch) {
-    dispatch(getProfileStart(true));
+  return (dispatch) => {
+    dispatch(fetchStart(true));
     return profileService.findOrCreate()
       .then(json => {
-        dispatch(getProfileComplete(json));
+        const error = profileService.validateProfile(json);
+        if (error.message) {
+          dispatch(validationFailed(error));
+        } else {
+          dispatch(getProfileComplete(json));
+        }
       })
       .catch(err => {
-        dispatch(getProfileFailed(err));
+        dispatch(fetchFailed(err));
       });
   };
 };
@@ -112,22 +97,37 @@ const getProfile = () => {
  * @returns {Function}
  */
 const updateProfile = profile => {
-  return function(dispatch, getState) {
+  return (dispatch) => {
     const error = profileService.validateProfile(profile);
     if (error.message) {
       dispatch(validationFailed(error));
     } else {
-      dispatch(updateProfileStart(true));
+      dispatch(fetchStart(true));
       return profileService.updateProfile(profile)
-        .then(response => {
-          dispatch(updateProfileComplete(response));
+        .then(json => {
+          const error = profileService.validateProfile(json);
+          if (error.message) {
+            dispatch(validationFailed(error));
+          } else {
+            dispatch(updateProfileComplete(json));
+          }
         })
         .catch(error => {
-          dispatch(updateProfileFailed(error));
+          dispatch(fetchFailed(error));
         });
     }
   };
 };
+
+/**
+ * Action creator to be used when update input fields of the profile
+ * @param value
+ * @returns {{type: string, value: *}}
+ */
+const handleChange = value => ({
+  type: "HANDLE_CHANGE_PROFILE",
+  value
+});
 
 /**
  * Exposed profile action interface
@@ -140,7 +140,8 @@ const updateProfile = profile => {
 export const ProfileActionFactory = () => {
   return {
     getProfile,
-    updateProfile
+    updateProfile,
+    handleChange
   };
 };
 

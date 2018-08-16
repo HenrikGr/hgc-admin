@@ -1,9 +1,9 @@
 /**
- * Description: Profile business logic module
+ * Description: Profile API service
  *
- * Profile service exposes a set of function representing business logic for profile data.
- * The business logic consist of a set of CRUD API functions and other types of services
- * such as validating inputs before performing the remote calls.
+ * Profile service exposes a set of function representing business logic for profile data
+ * in terms of a set of CRUD API functions and other types of services such as validating
+ * inputs before performing the remote calls.
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
@@ -11,40 +11,29 @@
  * @license: The MIT License (MIT)
  */
 
-// query string parser
+// query string parser to stringify entity objects when posting
 import qs from 'qs';
 
 // XHR service
 import XHRService, { errorHandler } from "./XHRService";
 
 // Schema services
-import ProfileSchema from '../../domain/schemas/ProfileSchema';
+import ProfileSchema from '../schemas/ProfileEntity';
 
 // XHR instance
 const XHR = XHRService.getInstance();
 
-function logField(prop) {
-  console.log('field: ', ProfileSchema.getFieldByName(prop))
-}
-
-const model = ['_id', 'firstName', 'lastName', 'email', 'phone', 'createdAt', 'updatedAt'];
-
-model.forEach(prop => {
-  logField(prop);
-});
-
 /**
- * Validate a profile object against the schema
- * @param profile
- * @returns {*}
+ * Validate profile entity
+ * @param {object} profile - profile entity
+ * @returns {object} - either error object or profile entity
  */
 function validateProfile(profile) {
   return ProfileSchema.isValid(profile);
 }
 
-
 /**
- * Fin current profile for the authenticated user or create a new
+ * Find or create profile for the authenticated user
  * @returns {Promise<AxiosResponse<any>>}
  */
 function findOrCreate() {
@@ -57,10 +46,9 @@ function findOrCreate() {
     });
 }
 
-
 /**
  * Update profile for the authenticated user.
- * @param profile
+ * @param {object} profile - profile entity
  * @returns {Promise<AxiosResponse<any>>}
  */
 function updateProfile(profile) {
@@ -72,7 +60,6 @@ function updateProfile(profile) {
       return Promise.reject(errorHandler(error));
     });
 }
-
 
 /**
  * Find profiles
@@ -96,7 +83,6 @@ function getProfiles(params) {
     });
 }
 
-
 /**
  * Get a profile by id
  * @param id
@@ -111,7 +97,6 @@ function getProfileById(id) {
       return Promise.reject(errorHandler(error));
     });
 }
-
 
 /**
  * Update profile by id
@@ -128,7 +113,6 @@ function updateProfileById(id, profile) {
       return Promise.reject(errorHandler(error));
     });
 }
-
 
 /**
  * Delete profile by id
@@ -149,7 +133,7 @@ function deleteProfileById(id) {
  * Export interface for the profile service
  * @constructor
  */
-const ProfileServiceFactory = () => {
+function ProfileServiceFactory() {
   return {
     validateProfile,
     findOrCreate,
@@ -159,6 +143,6 @@ const ProfileServiceFactory = () => {
     updateProfileById,
     deleteProfileById
   };
-};
+}
 
-export default ProfileServiceFactory();
+export default new ProfileServiceFactory();

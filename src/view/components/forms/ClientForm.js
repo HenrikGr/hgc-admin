@@ -101,7 +101,6 @@ class ClientForm extends React.Component {
     this.setState({ [id]: event.target.value});
   };
 
-
   renderSelectField = uiSchema => {
     const { classes } = this.props;
 
@@ -136,8 +135,8 @@ class ClientForm extends React.Component {
 
     return(
       <TextField
-        disabled={ uiSchema.readOnly }
         key={ uiSchema.id }
+        disabled={ uiSchema.readOnly }
         className={ classes.formControl }
         fullWidth={ false }
         label={ uiSchema.label }

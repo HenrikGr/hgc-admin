@@ -1,7 +1,5 @@
 /**
- * Description: Session business logic module
- *
- * Session service exposes a set of function representing business logic for session data.
+ * Description: Session API service
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
@@ -12,9 +10,8 @@
 // XHR service
 import XHRService, { errorHandler } from "./XHRService";
 
-// Schema services
-import CredentialSchema from '../../domain/schemas/SessionSchema';
-
+// Credentials schema
+import CredentialEntity from '../schemas/CredentialsEntity';
 
 // XHR instance
 const XHR = XHRService.getInstance();
@@ -22,21 +19,19 @@ const XHR = XHRService.getInstance();
 // Oauth 2 variables
 const API_CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
 
-
 /**
- * Validate a profile object
- * @param credentials
- * @returns {{message: string}}
+ * Validate credentials entity
+ * @param {object} credentials - credentials entity
+ * @returns {object} - either error object or credential entity
  */
 function validateCredentials(credentials) {
-  return CredentialSchema.isValid(credentials);
+  return CredentialEntity.isValid(credentials);
 }
-
 
 /**
  * Get a new session
- * @param credentials
- * @returns {Promise<T>}
+ * @param {object} credentials - entity object for credentials
+ * @returns {Promise<AxiosResponse<any> | never | never>}
  */
 function getSession(credentials) {
   let body = "username=" +
@@ -61,7 +56,7 @@ function getSession(credentials) {
 /**
  * Refresh/extend session
  * @param refresh_token
- * @returns {Promise<T>}
+ * @returns {Promise<AxiosResponse<any> | never | never>}
  */
 function refreshSession(refresh_token) {
   let body = "refresh_token=" +
@@ -92,13 +87,13 @@ function removeSession() {
  * Export session service methods
  * @constructor
  */
-export const SessionServiceFactory = () => {
+function SessionServiceFactory() {
   return {
     validateCredentials,
     getSession,
     refreshSession,
     removeSession,
   };
-};
+}
 
-export const sessionService = SessionServiceFactory();
+export default new SessionServiceFactory();

@@ -11,37 +11,30 @@
  * @license: The MIT License (MIT)
  */
 
-// query string parser
+// query string parser to stringify entity objects when posting
 import qs from 'qs';
 
 // XHR service
 import XHRService, { errorHandler } from "./XHRService";
 
 // Schema services
-import userSchema from '../../domain/schemas/json/user';
-import ValidatorFactory, { schemaErrorHandler } from '../../domain/schemas';
+import UserEntity from '../schemas/UserEntity';
 
 // XHR instance
 const XHR = XHRService.getInstance();
 
-// Validator instance
-const Validator = ValidatorFactory(userSchema);
-
-
 /**
- * Validate a user object
- * @param user
- * @returns {*}
+ * Validate user entity
+ * @param {object} user - user entity
+ * @returns {object} - either error object or user entity
  */
 function validateUser(user) {
-  // Clone object in order to support filtering of id prop.
-  return !Validator(Object.assign({}, user)) ? schemaErrorHandler(Validator.errors) : user;
+  return UserEntity.isValid(user);
 }
-
 
 /**
  * Create new user
- * @param user
+ * @param {object} user - user entity
  * @returns {Promise<AxiosResponse<any>>}
  */
 function createUser(user) {
@@ -54,7 +47,6 @@ function createUser(user) {
     });
 }
 
-
 /**
  * Get users
  * Support for param queries such as;
@@ -64,7 +56,7 @@ function createUser(user) {
  * - sorting,
  * - projection,
  * - etc...
- * @param params
+ * @param {object} params - query object
  * @returns {Promise<AxiosResponse<any>>}
  */
 function getUsers(params) {
@@ -77,10 +69,9 @@ function getUsers(params) {
     });
 }
 
-
 /**
  * Get user by id
- * @param id
+ * @param {string} id - id key for a user
  * @returns {Promise<AxiosResponse<any>>}
  */
 function getUserById(id) {
@@ -96,8 +87,8 @@ function getUserById(id) {
 
 /**
  * Update user by id
- * @param id
- * @param user
+ * @param {string} id - id key for a user
+ * @param {object} user - user entity
  * @returns {Promise<AxiosResponse<any>>}
  */
 function updateUserById(id, user) {
@@ -110,11 +101,10 @@ function updateUserById(id, user) {
     });
 }
 
-
 /**
  * Update users by ids
- * @param ids
- * @param user
+ * @param {array} ids - array of ids to be updated with the user entity
+ * @param {object} user - user entity
  * @returns {Promise<any>}
  */
 function updateUsersByIds(ids, user) {
@@ -140,10 +130,9 @@ function updateUsersByIds(ids, user) {
   })
 }
 
-
 /**
  * Delete user by id
- * @param id
+ * @param {string} id - id key for a user
  * @returns {Promise<AxiosResponse<any>>}
  */
 function deleteUserById(id) {
@@ -159,11 +148,10 @@ function deleteUserById(id) {
 
 /**
  * Delete multiple users by ids
- * @param ids
+ * @param {string} ids - array of ids for a users to be deleted
  * @returns {Promise<any>}
  */
 function deleteUsersByIds(ids) {
-
   // Create array of promise calls for each user ids
   let promises = [];
   ids.forEach(id => {
@@ -188,7 +176,7 @@ function deleteUsersByIds(ids) {
  * Export interface for the user service
  * @constructor
  */
-export const UserServiceFactory = () => {
+function UserServiceFactory () {
   return {
     validateUser,
     createUser,
@@ -202,4 +190,4 @@ export const UserServiceFactory = () => {
 };
 
 // Export interface
-export default UserServiceFactory();
+export default new UserServiceFactory();

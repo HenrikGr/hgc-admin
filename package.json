@@ -1,10 +1,10 @@
 {
-  "name": "HGC-CLIENT",
+  "name": "HGC-ADMIN",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^1.3.0",
-    "@material-ui/icons": "^1.1.0",
+    "@material-ui/core": "^1.5.0",
+    "@material-ui/icons": "^2.0.2",
     "ajv": "^6.5.2",
     "axios": "^0.18.0",
     "cfenv": "^1.1.0",
@@ -16,26 +16,24 @@
     "keycode": "^2.2.0",
     "prop-types": "15.6.2",
     "qs": "^6.5.2",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
-    "react-jss": "^8.6.0",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
+    "react-jss": "^8.6.1",
     "react-redux": "^5.0.7",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
-    "recompose": "^0.27.1",
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
-    "enzyme": "^3.3.0",
-    "enzyme-adapter-react-16": "^1.1.1",
-    "react-test-renderer": "^16.4.1",
+    "enzyme": "^3.4.1",
+    "enzyme-adapter-react-16": "^1.2.0",
+    "react-test-renderer": "^16.4.2",
     "redux-devtools-extension": "^2.13.5",
-    "sinon": "^6.0.1"
+    "sinon": "^6.1.5"
   },
   "scripts": {
-    "server": "node server.js",
     "start": "node server.js",
     "start-dev": "react-scripts start",
     "build": "react-scripts build",

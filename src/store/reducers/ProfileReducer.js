@@ -29,17 +29,45 @@ import defaults from './DefaultState'
 const profileReducer = (state = defaults.profile, action) => {
   switch (action.type) {
     case "PROFILE_VALIDATION_FAILED":
-    case "GET_PROFILE_FAILED":
-    case "UPDATE_PROFILE_FAILED":
-      return Object.assign({}, { error: action.error });
+      return {
+        ...state,
+        error: action.error
+      };
 
-    case "GET_PROFILE_START":
-    case "UPDATE_PROFILE_START":
-      return Object.assign({}, { isFetching: action.isFetching });
+    case "FETCH_PROFILE_STARTED":
+      return {
+        ...state,
+        error: {},
+        isFetching: action.isFetching
+      };
+
+    case "FETCH_PROFILE_FAILED":
+      return {
+        ...state,
+        error: action.error,
+        isFetching: false
+      };
 
     case "GET_PROFILE_COMPLETE":
+      return {
+        ...state,
+        entity: action.json,
+        isFetching: false
+      };
+
     case "UPDATE_PROFILE_COMPLETE":
-      return Object.assign({}, action.json);
+      return {
+        ...state,
+        entity: action.json,
+        isFetching: false
+      };
+
+    case "HANDLE_CHANGE_PROFILE":
+      return {
+        ...state,
+        entity: {...state.entity, ...action.value},
+        error: {}
+      };
 
     default:
       return state;

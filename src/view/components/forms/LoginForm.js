@@ -52,22 +52,18 @@ const styles = theme => ({
 
 /**
  * LoginForm component
- * @param props
+ * @param classes
+ * @param formLabel
+ * @param entity
+ * @param showPassword
+ * @param isFetching
+ * @param onSubmit
+ * @param onChange
+ * @param onShowPassword
  * @returns {*}
  * @constructor
  */
-function LoginForm(props) {
-  const {
-    classes,
-    formLabel,
-    entity,
-    showPassword,
-    isFetching,
-    onSubmit,
-    onChange,
-    onShowPassword
-  } = props;
-
+function LoginForm({ classes, formLabel, entity, showPassword, isFetching, onSubmit, onChange, onShowPassword }) {
   return(
     <div className={ classes.root }>
       <div className={ classes.formWrapper }>

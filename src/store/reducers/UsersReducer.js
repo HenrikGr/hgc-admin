@@ -41,20 +41,21 @@ const usersReducer = (state = defaults.users, action) => {
       return { ...state, error: action.error };
 
     case "FETCH_USERS_STARTED":
-      return { ...state, isFetching: action.isFetching };
+      return { ...state, error: {}, isFetching: action.isFetching };
     case "FETCH_USERS_FAILED":
       return { ...state, error: action.error, isFetching: false  };
+
     case "GET_USERS_COMPLETE":
-      return { ...state, docs: action.users.docs, isFetching: false };
+      return { ...state, entities: action.users.docs, isFetching: false };
 
     case "CREATE_USER_COMPLETE":
-      return { ...state, docs: appendElement(state.docs, action.user), isFetching: false, error: {} };
+      return { ...state, entities: appendElement(state.entities, action.user), isFetching: false, error: {} };
 
     case "DELETE_USER_COMPLETE":
-      return { ...state, docs: removeById(state.docs, action.id), isFetching: false, error: {} };
+      return { ...state, entities: removeById(state.entities, action.id), isFetching: false, error: {} };
 
     case "UPDATE_USER_COMPLETE":
-      return { ...state, docs: updateElement(state.docs, action.user), isFetching: false, error: {} };
+      return { ...state, entities: updateElement(state.entities, action.user), isFetching: false, error: {} };
 
     case "RESET_ERROR":
       return { ...state, error: {}, isFetching: false };

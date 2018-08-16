@@ -33,18 +33,46 @@ import defaults from './DefaultState'
  */
 const sessionReducer = (state = defaults.session, action) => {
   switch (action.type) {
-    case "CREDENTIALS_FAILED":
-    case "GET_SESSION_FAILED":
-      return Object.assign({}, { error: action.error });
+    case "SHOW_PASSWORD":
+      return {
+        ...state,
+        showPassword: action.show
+      };
+    case "HANDLE_CHANGE_CREDENTIALS":
+      return {
+        ...state,
+        entity: { ...state.entity, ...action.value },
+        error: {},
+        isFetching: false
+      };
 
-    case "GET_SESSION_START":
-      return Object.assign({}, { isFetching: action.isFetching });
+    case "CREDENTIALS_VALIDATION_FAILED":
+      return {
+        ...state,
+        error: action.error
+      };
 
-    case "GET_SESSION_COMPLETE":
-      return Object.assign({}, action.json);
+    case "FETCH_SESSION_START":
+      return {
+        ...state,
+        error: {},
+        isFetching: true
+      };
 
-    case "RESET_SESSION":
-      return Object.assign({}, {});
+    case "FETCH_SESSION_FAILED":
+      return {
+        ...state,
+        error: action.error,
+        isFetching: false
+      };
+
+    case "FETCH_SESSION_COMPLETE":
+      return { ...state,
+        token: action.json,
+        entity: defaults.session.entity,
+        redirectToReferrer: true,
+        isFetching: false,
+      };
 
     default:
       return state;

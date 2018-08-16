@@ -41,7 +41,7 @@ const clientsReducer = (state = defaults.clients, action) => {
       return { ...state, error: action.error };
 
     case "FETCH_CLIENTS_STARTED":
-      return { ...state, isFetching: action.isFetching };
+      return { ...state, error: {}, isFetching: action.isFetching };
     case "FETCH_CLIENTS_FAILED":
       return { ...state, error: action.error, isFetching: false  };
     case "FETCH_CLIENTS_COMPLETE":

@@ -27,6 +27,8 @@ import profileReducer from './ProfileReducer';
 import usersReducer from './UsersReducer';
 import clientsReducer from './ClientsReducer';
 
+import defaultState from './DefaultState'
+
 /**
  * Combine different state branch reducers to one app reducer
  * @type {Reducer<any>}
@@ -47,10 +49,23 @@ const appReducer = combineReducers({
  * @returns {*}
  */
 const rootReducer = (state, action) => {
-  if (action.type === 'REMOVE_SESSION') {
-    state = undefined
+  switch(action.type) {
+    case "REMOVE_SESSION":
+      return defaultState;
+
+    case "RESET_ERROR":
+      return {
+        ...state,
+        session: { ...state.session, error: {} },
+        profile: { ...state.profile, error: {}},
+        users: { ...state.users, error: {}},
+        clients: { ...state.clients, error: {}},
+      };
+
+
+    default:
+      return appReducer(state, action)
   }
-  return appReducer(state, action)
 };
 
 export default rootReducer;
