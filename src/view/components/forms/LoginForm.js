@@ -77,12 +77,14 @@ function LoginForm({ classes, formLabel, entity, showPassword, isFetching, onSub
             id="username"
             label="User name"
             required={true}
+            autoComplete="username"
             value={ entity.username }
             onChange={ onChange }
           />
 
           <PasswordField
             id="password"
+            autoComplete="current-password"
             value={ entity.password }
             showPassword={ showPassword }
             onChange={ onChange }
