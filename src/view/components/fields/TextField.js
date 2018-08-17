@@ -33,8 +33,10 @@ function TextField(props) {
   const {
     classes,
     id,
+    type,
     disabled,
     required,
+    autoComplete,
     value,
     label,
     onChange,
@@ -50,9 +52,10 @@ function TextField(props) {
       </InputLabel>
       <Input
         id={ id }
+        type={ type }
         disable={ disabled.toString() }
+        autoComplete={ autoComplete }
         value={ value }
-        autoComplete={ id }
         onChange={ onChange(id) }
       />
     </FormControl>
@@ -62,14 +65,17 @@ function TextField(props) {
 TextField.propTypes = {
   classes: PropTypes.object,
   id: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
   disabled: PropTypes.bool.isRequired,
   required: PropTypes.bool.isRequired,
+  autoComplete: PropTypes.string,
   value: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };
 
 TextField.defaultProps = {
+  type: "text",
   label: 'label',
   disabled: false,
   required: false,
