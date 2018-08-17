@@ -39,6 +39,7 @@ function PasswordField(props) {
     id,
     disabled,
     required,
+    autoComplete,
     value,
     label,
     showPassword,
@@ -59,6 +60,7 @@ function PasswordField(props) {
         disabled={ disabled }
         type={ showPassword ? 'text' : 'password' }
         value={ value }
+        autoComplete={ autoComplete }
         onChange={ onChange(id) }
         endAdornment={
           <InputAdornment position="end">
@@ -80,16 +82,18 @@ PasswordField.propTypes = {
   classes: PropTypes.object,
   id: PropTypes.string.isRequired,
   disabled: PropTypes.bool.isRequired,
+  required: PropTypes.bool.isRequired,
+  autoComplete: PropTypes.string,
   value: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   showPassword: PropTypes.bool.isRequired,
-  onChange: PropTypes.func,
+  onChange: PropTypes.func.isRequired,
   onShowPassword: PropTypes.func.isRequired,
 };
 
 PasswordField.defaultProps = {
-  disabled: false,
   id: "password",
+  disabled: false,
   required: true,
   label: "Password",
   showPassword: false,
