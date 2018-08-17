@@ -40,7 +40,7 @@ function ProfileForm({classes, formLabel, entity, isFetching, onChange, onSubmit
   return(
     <div className={classes.root}>
       <div className={classes.formWrapper}>
-        <form className={classes.form} onSubmit={ onSubmit }>
+        <form className={classes.form} onSubmit={ onSubmit } >
 
           <FormLabel component="legend">
             {formLabel}
@@ -48,6 +48,7 @@ function ProfileForm({classes, formLabel, entity, isFetching, onChange, onSubmit
 
           <TextField
             id="email"
+            type="email"
             label="Email"
             value={ entity.email }
             onChange={ onChange }
@@ -69,6 +70,7 @@ function ProfileForm({classes, formLabel, entity, isFetching, onChange, onSubmit
 
           <TextField
             id="phone"
+            type="tel"
             label="Phone"
             value={ entity.phone }
             onChange={ onChange }
