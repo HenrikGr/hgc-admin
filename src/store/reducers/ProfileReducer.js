@@ -19,53 +19,61 @@
 
 // initial state
 import defaults from './DefaultState'
+import {
+  PROFILE_VALIDATION_FAILED,
+  FETCH_PROFILE_STARTED,
+  FETCH_PROFILE_FAILED,
+  FETCH_PROFILE_SUCCESS,
+  UPDATE_PROFILE_STATE,
+  RESET_PROFILE_ERROR,
+} from '../actions/constants';
+
 
 /**
  * Profile state reducer
- * @param state
- * @param action
+ * @param {object} state - global state which defaults to the profile branch
+ * @param {object} action - action creator object in the form { type: ACTION, payload: data }
  * @returns {*}
  */
 const profileReducer = (state = defaults.profile, action) => {
   switch (action.type) {
-    case "PROFILE_VALIDATION_FAILED":
+    case PROFILE_VALIDATION_FAILED:
       return {
         ...state,
-        error: action.error
+        error: action.payload
       };
 
-    case "FETCH_PROFILE_STARTED":
+    case FETCH_PROFILE_STARTED:
       return {
         ...state,
         error: {},
-        isFetching: action.isFetching
+        isFetching: true
       };
 
-    case "FETCH_PROFILE_FAILED":
+    case FETCH_PROFILE_FAILED:
       return {
         ...state,
-        error: action.error,
+        error: action.payload,
         isFetching: false
       };
 
-    case "GET_PROFILE_COMPLETE":
+    case FETCH_PROFILE_SUCCESS:
       return {
         ...state,
-        entity: action.json,
+        entity: action.payload,
         isFetching: false
       };
 
-    case "UPDATE_PROFILE_COMPLETE":
+    case UPDATE_PROFILE_STATE:
       return {
         ...state,
-        entity: action.json,
-        isFetching: false
+        entity: {...state.entity, ...action.payload },
+        error: {}
       };
 
-    case "HANDLE_CHANGE_PROFILE":
+    case RESET_PROFILE_ERROR:
       return {
         ...state,
-        entity: {...state.entity, ...action.value},
         error: {}
       };
 
