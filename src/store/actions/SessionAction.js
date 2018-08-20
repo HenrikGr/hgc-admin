@@ -1,14 +1,5 @@
 /**
- * Description: Module containing action creators for the session state.
- *
- * The session actions consist of two remote CRUD operations to create and refresh session
- * information to the state.
- *
- * There is also helpers action creators that describe the new state that should be set
- * during the remote calls in case of start, success or failure.
- *
- * The remote calls using session service module that contains business logic
- * for session information, for example validation of data and CRUD XHR calls
+ * Description: Module containing action creators for the session state branch.
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
@@ -18,128 +9,102 @@
 
 // Business logic for session data
 import sessionService from '../../domain/service/Session';
-
-/**
- * Helper action creator to be used when there is a client validation error
- * @param {object} error - ValidationError object
- * @returns {{type: string, error: object}}
- */
-const validationFailed = error => ({
-  type: "CREDENTIALS_VALIDATION_FAILED",
-  error
-});
-
-/**
- * Helper action creator to be used when starting remote call getSession
- * @returns {{type: string}}
- */
-const fetchSessionStart = () => ({
-  type: "FETCH_SESSION_START",
-});
-
-/**
- * Helper action creator to be used when remote call getSession fails
- * @param error
- * @returns {{type: string, error: *}}
- */
-const fetchSessionFailed = error => ({
-  type: "FETCH_SESSION_FAILED",
-  error
-});
-
-/**
- * Helper action creator to be used when remote call getSession succeed.
- * @param json
- * @returns {{type: string, json: *}}
- */
-const fetchSessionComplete = json => ({
-  type: "FETCH_SESSION_COMPLETE",
-  json
-});
+import {
+  CREDENTIALS_VALIDATION_FAILED,
+  FETCH_SESSION_START,
+  FETCH_SESSION_FAILED,
+  FETCH_SESSION_SUCCESS,
+  PASSWORD_VISIBLE,
+  UPDATE_CREDENTIALS,
+  RESET_SESSION_ERROR,
+  REMOVE_SESSION,
+} from '../actions/constants'
 
 /**
  * Action creator - fetching session information, aka access_token
  * @param {object} credentials - credential object
  * @returns {Function}
  */
-const getSession = credentials => {
+function getSession(credentials) {
   return function(dispatch) {
     const error = sessionService.validateCredentials(credentials);
     if (error.message) {
-      dispatch(validationFailed(error));
+      dispatch({ type: CREDENTIALS_VALIDATION_FAILED, payload: error } );
     } else {
-      dispatch(fetchSessionStart());
+      dispatch({ type: FETCH_SESSION_START });
       sessionService.getSession(credentials).then(json => {
-        dispatch(fetchSessionComplete(json))
+        dispatch({ type: FETCH_SESSION_SUCCESS, payload: json })
       }).catch(err => {
-        dispatch(fetchSessionFailed(err))
+        dispatch({ type: FETCH_SESSION_FAILED, payload: err })
       })
     }
   }
-};
+}
 
 /**
  * Action creator - fetching session information via refresh_token
- * @returns {function(*, *): Promise<T>}
- */
-const refreshSession = () => {
-  return function(dispatch, getState) {
-    const { refresh_token } = getState().session.token;
-    dispatch(fetchSessionStart(true));
-    sessionService.refreshSession(refresh_token).then(json => {
-      dispatch(fetchSessionComplete(json))
-    }).catch(err => {
-      dispatch(fetchSessionFailed(err))
-    })
-  }
-};
-
-/**
- * Action creator that removes session information from session state
- * and from session service module
  * @returns {Function}
  */
-const removeSession = () => {
-  sessionService.removeSession();
-  return {
-    type: "REMOVE_SESSION",
-  };
-};
+function refreshSession() {
+  return function(dispatch, getState) {
+    // Get refresh token from state
+    const { refresh_token } = getState().session.token;
+    dispatch({ type: FETCH_SESSION_START });
+    sessionService.refreshSession(refresh_token).then(json => {
+      dispatch({ type: FETCH_SESSION_SUCCESS, payload: json })
+    }).catch(err => {
+      dispatch({ type: FETCH_SESSION_FAILED, payload: err })
+    })
+  }
+}
 
 /**
- * Action creator to be used when update input fields of the profile
- * @param value
- * @returns {{type: string, value: *}}
+ * Action creator to toggle visible password
+ * @returns {{type: string}}
  */
-const handleChange = value => ({
-  type: "HANDLE_CHANGE_CREDENTIALS",
-  value
-});
+function togglePasswordVisible() {
+  return { type: PASSWORD_VISIBLE }
+}
 
-const toggleShowPassword = show => ({
-  type: "SHOW_PASSWORD",
-  show
-});
+/**
+ * Action creator to store credentials updates in state
+ * @param {string} value - character entered in credentials input
+ * @returns {{type: string, payload: *}}
+ */
+function updateCredentials(value) {
+  return { type: UPDATE_CREDENTIALS, payload: value }
+}
 
 /**
  * Action creator to reset error messages
+ * @returns {{type: string}}
  */
-const resetError = () => ({
-  type: "RESET_ERROR"
-});
+function resetSessionError() {
+  return { type: RESET_SESSION_ERROR }
+}
 
 /**
- * Exposed session interface
+ * Action creator that removes session information from session state
+ * It will also remove the access token from the XHR service
+ * @returns {{type: string}}
+ */
+function removeSession() {
+  sessionService.removeSession();
+  return { type: REMOVE_SESSION };
+}
+
+/**
+ * Factory for session action interface
  * @constructor
  */
 function SessionActionFactory() {
   return {
     getSession,
     refreshSession,
+    togglePasswordVisible,
+    updateCredentials,
     removeSession,
-    handleChange,
-    resetError,
-    toggleShowPassword,
+    resetSessionError,
   }
 }
 
