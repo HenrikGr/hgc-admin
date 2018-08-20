@@ -1,15 +1,6 @@
 /**
  * Description: Module containing action creators for the profile state.
  *
- * The profile actions consist of two remote CRUD operations to retrieve and update profile
- * information to the state.
- *
- * There is also helpers action creators that describe the new state that should be set
- * during the remote calls in case of start, success or failure.
- *
- * The remote calls using profile service module that contains business logic
- * for profile information, for example validation of data and CRUD XHR calls
- *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
@@ -18,132 +9,94 @@
 
 // Business logic for profile data
 import profileService from "../../domain/service/Profile";
-
-/**
- * Helper action creator to be used when there is a client validation error
- * @param error
- * @returns {{type: string, error: *}}
- */
-const validationFailed = error => ({
-  type: "PROFILE_VALIDATION_FAILED",
-  error
-});
-
-/**
- * Helper action creator to be used when starting remote call getUsers
- * @param isFetching
- * @returns {{type: string, isFetching: *}}
- */
-const fetchStart = (isFetching) => ({
-  type: "FETCH_PROFILE_STARTED",
-  isFetching
-});
-
-/**
- * Helper action creator to be used when remote call getUsers fails
- * @param error
- * @returns {{type: string, error: *}}
- */
-const fetchFailed = error => ({
-  type: "FETCH_PROFILE_FAILED",
-  error
-});
-
-/**
- * Helper action creator to be used when remote call getProfile succeed.
- * @param json
- * @returns {{type: string, json: *}}
- */
-const getProfileComplete = json => ({
-  type: "GET_PROFILE_COMPLETE",
-  json
-});
-
-/**
- * Helper action creator to be used when remote call updateProfile succeed.
- * @param json
- * @returns {{type: string, json: *}}
- */
-const updateProfileComplete = json => ({
-  type: "UPDATE_PROFILE_COMPLETE",
-  json
-});
+import {
+  PROFILE_VALIDATION_FAILED,
+  FETCH_PROFILE_STARTED,
+  FETCH_PROFILE_FAILED,
+  FETCH_PROFILE_SUCCESS,
+  UPDATE_PROFILE_STATE,
+  RESET_PROFILE_ERROR
+} from '../actions/constants';
 
 /**
  * Action creator - fetching profile information
- * @returns {Function}
+ * @returns {function(*): Promise<T | never>}
  */
-const getProfile = () => {
+function getProfile() {
   return (dispatch) => {
-    dispatch(fetchStart(true));
+    dispatch({ type: FETCH_PROFILE_STARTED });
     return profileService.findOrCreate()
       .then(json => {
         const error = profileService.validateProfile(json);
         if (error.message) {
-          dispatch(validationFailed(error));
+          dispatch({ type: PROFILE_VALIDATION_FAILED, payload: error});
         } else {
-          dispatch(getProfileComplete(json));
+          dispatch({ type: FETCH_PROFILE_SUCCESS, payload: json });
         }
       })
       .catch(err => {
-        dispatch(fetchFailed(err));
+        dispatch({ type: FETCH_PROFILE_FAILED, payload: err });
       });
   };
-};
+}
 
 /**
  * Action creator - update profile information
- * @param profile
+ * @param {object} profile - profile entity
  * @returns {Function}
  */
-const updateProfile = profile => {
+function updateProfile(profile) {
   return (dispatch) => {
     const error = profileService.validateProfile(profile);
     if (error.message) {
-      dispatch(validationFailed(error));
+      dispatch({ type: PROFILE_VALIDATION_FAILED, payload: error});
     } else {
-      dispatch(fetchStart(true));
+      dispatch({ type: FETCH_PROFILE_STARTED });
       return profileService.updateProfile(profile)
         .then(json => {
           const error = profileService.validateProfile(json);
           if (error.message) {
-            dispatch(validationFailed(error));
+            dispatch({ type: PROFILE_VALIDATION_FAILED, payload: error});
           } else {
-            dispatch(updateProfileComplete(json));
+            dispatch({ type: FETCH_PROFILE_SUCCESS, payload: json });
           }
         })
-        .catch(error => {
-          dispatch(fetchFailed(error));
+        .catch(err => {
+          dispatch({ type: FETCH_PROFILE_FAILED, payload: err });
         });
     }
   };
-};
+}
 
 /**
  * Action creator to be used when update input fields of the profile
- * @param value
- * @returns {{type: string, value: *}}
+ * @param {string} value - character entered in input fields
+ * @returns {{type: string, payload: *}}
  */
-const handleChange = value => ({
-  type: "HANDLE_CHANGE_PROFILE",
-  value
-});
+function updateProfileState(value) {
+  return { type: UPDATE_PROFILE_STATE, payload: value }
+}
 
 /**
- * Exposed profile action interface
- * @returns {{
- * getProfile: function(): function(*): (Promise<T> | *),
- * updateProfile: function(*=): Function
- * }}
+ * Action creator to reset error messages
+ * @returns {{type: string}}
+ */
+function resetProfileError() {
+  return { type: RESET_PROFILE_ERROR }
+}
+
+/**
+ * Factory for profile interface
  * @constructor
  */
-export const ProfileActionFactory = () => {
+function ProfileActionFactory() {
   return {
     getProfile,
     updateProfile,
-    handleChange
+    updateProfileState,
+    resetProfileError
   };
-};
+}
 
 // Export interface
-export default ProfileActionFactory();
+export default new ProfileActionFactory();
