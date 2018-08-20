@@ -17,7 +17,7 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 
 // custom component
-import ErrorSnackbar from "../components/error/ErrorSnackbar";
+import Notification from "../components/notification/Notification";
 import LinearProgressbar from "../components/progress/LinearProgressbar";
 
 // Presentation layer
@@ -34,7 +34,8 @@ class LoginPage extends React.Component {
   /**
    * Props API
    */
-  static propTypes = {    /**
+  static propTypes = {
+    /**
      * Data entity to be rendered by the form
      */
     entity: PropTypes.object.isRequired,
@@ -55,45 +56,64 @@ class LoginPage extends React.Component {
      */
     error: PropTypes.object.isRequired,
     /**
-     * Function to update db
+     * Function to get session from db
      */
-    update: PropTypes.func.isRequired,
+    getSession: PropTypes.func.isRequired,
     /**
      * Function to update input data in global state
      */
-    updateState: PropTypes.func.isRequired,
+    updateCredentials: PropTypes.func.isRequired,
     /**
-     * Function to reset error
+     * Function to reset session validation error
      */
-    reset: PropTypes.func.isRequired,
+    resetSessionError: PropTypes.func.isRequired,
     /**
      * Function to toggle password visibility
      */
-    toggleShowPassword: PropTypes.func.isRequired,
+    togglePasswordVisible: PropTypes.func.isRequired,
   };
 
+  /**
+   * Reset possible errors on un mount
+   */
   componentWillUnmount() {
-    const { error } = this.props;
-    if (!isEmpty(error)) {
-      this.props.reset();
+    if (!isEmpty(this.props.error)) {
+      this.props.resetSessionError();
     }
   }
 
+  /**
+   * Event handler to deal with input values
+   * @param prop
+   * @returns {Function}
+   */
   handleChange = prop => event => {
-    this.props.updateState({ [prop]: event.target.value });
+    this.props.updateCredentials({ [prop]: event.target.value });
   };
 
+  /**
+   * Event handler for form submit
+   * @param event
+   */
   handleSubmit = event => {
     event.preventDefault();
-    this.props.update(this.props.entity);
+    this.props.getSession(this.props.entity);
   };
 
+  /**
+   * Event handler for toggle password visibility
+   */
   handleShowPassword = () => {
-    this.props.toggleShowPassword(!this.props.showPassword);
+    this.props.togglePasswordVisible();
   };
 
+  /**
+   * Event handler to reset validation errors
+   */
   handleReset = () => {
-    this.props.reset();
+    if (!isEmpty(this.props.error)) {
+      this.props.resetSessionError();
+    }
   };
 
   render() {
@@ -114,9 +134,10 @@ class LoginPage extends React.Component {
       <Grid container spacing={ 0 }>
         <Grid item xs={ 12 }>
 
-          <ErrorSnackbar
-            error={ error }
-            onResetError={ this.handleReset }
+          <Notification
+            variant="error"
+            messages={ error }
+            onResetMessages={ this.handleReset }
           />
 
           <LinearProgressbar
@@ -125,12 +146,12 @@ class LoginPage extends React.Component {
 
           <LoginForm
             formLabel="Log in"
-            entity={entity}
-            showPassword={showPassword}
-            isFetching={isFetching}
-            onSubmit={this.handleSubmit}
-            onChange={this.handleChange}
-            onShowPassword={this.handleShowPassword}
+            entity={ entity }
+            showPassword={ showPassword }
+            isFetching={ isFetching }
+            onSubmit={ this.handleSubmit }
+            onChange={ this.handleChange }
+            onShowPassword={ this.handleShowPassword }
           />
 
         </Grid>
@@ -139,6 +160,10 @@ class LoginPage extends React.Component {
   }
 }
 
+/**
+ * Map global state to props
+ * @param state
+ */
 const mapStateToProps = state => ({
   entity: state.session.entity,
   showPassword: state.session.showPassword,
@@ -147,21 +172,23 @@ const mapStateToProps = state => ({
   error: state.session.error,
 });
 
+/**
+ * Map actions to props
+ * @param dispatch
+ */
 const mapDispatchToProps = dispatch => {
   return {
-    update: (credentials) => {
+    getSession: (credentials) => {
       dispatch(sessionAction.getSession(credentials));
     },
-    updateState: (value) => {
-      dispatch(sessionAction.handleChange(value))
+    updateCredentials: (value) => {
+      dispatch(sessionAction.updateCredentials(value))
     },
-    reset: () => {
-      dispatch({
-        type: "RESET_ERROR",
-      })
+    resetSessionError: () => {
+      dispatch(sessionAction.resetSessionError())
     },
-    toggleShowPassword: (show) => {
-      dispatch(sessionAction.toggleShowPassword(show))
+    togglePasswordVisible: () => {
+      dispatch(sessionAction.togglePasswordVisible())
     }
   };
 };
