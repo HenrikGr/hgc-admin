@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 
 // custom component - presentation layer
-import ErrorSnackbar from '../components/error/ErrorSnackbar'
+import Notification from '../components/notification/Notification'
 import LinearProgressbar from '../components/progress/LinearProgressbar'
 import ProfileForm from '../components/forms/ProfileForm';
 
@@ -46,36 +46,51 @@ class ProfilePage extends React.Component {
     /**
      * Function to get data from db
      */
-    find: PropTypes.func.isRequired,
+    getProfile: PropTypes.func.isRequired,
     /**
      * Function to update db
      */
-    update: PropTypes.func.isRequired,
+    updateProfile: PropTypes.func.isRequired,
     /**
      * Function to update input data in global state
      */
-    updateState: PropTypes.func.isRequired,
+    updateProfileState: PropTypes.func.isRequired,
     /**
      * Function to reset error
      */
-    reset: PropTypes.func.isRequired,
+    resetProfileError: PropTypes.func.isRequired,
   };
 
+  /**
+   * Get profile on mount
+   */
   componentDidMount() {
-    this.props.find();
+    this.props.getProfile();
   }
 
+  /**
+   * Event handler to deal with input field changes
+   * @param prop
+   * @returns {Function}
+   */
   handleChange = prop => event => {
-    this.props.updateState({ [prop]: event.target.value });
+    this.props.updateProfileState({ [prop]: event.target.value });
   };
 
+  /**
+   * Event handler for submitting the form
+   * @param event
+   */
   handleSubmit = event => {
     event.preventDefault();
-    this.props.update(this.props.entity);
+    this.props.updateProfile(this.props.entity);
   };
 
+  /**
+   * Event handler to deal with resetting error notifications
+   */
   handleResetError = () => {
-    this.props.reset();
+    this.props.resetProfileError();
   };
 
   render() {
@@ -85,9 +100,10 @@ class ProfilePage extends React.Component {
       <Grid container spacing={ 0 }>
         <Grid item xs={ 12 }>
 
-          <ErrorSnackbar
-            error={ error }
-            onResetError={ this.handleResetError }
+          <Notification
+            variant="error"
+            messages={ error }
+            onResetMessages={ this.handleResetError }
           />
 
           <LinearProgressbar
@@ -108,27 +124,33 @@ class ProfilePage extends React.Component {
   }
 }
 
+/**
+ * Map global state to props
+ * @param state
+ */
 const mapStateToProps = state => ({
   entity: state.profile.entity,
   isFetching: state.profile.isFetching,
   error: state.profile.error,
 });
 
+/**
+ * Map actions to props
+ * @param dispatch
+ */
 const mapDispatchToProps = dispatch => {
   return {
-    find: () => {
+    getProfile: () => {
       dispatch(profileAction.getProfile());
     },
-    update: profile => {
+    updateProfile: profile => {
       dispatch(profileAction.updateProfile(profile));
     },
-    updateState: profile => {
-      dispatch(profileAction.handleChange(profile))
+    updateProfileState: profile => {
+      dispatch(profileAction.updateProfileState(profile))
     },
-    reset: () => {
-      dispatch({
-        type: "RESET_ERROR",
-      })
+    resetProfileError: () => {
+      dispatch(profileAction.resetProfileError())
     }
   };
 };
