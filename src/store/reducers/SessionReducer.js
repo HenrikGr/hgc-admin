@@ -1,8 +1,5 @@
 /**
- * Description: Module containing reducer for session state
- *
- * The session reducer function creates a new state based on the current state
- * and the description of the new state supplied by the session action creators.
+ * Description: Session reducer module
  *
  * GENERAL
  * Reducers are pure JavaScript functions that:
@@ -24,54 +21,70 @@
 
 // Default state shape
 import defaults from './DefaultState'
+import {
+  CREDENTIALS_VALIDATION_FAILED,
+  FETCH_SESSION_START,
+  FETCH_SESSION_FAILED,
+  FETCH_SESSION_SUCCESS,
+  PASSWORD_VISIBLE,
+  UPDATE_CREDENTIALS,
+  RESET_SESSION_ERROR,
+} from '../actions/constants'
 
 /**
  * Session reducer
- * @param state
- * @param action
+ * @param {object} state - global state which defaults to the session branch
+ * @param {object} action - action creator object in the form { type: ACTION, payload: data }
  * @returns {*}
  */
 const sessionReducer = (state = defaults.session, action) => {
   switch (action.type) {
-    case "SHOW_PASSWORD":
+    case CREDENTIALS_VALIDATION_FAILED:
       return {
         ...state,
-        showPassword: action.show
-      };
-    case "HANDLE_CHANGE_CREDENTIALS":
-      return {
-        ...state,
-        entity: { ...state.entity, ...action.value },
-        error: {},
-        isFetching: false
+        error: action.payload
       };
 
-    case "CREDENTIALS_VALIDATION_FAILED":
-      return {
-        ...state,
-        error: action.error
-      };
-
-    case "FETCH_SESSION_START":
+    case FETCH_SESSION_START:
       return {
         ...state,
         error: {},
         isFetching: true
       };
 
-    case "FETCH_SESSION_FAILED":
+    case FETCH_SESSION_FAILED:
       return {
         ...state,
-        error: action.error,
+        error: action.payload,
         isFetching: false
       };
 
-    case "FETCH_SESSION_COMPLETE":
+    case FETCH_SESSION_SUCCESS:
       return { ...state,
-        token: action.json,
+        token: action.payload,
         entity: defaults.session.entity,
         redirectToReferrer: true,
         isFetching: false,
+      };
+
+    case PASSWORD_VISIBLE:
+      return {
+        ...state,
+        showPassword: !state.showPassword
+      };
+
+    case UPDATE_CREDENTIALS:
+      return {
+        ...state,
+        entity: { ...state.entity, ...action.payload },
+        error: {},
+        isFetching: false
+      };
+
+    case RESET_SESSION_ERROR:
+      return {
+        ...state,
+        error: {}
       };
 
     default:
