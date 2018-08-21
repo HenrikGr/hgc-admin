@@ -23,11 +23,21 @@
  */
 
 // Initial state
-import defaults, {
-  appendElement,
-  removeById,
-  updateElement,
-} from './DefaultState'
+import defaults from './DefaultState'
+import {
+  USER_VALIDATION_FAILED,
+  USERS_FETCHING,
+  USERS_ERROR,
+  USERS_GET_SUCCESS,
+  //USERS_UPDATE_SUCCESS, // TODO: Test multi select and multi update
+  USER_CREATE_SUCCESS,
+  USER_UPDATE_SUCCESS,
+  USER_DELETE_SUCCESS,
+  USER_RESET_ERROR,
+} from "../actions/constants";
+
+// Array helper functions
+import { appendElement, removeById, updateElement } from '../../utils/helper'
 
 /**
  * Users state reducer
@@ -37,28 +47,63 @@ import defaults, {
  */
 const usersReducer = (state = defaults.users, action) => {
   switch (action.type) {
-    case "USER_VALIDATION_FAILED":
-      return { ...state, error: action.error };
+    case USER_VALIDATION_FAILED:
+      return {
+        ...state,
+        error: action.payload
+      };
 
-    case "FETCH_USERS_STARTED":
-      return { ...state, error: {}, isFetching: action.isFetching };
-    case "FETCH_USERS_FAILED":
-      return { ...state, error: action.error, isFetching: false  };
+    case USERS_FETCHING:
+      return {
+        ...state,
+        isFetching: true,
+        error: {}
+      };
 
-    case "GET_USERS_COMPLETE":
-      return { ...state, entities: action.users.docs, isFetching: false };
+    case USERS_ERROR:
+      return {
+        ...state,
+        error: action.payload,
+        isFetching: false
+      };
 
-    case "CREATE_USER_COMPLETE":
-      return { ...state, entities: appendElement(state.entities, action.user), isFetching: false, error: {} };
+    case USERS_GET_SUCCESS:
+      return {
+        ...state,
+        entities: action.payload,
+        isFetching: false
+      };
 
-    case "DELETE_USER_COMPLETE":
-      return { ...state, entities: removeById(state.entities, action.id), isFetching: false, error: {} };
+    case USER_CREATE_SUCCESS:
+      return {
+        ...state,
+        entities: appendElement(state.entities, action.payload),
+        isFetching: false,
+        error: {}
+      };
 
-    case "UPDATE_USER_COMPLETE":
-      return { ...state, entities: updateElement(state.entities, action.user), isFetching: false, error: {} };
+    case USER_DELETE_SUCCESS:
+      return {
+        ...state,
+        entities: removeById(state.entities, action.payload),
+        isFetching: false,
+        error: {}
+      };
 
-    case "RESET_ERROR":
-      return { ...state, error: {}, isFetching: false };
+    case USER_UPDATE_SUCCESS:
+      return {
+        ...state,
+        entities: updateElement(state.entities, action.payload),
+        isFetching: false,
+        error: {}
+      };
+
+    case USER_RESET_ERROR:
+      return {
+        ...state,
+        error: {},
+        isFetching: false
+      };
 
     default:
       return state;
