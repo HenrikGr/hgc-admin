@@ -20,11 +20,12 @@
  */
 
 import defaults from './DefaultState'
+import { LOG_STATUS } from '../actions/constants'
 
 const statusReducer = (state = defaults.status, action) => {
   switch (action.type) {
-    case "LOG_INFO":
-      return action.text;
+    case LOG_STATUS:
+      return action.payload;
     default:
       return state;
   }
