@@ -7,7 +7,7 @@
  * @license: The MIT License (MIT)
  */
 
-// Business logic for profile data
+// Profile XHR services
 import profileService from "../../domain/service/Profile";
 import {
   PROFILE_VALIDATION_FAILED,
