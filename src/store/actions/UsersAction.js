@@ -1,187 +1,146 @@
 /**
  * Description: Module containing action creators for the users state.
  *
- * The users actions consist of remote CRUD operations to retrieve users
- * information to the state.
- *
- * There is also helpers action creators that describe the new state that should be set
- * during the remote calls in case of start, success or failure.
- *
- * The remote calls using users service module that contains business logic
- * for users information.
- *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
 
-// Module dependencies
+// User XHR Service
 import userService from "../../domain/service/User";
-
-/**
- * Helper action creator to be used when there is a user validation error
- * @param error
- * @returns {{type: string, error: *}}
- */
-const validationFailed = error => ({
-  type: "USER_VALIDATION_FAILED",
-  error
-});
-
-/**
- * Helper action creator to be used when starting remote call getUsers
- * @param isFetching
- * @returns {{type: string, isFetching: *}}
- */
-const fetchStart = (isFetching) => ({
-  type: "FETCH_USERS_STARTED",
-  isFetching
-});
-
-/**
- * Helper action creator to be used when remote call getUsers fails
- * @param error
- * @returns {{type: string, error: *}}
- */
-const fetchFailed = error => ({
-  type: "FETCH_USERS_FAILED",
-  error
-});
-
-const getUsersComplete = users => ({
-  type: "GET_USERS_COMPLETE",
-  users
-});
-
-const createUserComplete = user => ({
-  type: "CREATE_USER_COMPLETE",
-  user
-});
-
-const updateUserComplete = user => ({
-  type: "UPDATE_USER_COMPLETE",
-  user
-});
-
-const deleteUserComplete = id => ({
-  type: "DELETE_USER_COMPLETE",
-  id
-});
-
-const updateUsersComplete = users => ({
-  type: "UPDATE_USERS_COMPLETE",
-  users
-});
-
-const resetError = () => ({
-  type: "RESET_ERROR"
-});
-
+import {
+  LOG_STATUS,
+  USER_VALIDATION_FAILED,
+  USERS_FETCHING,
+  USERS_ERROR,
+  USERS_GET_SUCCESS,
+  USERS_UPDATE_SUCCESS,
+  USER_CREATE_SUCCESS,
+  USER_UPDATE_SUCCESS,
+  USER_DELETE_SUCCESS,
+  USER_RESET_ERROR,
+} from "./constants";
 
 /**
  * Action creator - fetching users information
- * @param params
+ * @param {object} params - query params
  * @returns {Function}
  */
-const getUsers = params => {
-  return function(dispatch, getState) {
-    dispatch(fetchStart(true));
+function getUsers(params) {
+  return function(dispatch) {
+    dispatch({ type: LOG_STATUS, payload: "Start get users" });
+    dispatch({ type: USERS_FETCHING });
     userService.getUsers(params)
       .then(json => {
-        dispatch(getUsersComplete(json));
+        dispatch({ type: USERS_GET_SUCCESS, payload: json.docs });
       })
-      .catch(json => {
-        dispatch(fetchFailed(json));
+      .catch(err => {
+        dispatch({ type: USERS_ERROR, payload: err });
       });
   };
-};
+}
 
 /**
  * Action creator - create user
  * @param user
+ * @returns {Function}
  */
-const createUser = user => {
+function createUser(user) {
   return function(dispatch) {
+    dispatch({ type: LOG_STATUS, payload: "Start create user" });
     const error = userService.validateUser(user);
     if (error.message) {
-      dispatch(validationFailed(error));
+      dispatch({ type: USER_VALIDATION_FAILED, payload: error });
     } else {
-      dispatch(fetchStart(true));
+      dispatch({ type: USERS_FETCHING });
       userService.createUser(user)
         .then(json => {
-          dispatch(createUserComplete(json));
+          dispatch({ type: USER_CREATE_SUCCESS, payload: json });
         })
         .catch(err => {
-          dispatch(fetchFailed(err));
+          dispatch({ type: USERS_ERROR, payload: err });
         })
     }
   }
-};
-
+}
 /**
- * Action creator - updating user
- * @param id
- * @param user
+ * Action creator - updating user by id
+ * @param {string} id - user entity id string
+ * @param {object} user - user entity object
  * @returns {Function}
  */
-const updateUserById = (id, user) => {
-  return function(dispatch, getState) {
+function updateUserById(id, user) {
+  return function(dispatch) {
+    dispatch({ type: LOG_STATUS, payload: "Update user by id: " + id });
     const error = userService.validateUser(user);
     if (error.message) {
-      dispatch(validationFailed(error));
+      dispatch({ type: USER_VALIDATION_FAILED, payload: error });
     } else {
-      dispatch(fetchStart(true));
+      dispatch({ type: USERS_FETCHING });
       userService.updateUserById(id, user)
         .then(json => {
-          dispatch(updateUserComplete(json));
+          dispatch({ type: USER_UPDATE_SUCCESS, payload: json });
         })
         .catch(err => {
-          dispatch(fetchFailed(err));
+          dispatch({ type: USERS_ERROR, payload: err });
         })
     }
   }
-};
+}
 
 /**
- * Action creator - updating user
- * @param id
+ * Action creator - delete user by id
+ * @param {string} id - user entity id string
  * @returns {Function}
  */
-const deleteUserById = id => {
+function deleteUserById(id) {
   return function(dispatch) {
-    dispatch(fetchStart(true));
+    dispatch({ type: LOG_STATUS, payload: "Delete user by id: " + id });
+    dispatch({ type: USERS_FETCHING });
     userService.deleteUserById(id)
       .then(() => {
-        dispatch(deleteUserComplete(id));
+        dispatch({ type: USER_DELETE_SUCCESS });
       })
       .catch(err => {
-        dispatch(fetchFailed(err));
+        dispatch({ type: USERS_ERROR, payload: err });
       })
   }
-};
+}
 
 /**
- * Action creator - updating users
- * @param ids
- * @param user
+ * Action creator - update users
+ * @param {array} ids - array of entity ids to be updated
+ * @param {object} user- entity user object to be stored on multiple user(s)
  * @returns {Function}
  */
-const updateUsersByIds = (ids, user) => {
-  return function(dispatch, getState) {
-    dispatch(fetchStart(true));
+function updateUsersByIds(ids, user) {
+  return function(dispatch) {
+    dispatch({ type: LOG_STATUS, payload: "Update users by ids: " + ids.toString() });
+    dispatch({ type: USERS_FETCHING });
     userService.updateUsersByIds(ids, user)
       .then(json => {
-        dispatch(updateUsersComplete(json));
+        dispatch({ type: USERS_UPDATE_SUCCESS, payload: json });
       })
       .catch(err => {
-        dispatch(fetchFailed(err));
+        dispatch({ type: USERS_ERROR, payload: err });
       })
   }
-};
+}
 
+/**
+ * Action creator - Used to reset error
+ * @returns {{type: string}}
+ */
+function resetError() {
+  return { type: USER_RESET_ERROR }
+}
 
-export const UsersActionFactory = (() => {
+/**
+ * Factory for users interface
+ * @constructor
+ */
+function UsersActionFactory() {
   return {
     getUsers,
     createUser,
@@ -190,7 +149,8 @@ export const UsersActionFactory = (() => {
     updateUsersByIds,
     resetError,
   }
-});
+}
 
-export default UsersActionFactory();
+// Export the interface
+export default new UsersActionFactory();
 
