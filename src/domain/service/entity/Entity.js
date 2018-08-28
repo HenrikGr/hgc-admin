@@ -6,14 +6,14 @@
  * @license: The MIT License (MIT)
  */
 
-import ValidationException from './ValidationException';
+import { EntityValidationError } from './ValidationException';
 import Ajv from "ajv";
 import { isNotEmpty, isNotEmptyArray, isPassword } from "./customKeywords";
 
 /**
  * EntityModel class
  */
-export default class EntityModel {
+export default class Entity {
   constructor(schema, {allErrors = true, useDefaults = true, removeAdditional = true, ...props} = {}) {
     this._schema = schema;
     this._schemaId = this._schema.$id;
@@ -51,14 +51,6 @@ export default class EntityModel {
   }
 
   /**
-   * Get the schema
-   * @returns {*}
-   */
-  getSchema() {
-    return this._schema;
-  }
-
-  /**
    * Get ajv error message object
    * @param {string} name - name of a field
    * @param {object} error - ValidationException error object
@@ -84,12 +76,13 @@ export default class EntityModel {
     return (scopedError && scopedError.message) || '';
   }
 
+  // noinspection JSMethodCanBeStatic
   /**
    * Get all error messages as an array
    * @param {object} error - ValidationException object
    * @returns {array} - array of error messages
    */
-  static getErrorMessages(error) {
+  getErrorMessages(error) {
     if (error) {
       if (Array.isArray(error.details)) {
         return error.details.reduce((acc, {message}) => acc.concat(message), []);
@@ -104,7 +97,7 @@ export default class EntityModel {
    * up the the schema, field definitions and initial values from the
    * JSONSchema instance
    */
-  getDefaultEntity() {
+  getEntity() {
     return this._entity;
   }
 
@@ -112,33 +105,25 @@ export default class EntityModel {
    * Entity validator function that throws an ValidationException error on failure
    * @param {object} entity - entity object to be validated
    */
-  entityValidator(entity) {
+  validate(entity) {
     this._validator(entity);
 
     // if error throw a ValidationException error
     if (this._validator.errors && this._validator.errors.length) {
-      throw new ValidationException(this._validator.errors)
+      throw new EntityValidationError(this._validator.errors, entity)
     }
   }
 
   /**
    * Validation error checker
    * @param {object} entity - entity object to be validated
-   * @returns {object} - if valid returns the entity otherwise an error object
+   * @returns {object} - if valid returns the entity otherwise an validationException
    */
   isValid(entity) {
     try {
-      this.entityValidator(entity);
-    } catch (errors) {
-      let validationError = { message: errors.name };
-
-      for (let key of Object.keys(entity)) {
-        let error = this.getError(key, errors);
-        if (error && error.message) {
-          validationError[key] = error.message;
-        }
-      }
-      return validationError;
+      this.validate(entity);
+    } catch (validationException) {
+      return validationException.errors
     }
     return entity;
   }
