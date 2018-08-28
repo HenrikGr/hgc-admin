@@ -1,36 +1,46 @@
 {
   "$id": "http://hgc.se/user.json",
-  "type": "object",
-  "definitions": {},
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "required": ["username", "scope"],
+  "type": "object",
+  "required": ["username", "scope", "admin", "active"],
   "additionalProperties": false,
   "properties": {
+    "_id": {
+      "title": "Id",
+      "type": "string",
+      "readOnly": true
+    },
     "username": {
-      "$id": "/properties/username",
-      "title": "The Username Schema",
+      "title": "User name",
       "type": "string",
       "default": "",
-      "minLength": 6
+      "isNotEmpty": true
     },
     "scope": {
-      "$id": "/properties/scope",
-      "title": "The Scope Schema",
+      "title": "Scope",
       "type": "string",
       "default": "",
-      "minLength": 1
+      "isNotEmpty": true
     },
     "admin": {
-      "$id": "/properties/admin",
-      "title": "The Admin Schema",
-      "default": false,
-      "type": "boolean"
+      "title": "Admin",
+      "type": "boolean",
+      "default": false
     },
     "active": {
-      "$id": "/properties/active",
-      "title": "The Active Schema",
-      "default": false,
-      "type": "boolean"
+      "title": "Active",
+      "type": "boolean",
+      "default": false
+    },
+    "updatedAt": {
+      "title": "Updated at",
+      "type": "string",
+      "readOnly": true
+    },
+    "createdAt": {
+      "title": "Created at",
+      "type": "string",
+      "readOnly": true
     }
   }
 }

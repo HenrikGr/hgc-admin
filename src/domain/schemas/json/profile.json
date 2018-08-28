@@ -6,44 +6,37 @@
   "additionalProperties": false,
   "properties": {
     "_id": {
-      "$id": "/properties/_id",
-      "title": "id of profile",
+      "title": "Id",
       "type": "string",
       "readOnly": true
     },
     "firstName": {
-      "$id": "/properties/firstName",
       "title": "First name",
       "type": "string",
       "default": ""
     },
     "lastName": {
-      "$id": "/properties/lastName",
       "title": "Last name",
       "type": "string",
       "default": ""
     },
     "email": {
-      "$id": "/properties/email",
       "title": "Email",
       "type": "string",
       "default": ""
     },
     "phone": {
-      "$id": "/properties/phone",
       "title": "Phone",
       "type": "string",
       "default": ""
     },
     "updatedAt": {
-      "$id": "/properties/updatedAt",
-      "title": "Updated",
+      "title": "Updated at",
       "type": "string",
       "readOnly": true
     },
     "createdAt": {
-      "$id": "/properties/createdAt",
-      "title": "Updated",
+      "title": "Created at",
       "type": "string",
       "readOnly": true
     }
