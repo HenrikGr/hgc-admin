@@ -92,7 +92,6 @@ PasswordField.propTypes = {
 };
 
 PasswordField.defaultProps = {
-  id: "password",
   disabled: false,
   required: true,
   label: "Password",

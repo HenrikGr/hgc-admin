@@ -69,16 +69,16 @@ TextField.propTypes = {
   disabled: PropTypes.bool.isRequired,
   required: PropTypes.bool.isRequired,
   autoComplete: PropTypes.string,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.any.isRequired,
   label: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };
 
 TextField.defaultProps = {
   type: "text",
-  label: 'label',
   disabled: false,
   required: false,
+  label: 'label',
 };
 
 

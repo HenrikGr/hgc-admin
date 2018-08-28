@@ -26,18 +26,14 @@ const styles = theme => ({
   formControl: {
     margin: theme.spacing.unit
   },
+  chips: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  chip: {
+    margin: theme.spacing.unit / 4,
+  },
 });
-
-/**
- * Helper function to check if object is empty
- * @param id
- * @param error
- * @returns {boolean}
- */
-export function isFieldError(id, error) {
-  const isEmpty = Object.keys(error).length === 0 && error.constructor === Object;
-  return !isEmpty && (error[ id ] !== undefined || error[id] === "");
-}
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -50,23 +46,18 @@ const MenuProps = {
   },
 };
 
-
 /**
  * SelectField component
  * @param {object} classes
  * @param {string} id
- * @param {boolean} disabled
  * @param {string} value
+ * @param {array} options
  * @param {string} label
- * @param {object} error
  * @param {function} onChange
- * @param {object} rest
  * @returns {*}
  * @constructor
  */
-function SelectField({ classes, id, disabled, value, label, error, onChange, ...rest }) {
-  const isError = isFieldError(id, error);
-  const errorMessage = isError ? error[id] : "";
+function SelectField({ classes, id, value, options, label, onChange }) {
 
   return(
     <FormControl key={ id } className={ classes.formControl }>
@@ -94,13 +85,13 @@ function SelectField({ classes, id, disabled, value, label, error, onChange, ...
   )
 }
 
-TextField.propTypes = {
+SelectField.propTypes = {
   classes: PropTypes.object,
   id: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.array.isRequired,
+  options: PropTypes.array.isRequired,
   label: PropTypes.string.isRequired,
-  error: PropTypes.object,
-  onChange: PropTypes.func,
+  onChange: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(SelectField);
