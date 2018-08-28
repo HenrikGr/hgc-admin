@@ -21,46 +21,45 @@ import XHRService, { errorHandler } from "./XHRService";
 import clientSchema from '../schemas/json/client'
 
 // Base entity model
-import EntityModel from './entity/EntityModel'
+import Entity from './entity/Entity'
+
+// Entity model instance
+const ClientEntity = new Entity(clientSchema);
 
 // XHR instance
 const XHR = XHRService.getInstance();
 
-// Entity model instance
-const ClientEntityModel = new EntityModel(clientSchema);
-
 /**
- * Get schema
- * @returns {*}
+ * Get client schema
+ * @returns {object} - client json schema
  */
 function getSchema() {
-  return ClientEntityModel.getSchema();
+  return clientSchema;
 }
 
 /**
- * Get client entity model
- * @returns {*}
+ * Get client default entity
+ * @returns {object} - client default entity
  */
-function getEntityModel() {
-  return ClientEntityModel.getDefaultEntity();
+function getEntity() {
+  return ClientEntity.getEntity();
 }
 
-
 /**
- * Validate a user object
- * @param client
- * @returns {*}
+ * Validate a client object
+ * @param {object} client - profile entity
+ * @returns {object} - client entity of no error otherwise entity validation exception
  */
-function validateClient(client) {
-  return ClientEntityModel.isValid(client);
+function validate(client) {
+  return ClientEntity.isValid(client);
 }
 
 /**
  * Create client
- * @param client
+ * @param {object} client - client entity
  * @returns {Promise<AxiosResponse<any>>}
  */
-function createClient(client) {
+function create(client) {
   return XHR.post("/api/clients", qs.stringify(client))
     .then(response => {
       return Promise.resolve(response.data);
@@ -69,7 +68,6 @@ function createClient(client) {
       return Promise.reject(errorHandler(error));
     });
 }
-
 
 /**
  * Get clients
@@ -80,10 +78,10 @@ function createClient(client) {
  * - sorting,
  * - projection,
  * - etc...
- * @param params
+ * @param {object} params - query params
  * @returns {Promise<AxiosResponse<any>>}
  */
-function getClients(params) {
+function findByQuery(params) {
   return XHR.get("/api/clients", { params: params })
     .then(response => {
       return Promise.resolve(response.data);
@@ -93,30 +91,13 @@ function getClients(params) {
     });
 }
 
-
-/**
- * Get client by id
- * @param id
- * @returns {Promise<AxiosResponse<any>>}
- */
-function getClientById(id) {
-  return XHR.get("/api/clients/" + id)
-    .then(response => {
-      return Promise.resolve(response.data);
-    })
-    .catch(error => {
-      return Promise.reject(errorHandler(error));
-    });
-}
-
-
 /**
  * Update client by id
- * @param id
- * @param client
+ * @param {string} id - id key for a client
+ * @param {object} client - client entity
  * @returns {Promise<AxiosResponse<any>>}
  */
-function updateClientById(id, client) {
+function updateById(id, client) {
   return XHR.put("/api/clients/" + id, qs.stringify(client))
     .then(response => {
       return Promise.resolve(response.data);
@@ -126,13 +107,12 @@ function updateClientById(id, client) {
     });
 }
 
-
 /**
  * Delete client by id
- * @param id
+ * @param {string} id - id key for a client
  * @returns {Promise<AxiosResponse<any>>}
  */
-function deleteClientById(id) {
+function deleteById(id) {
   return XHR.delete("/api/clients/" + id)
     .then(response => {
       return Promise.resolve(response.data);
@@ -149,15 +129,14 @@ function deleteClientById(id) {
 export const ClientServiceFactory = () => {
   return {
     getSchema,
-    getEntityModel,
-    validateClient,
-    createClient,
-    getClientById,
-    updateClientById,
-    deleteClientById,
-    getClients,
+    getEntity,
+    validate,
+    create,
+    findByQuery,
+    updateById,
+    deleteById,
   };
 };
 
 // Export interface
-export default ClientServiceFactory();
+export default new ClientServiceFactory();
