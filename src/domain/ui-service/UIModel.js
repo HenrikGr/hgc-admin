@@ -18,21 +18,25 @@ export default class UIModel {
   constructor(schema) {
     this.schema = schema;
     this._compiledSchema = {};
-    this._properties = {};
     this._uiModel = {};
 
-    // Filter out readOnly fields
+    // Filter out readOnly fields since we do not want them in our properties
     for (let [key, value] of Object.entries(schema.properties)) {
       if (!value.readOnly) {
-        this._properties[key] = value;
+        // Use title as label
+        let title = value.title;
+        // Detect if prop is contains items (enum) - add .$ to key
+        let prop = value.items ? key + '.$' : key;
+        this._uiModel[key] = this.getProps(prop, { label: title });
+        this._uiModel[key]['id'] = key;
+        this._uiModel[key]['type'] = this.getTypeString(key);
+        this._uiModel[key]['defaultValue'] = this.getInitialValue(key);
       }
     }
-
-
   }
 
   /**
-   * Get ajv error message object
+   * Get ajv error message object if name exist in dataPath
    * @param {string} name - name of a field
    * @param {object} error - ValidationException error object
    * @returns {object} - ajv error object
@@ -72,47 +76,6 @@ export default class UIModel {
     return [];
   }
 
-  getFieldNew(name) {
-    let joinedName = joinName(null, name);
-    return joinedName.reduce((definition, next, nextIndex, array) => {
-      // Get the previous name part if any
-      const previous = joinName(array.slice(0, nextIndex));
-      // Check if name exist in the required array or if it exist in the compiled schema
-      const isRequired = (definition.required || (this._compiledSchema[previous] || {}).required || []).includes(next);
-      // Get the full key
-      const _key = joinName(previous, next);
-
-      // Get the compiled schema from cache if exist
-      const _definition = this._compiledSchema[_key] || {};
-
-      /**
-       * Get the field definition
-       */
-      if (next === '$' || next === '' + parseInt(next, 10) ) {
-        invariant(definition.type === 'array', 'Field not found in schema: "%s"', name);
-        definition = Array.isArray(definition.items) ? definition.items[parseInt(next, 10)] : definition.items;
-
-      } else if (definition.type === 'object') {
-        definition = definition.properties[next];
-
-      } else {
-        const [{properties: combinedDefinition = {}} = {}] = ['allOf', 'anyOf', 'oneOf']
-          .filter(key => definition[key])
-          .map(key => definition[key].find(({properties = {}}) => properties[next]));
-
-        definition = combinedDefinition[next];
-      }
-
-      // No definition found
-      invariant(definition, 'Field not found in schema: "%s"', name);
-
-      // Set compiles schema (cache)
-      this._compiledSchema[_key] = Object.assign(_definition, { isRequired });
-      return definition;
-
-    }, this.schema);
-  }
-
   /**
    * Get field definition from schema
    * Function to execute on each element in the array, taking four arguments:
@@ -139,7 +102,7 @@ export default class UIModel {
       const _definition = this._compiledSchema[_key] || {};
 
       /**
-       * Get the field definition from array, object or combined definitions.
+       * Get the field definition
        */
       if (next === '$' || next === '' + parseInt(next, 10) ) {
         invariant(definition.type === 'array', 'Field not found in schema: "%s"', name);
@@ -190,7 +153,6 @@ export default class UIModel {
         _definition.properties = properties;
         _definition.required = required;
       }
-
 
       this._compiledSchema[_key] = Object.assign(_definition, { isRequired });
       return definition;
@@ -247,7 +209,6 @@ export default class UIModel {
     } = this._compiledSchema[name];
 
     const [fieldName] = joinName(null, name).slice(-1).map(str => str.replace(/([A-Z])/g, ' $1'));
-
     const fieldNameCapitalized = fieldName.charAt(0).toUpperCase() + fieldName.slice(1).toLowerCase();
 
     const ready = {
@@ -297,6 +258,11 @@ export default class UIModel {
     return fieldType;
   }
 
+  /**
+   * Get field type as string
+   * @param name
+   * @returns {*}
+   */
   getTypeString(name) {
     const { type: _type, format: fieldFormat } = this.getField(name);
     const { type: fieldType = _type } = this._compiledSchema[name];
@@ -332,20 +298,10 @@ export default class UIModel {
   }
 
   /**
-   * Get the uiModel for the properties in the schema
+   * Get the UIModel for the properties in the schema
    * @returns {{}|*}
    */
   getUIModel() {
-    for (let [key, value] of Object.entries(this._properties)) {
-      // Use title as label
-      let title = value.title;
-      // Detect if prop is contains items (enum) - add .$ to key
-      let prop = value.items ? key + '.$' : key;
-      this._uiModel[key] = this.getProps(prop, {label: title});
-      this._uiModel[key]['id'] = key;
-      this._uiModel[key]['type'] = this.getTypeString(key);
-      this._uiModel[key]['defaultValue'] = this.getInitialValue(key);
-    }
     return this._uiModel;
   }
 
