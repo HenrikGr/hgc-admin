@@ -16,7 +16,7 @@ import axios from 'axios';
  * @param error
  * @returns {*}
  */
-export const errorHandler = error => {
+export function errorHandler(error)  {
   if (error.response) {
     // The request was made and the server responded with a status code
     // that falls out of the range of 2xx
@@ -39,13 +39,13 @@ export const errorHandler = error => {
     // Something happened in setting up the request that triggered an Error
     return error.message;
   }
-};
+}
 
 /**
- * XHR Service factory function
+ * XHR Service factory singleton
  * @constructor
  */
-const XHRServiceFactory = () => {
+function XHRServiceFactory() {
 
   let instance = null;
   let baseURL = process.env.REACT_APP_API_URL;
@@ -67,8 +67,12 @@ const XHRServiceFactory = () => {
     },
     removeAuthorizationHeader() {
       instance.defaults.headers.common['Authorization'] = '';
+    },
+    getAuthorizationHeader() {
+      return instance.default.headers.common["Authorization"];
     }
   };
-};
+}
 
-export default XHRServiceFactory();
+// Export interface
+export default new XHRServiceFactory();

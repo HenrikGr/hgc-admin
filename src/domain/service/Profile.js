@@ -1,9 +1,10 @@
 /**
  * Description: Profile API service
  *
- * Profile service exposes a set of function representing business logic for profile data
- * in terms of a set of CRUD API functions and other types of services such as validating
- * inputs before performing the remote calls.
+ * The service expose a set of interface to deal with profile services such as:
+ * - getting a profile entity based on json schema,
+ * - validating profile based on json schema,
+ * - remote XHR calls to get, update profile entity,
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
@@ -21,44 +22,44 @@ import XHRService, { errorHandler } from "./XHRService";
 import profileSchema from '../schemas/json/profile'
 
 // Base entity model
-import EntityModel from './entity/EntityModel'
+import Entity from './entity/Entity'
 
 // XHR instance
 const XHR = XHRService.getInstance();
 
 // Entity model instance
-const ProfileEntityModel = new EntityModel(profileSchema);
+const ProfileEntity = new Entity(profileSchema);
 
 /**
- * Get schema
- * @returns {*}
+ * Get profile schema
+ * @returns {object} - profile json schema
  */
 function getSchema() {
-  return ProfileEntityModel.getSchema();
+  return profileSchema
 }
 
 /**
- * Get profile entity model
- * @returns {*}
+ * Get profile default entity
+ * @returns {object} - profile default entity
  */
-function getEntityModel() {
-  return ProfileEntityModel.getDefaultEntity();
+function getEntity() {
+  return ProfileEntity.getEntity();
 }
 
 /**
  * Validate profile entity
  * @param {object} profile - profile entity
- * @returns {object} - either error object or profile entity
+ * @returns {object} - profile entity of no error otherwise entity validation exception
  */
-function validateProfile(profile) {
-  return ProfileEntityModel.isValid(profile);
+function validate(profile) {
+  return ProfileEntity.isValid(profile);
 }
 
 /**
  * Find or create profile for the authenticated user
  * @returns {Promise<AxiosResponse<any>>}
  */
-function findOrCreate() {
+function getMe() {
   return XHR.get("/api/profiles/me")
     .then(response => {
       return Promise.resolve(response.data);
@@ -73,7 +74,7 @@ function findOrCreate() {
  * @param {object} profile - profile entity
  * @returns {Promise<AxiosResponse<any>>}
  */
-function updateProfile(profile) {
+function updateMe(profile) {
   return XHR.put("/api/profiles/me", qs.stringify(profile))
     .then(response => {
       return Promise.resolve(response.data);
@@ -92,10 +93,10 @@ function updateProfile(profile) {
  * - sorting,
  * - projection,
  * - etc...
- * @param params
+ * @param {object} params - query params
  * @returns {Promise<AxiosResponse<any>>}
  */
-function getProfiles(params) {
+function findByQuery(params) {
   return XHR.get("/api/profiles", { params: params })
     .then(response => {
       return Promise.resolve(response.data);
@@ -107,10 +108,10 @@ function getProfiles(params) {
 
 /**
  * Get a profile by id
- * @param id
+ * @param {string} id - id key for the profile
  * @returns {Promise<AxiosResponse<any>>}
  */
-function getProfileById(id) {
+function getById(id) {
   return XHR.get("/api/profiles/" + id)
     .then(response => {
       return Promise.resolve(response.data);
@@ -122,11 +123,11 @@ function getProfileById(id) {
 
 /**
  * Update profile by id
- * @param id
+ * @param {string} id - id key for the profile
  * @param profile
  * @returns {Promise<AxiosResponse<any>>}
  */
-function updateProfileById(id, profile) {
+function updateById(id, profile) {
   return XHR.put("/api/profiles/" + id, qs.stringify(profile))
     .then(response => {
       return Promise.resolve(response.data);
@@ -138,10 +139,10 @@ function updateProfileById(id, profile) {
 
 /**
  * Delete profile by id
- * @param id
+ * @param {string} id - id key for the profile
  * @returns {Promise<AxiosResponse<any>>}
  */
-function deleteProfileById(id) {
+function deleteById(id) {
   return XHR.delete("/api/profiles/" + id)
     .then(response => {
       return Promise.resolve(response.data);
@@ -158,14 +159,14 @@ function deleteProfileById(id) {
 function ProfileServiceFactory() {
   return {
     getSchema,
-    getEntityModel,
-    validateProfile,
-    findOrCreate,
-    updateProfile,
-    getProfiles,
-    getProfileById,
-    updateProfileById,
-    deleteProfileById
+    getEntity,
+    validate,
+    getMe,
+    updateMe,
+    findByQuery,
+    getById,
+    updateById,
+    deleteById
   };
 }
 

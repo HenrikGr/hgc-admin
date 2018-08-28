@@ -21,45 +21,45 @@ import XHRService, { errorHandler } from "./XHRService";
 import userSchema from '../schemas/json/user'
 
 // Base entity model
-import EntityModel from './entity/EntityModel'
+import Entity from './entity/Entity'
+
+// Entity model instance
+const UserEntity = new Entity(userSchema);
 
 // XHR instance
 const XHR = XHRService.getInstance();
 
-// Entity model instance
-const UserEntityModel = new EntityModel(userSchema);
-
 /**
- * Get schema
- * @returns {*}
+ * Get user schema
+ * @returns {object} - user json schema
  */
 function getSchema() {
-  return UserEntityModel.getSchema();
+  return userSchema;
 }
 
 /**
- * Get user entity model instance
- * @returns {*}
+ * Get user default entity
+ * @returns {object} - user default entity
  */
-function getEntityModel() {
-  return UserEntityModel.getDefaultEntity();
+function getEntity() {
+  return UserEntity.getEntity();
 }
 
 /**
- * Validate user entity
- * @param {object} user - user entity
- * @returns {object} - either error object or user entity
+ * Validate a user object
+ * @param {object} user - profile entity
+ * @returns {object} - user entity of no error otherwise entity validation exception
  */
-function validateUser(user) {
-  return UserEntityModel.isValid(user);
+function validate(user) {
+  return UserEntity.isValid(user);
 }
 
 /**
- * Create new user
+ * Create user
  * @param {object} user - user entity
  * @returns {Promise<AxiosResponse<any>>}
  */
-function createUser(user) {
+function create(user) {
   return XHR.post("/api/users", qs.stringify(user))
     .then(response => {
       return Promise.resolve(response.data);
@@ -81,7 +81,7 @@ function createUser(user) {
  * @param {object} params - query object
  * @returns {Promise<AxiosResponse<any>>}
  */
-function getUsers(params) {
+function findByQuery(params) {
   return XHR.get("/api/users", { params: params })
     .then(response => {
       return Promise.resolve(response.data);
@@ -92,28 +92,12 @@ function getUsers(params) {
 }
 
 /**
- * Get user by id
- * @param {string} id - id key for a user
- * @returns {Promise<AxiosResponse<any>>}
- */
-function getUserById(id) {
-  return XHR.get("/api/users/" + id)
-    .then(response => {
-      return Promise.resolve(response.data);
-    })
-    .catch(error => {
-      return Promise.reject(errorHandler(error));
-    });
-}
-
-
-/**
  * Update user by id
  * @param {string} id - id key for a user
  * @param {object} user - user entity
  * @returns {Promise<AxiosResponse<any>>}
  */
-function updateUserById(id, user) {
+function updateById(id, user) {
   return XHR.put("/api/users/" + id, qs.stringify(user))
     .then(response => {
       return Promise.resolve(response.data);
@@ -129,7 +113,7 @@ function updateUserById(id, user) {
  * @param {object} user - user entity
  * @returns {Promise<any>}
  */
-function updateUsersByIds(ids, user) {
+function updateByIds(ids, user) {
   const body = qs.stringify(user);
 
   // Create array of promise calls for each user ids
@@ -157,7 +141,7 @@ function updateUsersByIds(ids, user) {
  * @param {string} id - id key for a user
  * @returns {Promise<AxiosResponse<any>>}
  */
-function deleteUserById(id) {
+function deleteById(id) {
   return XHR.delete("/api/users/" + id)
     .then(response => {
       return Promise.resolve(response.data);
@@ -173,7 +157,7 @@ function deleteUserById(id) {
  * @param {string} ids - array of ids for a users to be deleted
  * @returns {Promise<any>}
  */
-function deleteUsersByIds(ids) {
+function deleteByIds(ids) {
   // Create array of promise calls for each user ids
   let promises = [];
   ids.forEach(id => {
@@ -201,15 +185,14 @@ function deleteUsersByIds(ids) {
 function UserServiceFactory () {
   return {
     getSchema,
-    getEntityModel,
-    validateUser,
-    createUser,
-    getUsers,
-    getUserById,
-    updateUserById,
-    updateUsersByIds,
-    deleteUserById,
-    deleteUsersByIds,
+    getEntity,
+    validate,
+    create,
+    findByQuery,
+    updateById,
+    updateByIds,
+    deleteById,
+    deleteByIds,
   };
 }
 
