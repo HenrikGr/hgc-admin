@@ -25,17 +25,17 @@ import {
 function getProfile() {
   return (dispatch) => {
     dispatch({ type: FETCH_PROFILE_STARTED });
-    return profileService.findOrCreate()
+    return profileService.getMe()
       .then(json => {
-        const error = profileService.validateProfile(json);
-        if (error.message) {
-          dispatch({ type: PROFILE_VALIDATION_FAILED, payload: error});
+        const errors = profileService.validate(json);
+        if (errors.message) {
+          dispatch({ type: PROFILE_VALIDATION_FAILED, payload: errors});
         } else {
           dispatch({ type: FETCH_PROFILE_SUCCESS, payload: json });
         }
       })
-      .catch(err => {
-        dispatch({ type: FETCH_PROFILE_FAILED, payload: err });
+      .catch(errors => {
+        dispatch({ type: FETCH_PROFILE_FAILED, payload: errors });
       });
   };
 }
@@ -47,22 +47,22 @@ function getProfile() {
  */
 function updateProfile(profile) {
   return (dispatch) => {
-    const error = profileService.validateProfile(profile);
-    if (error.message) {
-      dispatch({ type: PROFILE_VALIDATION_FAILED, payload: error});
+    const errors = profileService.validate(profile);
+    if (errors.message) {
+      dispatch({ type: PROFILE_VALIDATION_FAILED, payload: errors });
     } else {
       dispatch({ type: FETCH_PROFILE_STARTED });
-      return profileService.updateProfile(profile)
+      return profileService.updateMe(profile)
         .then(json => {
-          const error = profileService.validateProfile(json);
-          if (error.message) {
-            dispatch({ type: PROFILE_VALIDATION_FAILED, payload: error});
+          const errors = profileService.validate(json);
+          if (errors.message) {
+            dispatch({ type: PROFILE_VALIDATION_FAILED, payload: errors });
           } else {
             dispatch({ type: FETCH_PROFILE_SUCCESS, payload: json });
           }
         })
-        .catch(err => {
-          dispatch({ type: FETCH_PROFILE_FAILED, payload: err });
+        .catch(errors => {
+          dispatch({ type: FETCH_PROFILE_FAILED, payload: errors });
         });
     }
   };

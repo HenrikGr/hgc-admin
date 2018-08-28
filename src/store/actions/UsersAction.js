@@ -31,7 +31,7 @@ function getUsers(params) {
   return function(dispatch) {
     dispatch({ type: LOG_STATUS, payload: "Start get users" });
     dispatch({ type: USERS_FETCHING });
-    userService.getUsers(params)
+    userService.findByQuery(params)
       .then(json => {
         dispatch({ type: USERS_GET_SUCCESS, payload: json.docs });
       })
@@ -43,27 +43,28 @@ function getUsers(params) {
 
 /**
  * Action creator - create user
- * @param user
+ * @param {object} user - user entity object
  * @returns {Function}
  */
 function createUser(user) {
   return function(dispatch) {
     dispatch({ type: LOG_STATUS, payload: "Start create user" });
-    const error = userService.validateUser(user);
-    if (error.message) {
-      dispatch({ type: USER_VALIDATION_FAILED, payload: error });
+    const errors = userService.validate(user);
+    if (errors.message) {
+      dispatch({ type: USER_VALIDATION_FAILED, payload: errors });
     } else {
       dispatch({ type: USERS_FETCHING });
-      userService.createUser(user)
+      userService.create(user)
         .then(json => {
           dispatch({ type: USER_CREATE_SUCCESS, payload: json });
         })
-        .catch(err => {
-          dispatch({ type: USERS_ERROR, payload: err });
+        .catch(errors => {
+          dispatch({ type: USERS_ERROR, payload: errors });
         })
     }
   }
 }
+
 /**
  * Action creator - updating user by id
  * @param {string} id - user entity id string
@@ -73,17 +74,17 @@ function createUser(user) {
 function updateUserById(id, user) {
   return function(dispatch) {
     dispatch({ type: LOG_STATUS, payload: "Update user by id: " + id });
-    const error = userService.validateUser(user);
-    if (error.message) {
-      dispatch({ type: USER_VALIDATION_FAILED, payload: error });
+    const errors = userService.validate(user);
+    if (errors.message) {
+      dispatch({ type: USER_VALIDATION_FAILED, payload: errors });
     } else {
       dispatch({ type: USERS_FETCHING });
-      userService.updateUserById(id, user)
+      userService.updateById(id, user)
         .then(json => {
           dispatch({ type: USER_UPDATE_SUCCESS, payload: json });
         })
-        .catch(err => {
-          dispatch({ type: USERS_ERROR, payload: err });
+        .catch(errors => {
+          dispatch({ type: USERS_ERROR, payload: errors });
         })
     }
   }
@@ -98,12 +99,12 @@ function deleteUserById(id) {
   return function(dispatch) {
     dispatch({ type: LOG_STATUS, payload: "Delete user by id: " + id });
     dispatch({ type: USERS_FETCHING });
-    userService.deleteUserById(id)
+    userService.deleteById(id)
       .then(() => {
         dispatch({ type: USER_DELETE_SUCCESS });
       })
-      .catch(err => {
-        dispatch({ type: USERS_ERROR, payload: err });
+      .catch(errors => {
+        dispatch({ type: USERS_ERROR, payload: errors });
       })
   }
 }
@@ -118,12 +119,12 @@ function updateUsersByIds(ids, user) {
   return function(dispatch) {
     dispatch({ type: LOG_STATUS, payload: "Update users by ids: " + ids.toString() });
     dispatch({ type: USERS_FETCHING });
-    userService.updateUsersByIds(ids, user)
+    userService.updateByIds(ids, user)
       .then(json => {
         dispatch({ type: USERS_UPDATE_SUCCESS, payload: json });
       })
-      .catch(err => {
-        dispatch({ type: USERS_ERROR, payload: err });
+      .catch(errors => {
+        dispatch({ type: USERS_ERROR, payload: errors });
       })
   }
 }
@@ -137,7 +138,7 @@ function resetError() {
 }
 
 /**
- * Factory for users interface
+ * Factory for user actions creator interface
  * @constructor
  */
 function UsersActionFactory() {

@@ -18,115 +18,118 @@
 
 // Module dependencies
 import clientService from "../../domain/service/Client";
-
-const validationFailed = error => ({
-  type: "CLIENT_VALIDATION_FAILED",
-  error
-});
-
-const fetchStart = (isFetching) => ({
-  type: "FETCH_CLIENTS_STARTED",
-  isFetching
-});
-
-const fetchFailed = error => ({
-  type: "FETCH_CLIENTS_FAILED",
-  error
-});
-
-const getClientsComplete = clients => ({
-  type: "FETCH_CLIENTS_COMPLETE",
-  clients
-});
-
-const createClientComplete = client => ({
-  type: "CREATE_CLIENT_COMPLETE",
-  client
-});
-
-const updateClientComplete = client => ({
-  type: "UPDATE_CLIENT_COMPLETE",
-  client
-});
-
-const deleteClientComplete = id => ({
-  type: "DELETE_CLIENT_COMPLETE",
-  id
-});
-
-const resetError = () => ({
-  type: "RESET_ERROR"
-});
-
+import {
+  LOG_STATUS,
+  CLIENT_VALIDATION_FAILED,
+  CLIENTS_FETCHING,
+  CLIENTS_ERROR,
+  CLIENTS_GET_SUCCESS,
+  //CLIENTS_UPDATE_SUCCESS,
+  CLIENT_CREATE_SUCCESS,
+  CLIENT_UPDATE_SUCCESS,
+  CLIENT_DELETE_SUCCESS,
+  CLIENT_RESET_ERROR
+} from "./constants";
 
 /**
- * Get clients
- * @param params
+ * Action creator - create client
+ * @param {object} client - user entity object
  * @returns {Function}
  */
-const getClients = params => {
-  return function(dispatch, getState) {
-    dispatch(fetchStart(true));
-    clientService.getClients(params)
-      .then(json => {
-        dispatch(getClientsComplete(json));
-      })
-      .catch(json => {
-        dispatch(fetchFailed(json));
-      });
-  };
-};
-
-const createClient = client => {
-  return function(dispatch, getState) {
-    const error = clientService.validateClient(client);
-    if (error.message) {
-      dispatch(validationFailed(error));
-    } else {
-      dispatch(fetchStart(true));
-      clientService.createClient(client)
-        .then(json => {
-          dispatch(createClientComplete(json));
-        })
-        .catch(err => {
-          dispatch(fetchFailed(err));
-        })
-    }
-  }
-};
-
-const updateClientById = (id, client) => {
-  return function(dispatch, getState) {
-    const error = clientService.validateClient(client);
-    if (error.message) {
-      dispatch(validationFailed(error));
-    } else {
-      dispatch(fetchStart(true));
-      clientService.updateClientById(id, client)
-        .then(json => {
-          dispatch(updateClientComplete(json));
-        })
-        .catch(err => {
-          dispatch(fetchFailed(err));
-        })
-    }
-  }
-};
-
-const deleteClientById = id => {
+function createClient(client) {
   return function(dispatch) {
-    dispatch(fetchStart(true));
-    clientService.deleteClientById(id)
-      .then(() => {
-        dispatch(deleteClientComplete(id));
+    dispatch({ type: LOG_STATUS, payload: "Start create user" });
+    const errors = clientService.validate(client);
+    if (errors.message) {
+      dispatch({ type: CLIENT_VALIDATION_FAILED, payload: errors });
+    } else {
+      dispatch({ type: CLIENTS_FETCHING });
+      clientService.create(client)
+        .then(json => {
+          dispatch({ type: CLIENT_CREATE_SUCCESS, payload: json });
+        })
+        .catch(errors => {
+          dispatch({ type: CLIENTS_ERROR, payload: errors });
+        })
+    }
+  }
+}
+
+/**
+ * Action creator - fetching clients information
+ * @param {object} params - query params
+ * @returns {Function}
+ */
+function getClients(params) {
+  return function(dispatch) {
+    dispatch({ type: LOG_STATUS, payload: "Start get clients" });
+    dispatch({ type: CLIENTS_FETCHING });
+    clientService.findByQuery(params)
+      .then(json => {
+        dispatch({ type: CLIENTS_GET_SUCCESS, payload: json.docs });
       })
-      .catch(err => {
-        dispatch(fetchFailed(err));
+      .catch(errors => {
+        dispatch({ type: CLIENTS_ERROR, payload: errors });
+      })
+  };
+}
+
+/**
+ * Action creator - updating client by id
+ * @param {string} id - client entity id string
+ * @param {object} client - client entity object
+ * @returns {Function}
+ */
+function updateClientById(id, client) {
+  return function(dispatch) {
+    dispatch({ type: LOG_STATUS, payload: "Update client by id: " + id });
+    const errors = clientService.validate(client);
+    if (errors.message) {
+      dispatch({ type: CLIENT_VALIDATION_FAILED, payload: errors });
+    } else {
+      dispatch({ type: CLIENTS_FETCHING });
+      clientService.updateById(id, client)
+        .then(json => {
+          dispatch({ type: CLIENT_UPDATE_SUCCESS, payload: json });
+        })
+        .catch(errors => {
+          dispatch({ type: CLIENTS_ERROR, payload: errors });
+        })
+    }
+  }
+}
+
+/**
+ * Action creator - delete client by id
+ * @param {string} id - client entity id string
+ * @returns {Function}
+ */
+function deleteClientById(id) {
+  return function(dispatch) {
+    dispatch({ type: LOG_STATUS, payload: "Delete client by id: " + id });
+    dispatch({ type: CLIENTS_FETCHING });
+    clientService.deleteById(id)
+      .then(() => {
+        dispatch({ type: CLIENT_DELETE_SUCCESS, payload: id });
+      })
+      .catch(errors => {
+        dispatch({ type: CLIENTS_ERROR, payload: errors });
       })
   }
-};
+}
 
+/**
+* Action creator - Used to reset error
+* @returns {{type: string}}
+*/
+function resetError() {
+  return { type: CLIENT_RESET_ERROR }
+}
 
+/**
+ * Factory for clients action creator interface
+ * @constructor
+ */
 export const ClientActionFactory = (() => {
   return {
     getClients,
@@ -137,5 +140,6 @@ export const ClientActionFactory = (() => {
   }
 });
 
-export default ClientActionFactory();
+// Export the interface
+export default new ClientActionFactory();
 

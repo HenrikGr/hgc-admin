@@ -7,33 +7,39 @@
  * @license: The MIT License (MIT)
  */
 
-// Business logic for session data
-import sessionService from '../../domain/service/Session';
+// Credentials services
+import credentialsService from '../../domain/service/Credentials';
+
+// Actions
 import {
+  LOG_STATUS,
   CREDENTIALS_VALIDATION_FAILED,
   FETCH_SESSION_START,
   FETCH_SESSION_FAILED,
-  FETCH_SESSION_SUCCESS,
+  GET_SESSION_SUCCESS,
+  REFRESH_SESSION_SUCCESS,
   PASSWORD_VISIBLE,
-  UPDATE_CREDENTIALS,
+  UPDATE_CREDENTIALS_STATE,
   RESET_SESSION_ERROR,
   REMOVE_SESSION,
 } from '../actions/constants'
 
 /**
- * Action creator - fetching session information, aka access_token
+ * Get a session token based on the credentials
  * @param {object} credentials - credential object
  * @returns {Function}
  */
 function getSession(credentials) {
   return function(dispatch) {
-    const error = sessionService.validateCredentials(credentials);
+    dispatch({ type: LOG_STATUS, payload: "Start get session" });
+    const error = credentialsService.validate(credentials);
     if (error.message) {
       dispatch({ type: CREDENTIALS_VALIDATION_FAILED, payload: error } );
     } else {
       dispatch({ type: FETCH_SESSION_START });
-      sessionService.getSession(credentials).then(json => {
-        dispatch({ type: FETCH_SESSION_SUCCESS, payload: json })
+      credentialsService.postCredentials(credentials).then(token => {
+        credentialsService.setAuthorizationHeader(token);
+        dispatch({ type: GET_SESSION_SUCCESS, payload: token })
       }).catch(err => {
         dispatch({ type: FETCH_SESSION_FAILED, payload: err })
       })
@@ -42,16 +48,17 @@ function getSession(credentials) {
 }
 
 /**
- * Action creator - fetching session information via refresh_token
+ * Refresh a session by posting the refresh_token from current session
  * @returns {Function}
  */
 function refreshSession() {
   return function(dispatch, getState) {
-    // Get refresh token from state
+    dispatch({ type: LOG_STATUS, payload: "Start refresh session" });
     const { refresh_token } = getState().session.token;
     dispatch({ type: FETCH_SESSION_START });
-    sessionService.refreshSession(refresh_token).then(json => {
-      dispatch({ type: FETCH_SESSION_SUCCESS, payload: json })
+    credentialsService.postRefreshToken(refresh_token).then(token => {
+      credentialsService.setAuthorizationHeader(token);
+      dispatch({ type: REFRESH_SESSION_SUCCESS, payload: token })
     }).catch(err => {
       dispatch({ type: FETCH_SESSION_FAILED, payload: err })
     })
@@ -67,16 +74,16 @@ function togglePasswordVisible() {
 }
 
 /**
- * Action creator to store credentials updates in state
+ * Store credentials entered in login fom
  * @param {string} value - character entered in credentials input
  * @returns {{type: string, payload: *}}
  */
 function updateCredentials(value) {
-  return { type: UPDATE_CREDENTIALS, payload: value }
+  return { type: UPDATE_CREDENTIALS_STATE, payload: value }
 }
 
 /**
- * Action creator to reset error messages
+ * Reset validation errors from state
  * @returns {{type: string}}
  */
 function resetSessionError() {
@@ -84,17 +91,17 @@ function resetSessionError() {
 }
 
 /**
- * Action creator that removes session information from session state
- * It will also remove the access token from the XHR service
+ * Removes session information from session state
+ * It will also remove the authorization header
  * @returns {{type: string}}
  */
 function removeSession() {
-  sessionService.removeSession();
+  credentialsService.removeAuthorizationHeader();
   return { type: REMOVE_SESSION };
 }
 
 /**
- * Factory for session action interface
+ * Factory for session actions interface
  * @constructor
  */
 function SessionActionFactory() {
