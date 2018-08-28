@@ -7,47 +7,19 @@
  * @license: The MIT License (MIT)
  */
 
+// Import comparision functions
+import {
+  equal,
+  gt,
+  lt,
+  idEqual,
+  visibleEqual,
+} from './comparisons'
 
 /**
  * Helper function to detect arrays
  */
 const isArray = Array.isArray;
-
-/**
- * Comparision functions for strict equal arrays
- * @param x
- * @returns {function(*): boolean}
- */
-const equal = x => y => x === y; // notice: triple equal
-
-/**
- * Comparision (arbitrary) function greater than
- * @param x
- * @returns {function(*): boolean}
- */
-const gt = x => y => x > y;
-
-/**
- * Comparision (arbitrary) function greater than
- * @param x
- * @returns {function(*): boolean}
- */
-const lt = x => y => y > x;
-
-/**
- * Comparision function when comparing array of object by key ._id
- * @param x
- * @returns {function(*): boolean}
- */
-const idEqual = x => y => x._id !== undefined && x._id === y._id;
-
-/**
- * Comparision function  when comparing array of object by key ._id
- * @param x
- * @returns {function(*): boolean}
- */
-const visibleEqual = x => y => x.visible !== undefined && x.visible === y.visible;
-
 
 /**
  * Generic arrayEquivalent procedure that is only concerned with stepping through the arrays.
@@ -76,75 +48,18 @@ const arrayDeepEquivalent = f =>
     f(a)(b));
 
 
-
 /**
  * arrayEqual can be defined with arrayEquivalent and a comparator function that
  * compares a to b using === (for strict equality) or any other comparision functions.
- *
  * @type {function(*): function(*): *}
  */
 export const arrayEqual = arrayEquivalent(equal);
-
-/**
- * arrayDeepEqual can be defined with arrayDeepEquivalent and a comparator function that
- * compares a to b using === (for strict equality) or any other comparision functions.
- *
- * @type {function(*): function(*): *}
- */
-export const arrayDeepEqual = arrayDeepEquivalent(equal);
-
-// arrayIdEqual :: [a] -> [a] -> Bool
-export const arrayIdEqual = arrayEquivalent(idEqual);
-
-// arrayVisibleEqual :: [a] -> [a] -> Bool
 export const arrayVisibleEqual = arrayEquivalent(visibleEqual);
-
-// arrayIdEqual :: [a] -> [a] -> Bool
-export const arrayIdDeepEqual = arrayDeepEquivalent(idEqual);
-
-// arrayGt :: [a] -> [a] -> Bool
+export const arrayIdEqual = arrayEquivalent(idEqual);
 export const arrayGt = arrayEquivalent(gt);
-
 export const arrayLt = arrayEquivalent(lt);
 
-
-/**
- * Sort compare function
- * @param key
- * @param order
- * @returns {Function}
- */
-export const sortCompareObject = (key, order='asc') => {
-  return function(a, b) {
-    if(!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
-      // property doesn't exist on either object
-      return 0;
-    }
-
-    const varA = (typeof a[key] === 'string') ? a[key].toUpperCase() : a[key];
-    const varB = (typeof b[key] === 'string') ? b[key].toUpperCase() : b[key];
-
-    let comparison = 0;
-    if (varA > varB) {
-      comparison = 1;
-    } else if (varA < varB) {
-      comparison = -1;
-    }
-    return order === 'desc' ? comparison * -1 : comparison;
-  };
-};
-
-
-
-//let x = ['henrik', 'anders', 'johnny', 'anton'];
-//let o = [{id: '1234', name: 'henrik'},{id:'2345', name: 'anders'},{id: '3456', name: 'johnny'},{id: '4567', name: 'anton'}];
-
-//console.log(o.slice().sort(sortCompareObject('id', 'asc')));
-//console.log(o.slice().sort(sortCompareObject('id', 'desc')));
-
-/**
- * Comparing arrays with scalar values
- */
+// Comparing arrays with scalar values
 //let x = [1,2,3];
 //let y = [1,2,3];
 //let z = ['1','2','3'];
@@ -155,19 +70,7 @@ export const sortCompareObject = (key, order='asc') => {
 //console.log('true? ', arrayLooseEqual(x)(y)); //=> true
 // (1 == '1') && (2 == '2') && (3 == '3')     //=> true
 
-/**
- * Comparing deep arrays with scalar values
- */
-//x = [1,[2,[3]]];
-//y = [1,[2,['3']]];
-//console.log('false? ', arrayDeepEqual(x)(y));       //=> false
-// (1 === 1) && (2 === 2) && (3 === '3')            //=> false
-//console.log('true? ', arrayDeepLooseEqual(x)(y));   //=> true
-// (1 == 1) && (2 == 2) && (3 == '3')               //=> true
-
-/**
- * Comparing array with object by property
- */
+// Comparing array with object by property
 //x = [{id:1}, {id:2}];
 //y = [{id:1}, {id:2}];
 //z = [{id:1}, {id:6}];
@@ -176,18 +79,77 @@ export const sortCompareObject = (key, order='asc') => {
 //console.log('false? ', arrayIdEqual(x)(z));     //=> false
 // (1 === 1) && (2 === 6)                       //=> false
 
+
+/**
+ * arrayDeepEqual can be defined with arrayDeepEquivalent and a comparator function that
+ * compares a to b using === (for strict equality) or any other comparision functions.
+ * @type {function(*): function(*): *}
+ */
+export const arrayDeepEqual = arrayDeepEquivalent(equal);
+// arrayIdEqual :: [a] -> [a] -> Bool
+export const arrayIdDeepEqual = arrayDeepEquivalent(idEqual);
+
+// Comparing deep arrays with scalar values
+//x = [1,[2,[3]]];
+//y = [1,[2,['3']]];
+//console.log('false? ', arrayDeepEqual(x)(y));       //=> false
+// (1 === 1) && (2 === 2) && (3 === '3')            //=> false
+//console.log('true? ', arrayDeepLooseEqual(x)(y));   //=> true
+// (1 == 1) && (2 == 2) && (3 == '3')               //=> true
 //console.log('true? ', arrayIdDeepEqual(x)(y));  //=> true
 
 
-//x = [5,10,20];
-//y = [2,4,8];
-//z = [6,12,24];
-//console.log('true? ', arrayGt(x)(y));   //=> true
-// (5 > 2) && (10 > 4) && (20 > 8)      //=> true
-//console.log('false? ', arrayGt(x)(z));  //=> false
-// (5 > 6)                              //=> false
+/**
+ * Append element, new array
+ * @param array
+ * @param element
+ * @returns {*[]}
+ */
+export function appendElement(array, element) {
+  return [ ...array, element ];
+}
 
+/**
+ * Helper function to remove element(s) from array
+ * Returns a new array, e.g non-mutating operation.
+ * @param array
+ * @param id
+ * @returns {*}
+ */
+export function removeById(array, id) {
+  // If more than one elements with the same id exist all will be removed.
+  return array.filter(e => e._id !== id);
+}
 
+/**
+ * Helper function to update an element in an array if the id is found
+ * Returns a new array, e.g non-mutating operation.
+ * @param array
+ * @param element
+ * @returns {*}
+ */
+export function updateElement(array, element) {
+  return array.map(doc => ((doc._id === element._id ? element: doc)));
+}
+
+/**
+ * Helper function that updated multiple elements in an array to the passed in array
+ * Returns a new array, e.g non-mutating operation.
+ * @param array
+ * @param elements
+ * @returns {*}
+ */
+export function updateElements(array, elements) {
+  return array.map(doc => {
+    let res = doc;
+    elements.forEach(r => {
+      if (doc._id === r._id) {
+        res = r;
+      }
+    });
+    return res;
+  });
+}
 
 
 /**
