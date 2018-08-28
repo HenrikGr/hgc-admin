@@ -17,11 +17,33 @@ import qs from 'qs';
 // XHR service
 import XHRService, { errorHandler } from "./XHRService";
 
-// Schema services
-import ProfileSchema from '../schemas/ProfileEntity';
+// Credentials schema
+import profileSchema from '../schemas/json/profile'
+
+// Base entity model
+import EntityModel from './entity/EntityModel'
 
 // XHR instance
 const XHR = XHRService.getInstance();
+
+// Entity model instance
+const ProfileEntityModel = new EntityModel(profileSchema);
+
+/**
+ * Get schema
+ * @returns {*}
+ */
+function getSchema() {
+  return ProfileEntityModel.getSchema();
+}
+
+/**
+ * Get profile entity model
+ * @returns {*}
+ */
+function getEntityModel() {
+  return ProfileEntityModel.getDefaultEntity();
+}
 
 /**
  * Validate profile entity
@@ -29,7 +51,7 @@ const XHR = XHRService.getInstance();
  * @returns {object} - either error object or profile entity
  */
 function validateProfile(profile) {
-  return ProfileSchema.isValid(profile);
+  return ProfileEntityModel.isValid(profile);
 }
 
 /**
@@ -135,6 +157,8 @@ function deleteProfileById(id) {
  */
 function ProfileServiceFactory() {
   return {
+    getSchema,
+    getEntityModel,
     validateProfile,
     findOrCreate,
     updateProfile,

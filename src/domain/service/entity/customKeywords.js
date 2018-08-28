@@ -20,10 +20,23 @@ export const isNotEmpty = {
   type: 'string',
   validate: function isNotEmpty(schema, data) {
     isNotEmpty.errors = [{keyword: 'isNotEmpty', message: isNotEmptyMsg, params: {keyword: 'isNotEmpty'}}];
-    return typeof data === 'string' && data.trim() !== ''
+    return typeof data === 'string' && data.trim() !== '';
   },
   errors: true
 };
+
+/**
+ * Custom validation function
+ */
+export const isNotEmptyArray = {
+  type: 'array',
+  validate: function isNotEmptyArray(schema, data) {
+    isNotEmptyArray.errors = [{keyword: 'isNotEmptyArray', message: isNotEmptyMsg, params: {keyword: 'isNotEmptyArray'}}];
+    return typeof Array.isArray(data) && data.length !== 0;
+  },
+  errors: true
+};
+
 
 /**
  * Custom validation function

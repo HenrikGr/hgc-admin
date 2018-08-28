@@ -1,5 +1,5 @@
 /**
- * Description: Utility functions
+ * Description: ValidationException function
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
@@ -14,6 +14,6 @@
  * @constructor
  */
 export default function ValidationException(error) {
-  this.details = error;
   this.name = 'Validation error';
+  this.details = error;
 }

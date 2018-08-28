@@ -17,11 +17,33 @@ import qs from 'qs';
 // XHR service
 import XHRService, { errorHandler } from "./XHRService";
 
-// Schema services
-import UserEntity from '../schemas/UserEntity';
+// Credentials schema
+import userSchema from '../schemas/json/user'
+
+// Base entity model
+import EntityModel from './entity/EntityModel'
 
 // XHR instance
 const XHR = XHRService.getInstance();
+
+// Entity model instance
+const UserEntityModel = new EntityModel(userSchema);
+
+/**
+ * Get schema
+ * @returns {*}
+ */
+function getSchema() {
+  return UserEntityModel.getSchema();
+}
+
+/**
+ * Get user entity model instance
+ * @returns {*}
+ */
+function getEntityModel() {
+  return UserEntityModel.getDefaultEntity();
+}
 
 /**
  * Validate user entity
@@ -29,7 +51,7 @@ const XHR = XHRService.getInstance();
  * @returns {object} - either error object or user entity
  */
 function validateUser(user) {
-  return UserEntity.isValid(user);
+  return UserEntityModel.isValid(user);
 }
 
 /**
@@ -178,6 +200,8 @@ function deleteUsersByIds(ids) {
  */
 function UserServiceFactory () {
   return {
+    getSchema,
+    getEntityModel,
     validateUser,
     createUser,
     getUsers,
@@ -187,7 +211,7 @@ function UserServiceFactory () {
     deleteUserById,
     deleteUsersByIds,
   };
-};
+}
 
 // Export interface
 export default new UserServiceFactory();

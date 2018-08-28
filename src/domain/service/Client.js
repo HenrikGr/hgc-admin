@@ -17,11 +17,33 @@ import qs from 'qs';
 // XHR service
 import XHRService, { errorHandler } from "./XHRService";
 
-// Schema services
-import ClientEntity from "../schemas/ClientEntity";
+// Credentials schema
+import clientSchema from '../schemas/json/client'
+
+// Base entity model
+import EntityModel from './entity/EntityModel'
 
 // XHR instance
 const XHR = XHRService.getInstance();
+
+// Entity model instance
+const ClientEntityModel = new EntityModel(clientSchema);
+
+/**
+ * Get schema
+ * @returns {*}
+ */
+function getSchema() {
+  return ClientEntityModel.getSchema();
+}
+
+/**
+ * Get client entity model
+ * @returns {*}
+ */
+function getEntityModel() {
+  return ClientEntityModel.getDefaultEntity();
+}
 
 
 /**
@@ -30,7 +52,7 @@ const XHR = XHRService.getInstance();
  * @returns {*}
  */
 function validateClient(client) {
-  return ClientEntity.isValid(client);
+  return ClientEntityModel.isValid(client);
 }
 
 /**
@@ -126,6 +148,8 @@ function deleteClientById(id) {
  */
 export const ClientServiceFactory = () => {
   return {
+    getSchema,
+    getEntityModel,
     validateClient,
     createClient,
     getClientById,

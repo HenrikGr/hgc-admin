@@ -11,13 +11,35 @@
 import XHRService, { errorHandler } from "./XHRService";
 
 // Credentials schema
-import CredentialEntity from '../schemas/CredentialsEntity';
+import credentialSchema from '../schemas/json/credentials'
+
+// Base entity model
+import EntityModel from './entity/EntityModel'
 
 // XHR instance
 const XHR = XHRService.getInstance();
 
+// Entity model instance
+const CredentialsEntityModel = new EntityModel(credentialSchema);
+
 // Oauth 2 variables
 const API_CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
+
+/**
+ * Get schema
+ * @returns {*}
+ */
+function getSchema() {
+  return CredentialsEntityModel.getSchema();
+}
+
+/**
+ * Get credentials entity model
+ * @returns {*}
+ */
+function getEntityModel() {
+  return CredentialsEntityModel.getDefaultEntity();
+}
 
 /**
  * Validate credentials entity
@@ -25,7 +47,7 @@ const API_CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
  * @returns {object} - either error object or credential entity
  */
 function validateCredentials(credentials) {
-  return CredentialEntity.isValid(credentials);
+  return CredentialsEntityModel.isValid(credentials);
 }
 
 /**
@@ -89,6 +111,8 @@ function removeSession() {
  */
 function SessionServiceFactory() {
   return {
+    getSchema,
+    getEntityModel,
     validateCredentials,
     getSession,
     refreshSession,
