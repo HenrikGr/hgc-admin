@@ -13,13 +13,19 @@
 // Module dependencies
 import React from 'react';
 import { render } from 'react-dom';
+
+// Redux store
 import store from './store/index'
-import Root from './view/theme/Root';
+
+// Application
+import App from './App';
 //import registerServiceWorker from './registerServiceWorker';
 
-
+/**
+ * Render the App
+ */
 render(
-  <Root store={store} />,
+  <App store={store} />,
   document.getElementById('root')
 );
 
