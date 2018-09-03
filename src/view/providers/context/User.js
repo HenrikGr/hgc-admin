@@ -1,5 +1,5 @@
 /**
- * Description: AuthContext
+ * Description: User context
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
@@ -11,9 +11,9 @@
 import React from "react";
 
 /**
- * Create the AuthContext
+ * User singleton
  */
-const AuthContext = React.createContext(null);
+const User = React.createContext(null);
 
 // Export auth context
-export default AuthContext;
+export default User;
