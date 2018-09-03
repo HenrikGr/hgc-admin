@@ -18,7 +18,7 @@ import { withStyles } from "@material-ui/core/styles";
 // Token context consumer
 import withTokenContext from '../../providers/withTokenContext'
 
-// Helpers
+// Helper functions to parse and format a number
 import { parseHHMMSS, formatDuration } from '../../../utils/helper';
 
 const styles = {
@@ -32,7 +32,6 @@ const styles = {
  * a readable time format
  * @param {object} classes - styles for the component
  * @param {object} context- token context from the token provider
- * @returns {*}
  * @constructor
  */
 function SessionClock({ classes, context }) {
@@ -49,7 +48,17 @@ function SessionClock({ classes, context }) {
  * @private
  */
 SessionClock.propTypes = {
+  /**
+   * Classes to extends style
+   * @type {object}
+   * @private
+   */
   classes: PropTypes.object.isRequired,
+  /**
+   * Token context
+   * @type {object}
+   * @private
+   */
   context: PropTypes.object.isRequired,
 };
 
