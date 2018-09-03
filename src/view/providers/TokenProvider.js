@@ -27,61 +27,53 @@ import sessionActions from "../../store/actions/SessionAction";
  * @public
  */
 class TokenProvider extends React.PureComponent {
+
   /**
    * Property type check
    * @type {Object}
-   * @private
+   * @public
    */
   static propTypes = {
+
     /**
      * Auto refresh flag
-     * default: false
-     * @type {boolean}
      */
     autoRefresh: PropTypes.bool.isRequired,
+
     /**
      * Interval for the timer
-     * default: 1000 ms
-     * @type {number}
      */
     interval: PropTypes.number.isRequired,
+
     /**
      * Refresh token threshold
-     * default: 5 minutes (5 * 60)
-     * @type {number}
      */
     refreshThreshold: PropTypes.number.isRequired,
+
     /**
      * Remove token threshold
      * Must be bigger than 0 and take into account the time for external removal
-     * default: 1 minutes (60)
-     * @type {number}
      */
     removeThreshold: PropTypes.number.isRequired,
+
     /**
      * Token received by external API and containing an expires_in property
-     * default: {}
-     * @type {object}
      */
     token: PropTypes.object.isRequired,
+
     /**
      * Refresh function to get a new token
-     * default: () => {}
-     * @type {Function}
      */
     getToken: PropTypes.func,
+
     /**
      * Remove function to remove the token
-     * default: () => {}
-     * @type {Function}
      */
     removeToken: PropTypes.func,
   };
 
   /**
    * Sets default property values
-   * @type {Object}
-   * @private
    */
   static defaultProps = {
     autoRefresh: false,
@@ -92,8 +84,7 @@ class TokenProvider extends React.PureComponent {
 
   /**
    * Sets initial component state
-   * @type {Object}
-   * @private
+   * @public
    */
   state = {
     expiresIn: 0,
@@ -145,7 +136,7 @@ class TokenProvider extends React.PureComponent {
 
   /**
    * Start/Restart timer
-   * @param duration
+   * @param {string} duration - the duration in seconds
    * @private
    */
   startTimer = (duration) => {
@@ -213,7 +204,6 @@ class TokenProvider extends React.PureComponent {
    * @private
    */
   countDownDuration = (isStarted, duration) => {
-    // If a new timer has started from new props
     if (isStarted) {
       this.setState(() => {
         return {
@@ -222,7 +212,6 @@ class TokenProvider extends React.PureComponent {
         }
       });
     } else {
-
       switch(this.state.expiresIn) {
         case this.props.refreshThreshold:
           this.setState(state => {
@@ -258,7 +247,7 @@ class TokenProvider extends React.PureComponent {
 
   /**
    * Get a new token
-   * @public
+   * @private
    */
   handleRefresh = () => {
     this.props.getToken();
@@ -266,7 +255,7 @@ class TokenProvider extends React.PureComponent {
 
   /**
    * Remove token
-   * @public
+   * @private
    */
   handleRemove = () => {
     this.props.removeToken()
