@@ -1,6 +1,21 @@
 /**
  * Description: TokenProvider using the context API
  *
+ * The token provider exposes a context that can be consumed by other component
+ * and the context that is exposed will have the following shape:
+ * - duration, a number that counts down every second until the token has expired,
+ * - refreshToken, a function for fetching a new token,
+ * - removeToken, a function to remove the token
+ *
+ * The token provider is dependent a global state management such as Redux
+ * as a means to receive token, refresh and remove the token.
+ *
+ * Once the Token provider receives a new token it will start a timer that
+ * will count down until the expiration of the token expires.
+ *
+ * The count down timer does also support refresh threshold, autoRefresh and remove threshold
+ * that are configurable via props
+ *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
@@ -10,18 +25,12 @@
 // react
 import React from "react";
 import PropTypes from "prop-types";
-
-// Redux
 import { connect } from "react-redux";
-
-// Token context
+import sessionActions from "../../store/actions/SessionAction";
 import Token from './context/Token';
 
-// User actions
-import sessionActions from "../../store/actions/SessionAction";
-
 /**
- * Calculate the remaining time of a token and expose data via context
+ * TokenProvider
  * @class TokenProvider
  * @public
  */
@@ -29,46 +38,51 @@ class TokenProvider extends React.PureComponent {
 
   /**
    * Property type check
-   * @type {Object}
-   * @public
    */
   static propTypes = {
 
     /**
      * Auto refresh flag
+     * @public
      */
     autoRefresh: PropTypes.bool.isRequired,
 
     /**
      * Interval for the timer
+     * @ignore
      */
     interval: PropTypes.number.isRequired,
 
     /**
      * Refresh token threshold
+     * @public
      */
     refreshThreshold: PropTypes.number.isRequired,
 
     /**
      * Remove token threshold
-     * Must be bigger than 0 and take into account the time for external removal
+     * Must be bigger than 0 and the time it takes to refresh a new token
+     * @public
      */
     removeThreshold: PropTypes.number.isRequired,
 
     /**
-     * Token received by external API and containing an expires_in property
+     * Token received
+     * @ignore
      */
     token: PropTypes.object.isRequired,
 
     /**
      * Refresh function to get a new token
+     * @ignore
      */
-    getToken: PropTypes.func,
+    getToken: PropTypes.func.isRequired,
 
     /**
      * Remove function to remove the token
+     * @ignore
      */
-    removeToken: PropTypes.func,
+    removeToken: PropTypes.func.isRequired,
   };
 
   /**
@@ -83,7 +97,7 @@ class TokenProvider extends React.PureComponent {
 
   /**
    * Sets initial component state
-   * @public
+   * @private
    */
   state = {
     expiresIn: 0,
@@ -102,7 +116,7 @@ class TokenProvider extends React.PureComponent {
   }
 
   /**
-   * Check for new token and if timer reached refresh and remove thresholds.
+   * Check for new token, if timer reached refresh and/or remove thresholds.
    * @param {object} prevProps
    * @param {object} prevState
    */
@@ -135,7 +149,7 @@ class TokenProvider extends React.PureComponent {
 
   /**
    * Start/Restart timer
-   * @param {string} duration - the duration in seconds
+   * @param {number} duration - the duration in seconds when starting a new timer
    * @private
    */
   startTimer = (duration) => {
@@ -148,7 +162,7 @@ class TokenProvider extends React.PureComponent {
     this.expected = Date.now() + this.props.interval;
     this.timeoutID = setTimeout(() => {
       this.step(true, duration);
-    }, 500);
+    }, 100);
   };
 
   /**
@@ -306,5 +320,5 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-// Inject redux state and action creators to props
+// Connect the mapped state and action creators to the component
 export default connect(mapStateToProps, mapDispatchToProps)(TokenProvider);
