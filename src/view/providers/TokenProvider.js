@@ -21,8 +21,7 @@ import Token from './context/Token';
 import sessionActions from "../../store/actions/SessionAction";
 
 /**
- * Token provider class that calculate the remaining time
- * before the token expires.
+ * Calculate the remaining time of a token and expose data via context
  * @class TokenProvider
  * @public
  */
