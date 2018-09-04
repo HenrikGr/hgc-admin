@@ -1,5 +1,13 @@
 /**
- * Description: The Redux store module
+ * @prettier
+ *
+ * @description: The module creates the redux store
+ *
+ * When creating the store we are setting up the root reducer,
+ * redux dev tools and applying the middleware to use
+ *
+ * For more information about the redux dev tools
+ * @see https://github.com/zalmoxisus/redux-devtools-extension
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
@@ -7,20 +15,20 @@
  * @license: The MIT License (MIT)
  */
 
-// Module dependencies
-import { createStore, applyMiddleware } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension/logOnlyInProduction';
-import reducer from "./reducers/RootReducers";
-import thunk from "./middleware/thunk";
+import { createStore, applyMiddleware } from 'redux'
+import { composeWithDevTools } from 'redux-devtools-extension/logOnlyInProduction'
+import rootReducer from './reducers/RootReducers'
+import thunk from './middleware/thunk'
 
 /**
- * Create store with root reducer, and using redux dev tools extension
- * @see https://github.com/zalmoxisus/redux-devtools-extension
+ * Create the store
  * @type {*}
  */
-const store = createStore(reducer, composeWithDevTools(
-  applyMiddleware(thunk),
-  // other store enhancers if any
-));
+const store = createStore(
+  rootReducer,
+  composeWithDevTools(
+    applyMiddleware(thunk)
+  )
+)
 
-export default store;
+export default store
