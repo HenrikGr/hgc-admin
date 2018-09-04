@@ -1,5 +1,8 @@
 /**
- * Description
+ * @prettier
+ *
+ * @description Console logger middleware
+ * The middleware logs action types to the console
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
@@ -7,13 +10,16 @@
  * @license: The MIT License (MIT)
  */
 
-/**
- * Logger middleware
- * @param store
- */
-const logger = store => next => action => {
-  console.log("MIDDLEWARE: Executing action " + action.type);
-  return next(action);
-};
+// Prefix message to the console
+const STR_CONSOLE_PREFIX = 'MIDDLEWARE: Executing action: '
 
-export default logger;
+/**
+ * Console logger middleware
+ * @function
+ */
+const consoleLogger = () => next => action => {
+  console.log(STR_CONSOLE_PREFIX + action.type)
+  return next(action)
+}
+
+export default consoleLogger

@@ -16,6 +16,7 @@
  * creator is of type function. Otherwise it returns the object.
  * @param extraArgument
  * @returns {function({dispatch?: *, getState?: *}): function(*): function(*=)}
+ * @constructor
  */
 function createThunkMiddleware(extraArgument) {
   return ({ dispatch, getState }) => next => action => {
