@@ -1,6 +1,6 @@
 /**
- * Description: Container component for LoginForm component
- *
+ * @prettier
+ * @description: Container component for LoginForm component
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
@@ -8,155 +8,136 @@
  */
 
 // React & Redux
-import React from 'react';
-import { Redirect } from "react-router";
-import { connect } from "react-redux";
-import PropTypes from 'prop-types';
+import React from 'react'
+import { Redirect } from 'react-router'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 // material-ui
-import Grid from '@material-ui/core/Grid';
-
-// custom component
-import Notification from "../components/notification/Notification";
-import LinearProgressbar from "../components/progress/LinearProgressbar";
+import Grid from '@material-ui/core/Grid'
 
 // Presentation layer
-import LoginForm from "../components/forms/LoginForm";
+import LoginForm from '../components/forms/LoginForm'
+import Notification from '../components/notification/Notification'
+import LinearProgressbar from '../components/progress/LinearProgressbar'
 
 // Action creators used to update session state
-import sessionAction from '../../store/actions/SessionAction';
-import {isEmpty} from "../../utils/helper";
+import userAction from '../../store/actions/UserAction'
+import { isEmpty } from '../../utils/helper'
 
 /**
- * LoginPage
+ * LoginPage container component
+ * @class LoginPage
+ * @public
  */
-class LoginPage extends React.Component {
+class LoginPage extends React.PureComponent {
   /**
-   * Props API
+   * Property type checks
    */
   static propTypes = {
+
     /**
-     * Data entity to be rendered by the form
+     * Flag indicating if user successfully logged in
+     * Is used to redirect
+     * @ignore
      */
-    entity: PropTypes.object.isRequired,
-    /**
-     * Flag indicating if visible password
-     */
-    showPassword: PropTypes.bool.isRequired,
-    /**
-     * Flag indicating redirect to referrer state from history
-     */
-    redirectToReferrer: PropTypes.bool.isRequired,
+    isAuth: PropTypes.bool.isRequired,
+
     /**
      * Flag indicating fetch actions
+     * @ignore
      */
     isFetching: PropTypes.bool.isRequired,
+
     /**
      * error object
+     * @ignore
      */
     error: PropTypes.object.isRequired,
-    /**
-     * Function to get session from db
-     */
-    getSession: PropTypes.func.isRequired,
-    /**
-     * Function to update input data in global state
-     */
-    updateCredentials: PropTypes.func.isRequired,
-    /**
-     * Function to reset session validation error
-     */
-    resetSessionError: PropTypes.func.isRequired,
-    /**
-     * Function to toggle password visibility
-     */
-    togglePasswordVisible: PropTypes.func.isRequired,
-  };
 
-  /**
-   * Reset possible errors on un mount
-   */
-  componentWillUnmount() {
-    if (!isEmpty(this.props.error)) {
-      this.props.resetSessionError();
-    }
+    /**
+     * Function to log in
+     * @ignore
+     */
+    logIn: PropTypes.func.isRequired,
+
+    /**
+     * Function to reset error
+     * @ignore
+     */
+    resetError: PropTypes.func.isRequired
   }
 
   /**
-   * Event handler to deal with input values
-   * @param prop
-   * @returns {Function}
+   * Sets initial component state
+   * @private
    */
+  state = {
+    username: '',
+    password: '',
+    showPassword: false,
+    redirectToReferrer: false
+  }
+
+  componentWillUnmount() {
+    if (!isEmpty(this.props.error)) {
+      this.props.resetError()
+    }
+  }
+
   handleChange = prop => event => {
-    this.props.updateCredentials({ [prop]: event.target.value });
-  };
+    this.setState({ [prop]: event.target.value })
+  }
 
-  /**
-   * Event handler for form submit
-   * @param event
-   */
   handleSubmit = event => {
-    event.preventDefault();
-    this.props.getSession(this.props.entity);
-  };
+    const { username, password } = this.state
+    event.preventDefault()
+    this.props.logIn({ username, password })
+  }
 
-  /**
-   * Event handler for toggle password visibility
-   */
   handleShowPassword = () => {
-    this.props.togglePasswordVisible();
-  };
+    this.setState(prevState => {
+      return {
+        ...prevState,
+        showPassword: !prevState.showPassword
+      }
+    })
+  }
 
-  /**
-   * Event handler to reset validation errors
-   */
   handleReset = () => {
     if (!isEmpty(this.props.error)) {
-      this.props.resetSessionError();
+      this.props.resetError()
     }
-  };
+  }
 
   render() {
-    const {
-      entity,
-      showPassword,
-      redirectToReferrer,
-      isFetching,
-      error
-    } = this.props;
+    const { isAuth, isFetching, error } = this.props
+    const { username, password, showPassword } = this.state
 
-    if (redirectToReferrer) {
-      const { from } = this.props.location.state || { from: { pathname: "/dashboard" } };
-      return <Redirect to={from} />;
+    if (isAuth) {
+      const { from } = this.props.location.state || { from: { pathname: '/dashboard' } }
+      return <Redirect to={from} />
     }
 
     return (
-      <Grid container spacing={ 0 }>
-        <Grid item xs={ 12 }>
+      <Grid container spacing={0}>
+        <Grid item xs={12}>
+          <Notification variant="error" messages={error} onResetMessages={this.handleReset} />
 
-          <Notification
-            variant="error"
-            messages={ error }
-            onResetMessages={ this.handleReset }
-          />
-
-          <LinearProgressbar
-            isFetching={ isFetching}
-          />
+          <LinearProgressbar isFetching={isFetching} />
 
           <LoginForm
             formLabel="Log in"
-            entity={ entity }
-            showPassword={ showPassword }
-            isFetching={ isFetching }
-            onSubmit={ this.handleSubmit }
-            onChange={ this.handleChange }
-            onShowPassword={ this.handleShowPassword }
+            entity={{ username, password }}
+            showPassword={showPassword}
+            isFetching={isFetching}
+            onSubmit={this.handleSubmit}
+            onChange={this.handleChange}
+            onShowPassword={this.handleShowPassword}
           />
-
         </Grid>
       </Grid>
-    );
+    )
   }
 }
 
@@ -165,12 +146,10 @@ class LoginPage extends React.Component {
  * @param state
  */
 const mapStateToProps = state => ({
-  entity: state.session.entity,
-  showPassword: state.session.showPassword,
-  redirectToReferrer: state.session.redirectToReferrer,
+  isAuth: state.session.isAuth,
   isFetching: state.session.isFetching,
-  error: state.session.error,
-});
+  error: state.session.error
+})
 
 /**
  * Map actions to props
@@ -178,20 +157,17 @@ const mapStateToProps = state => ({
  */
 const mapDispatchToProps = dispatch => {
   return {
-    getSession: (credentials) => {
-      dispatch(sessionAction.getSession(credentials));
+    logIn: credentials => {
+      dispatch(userAction.logIn(credentials))
     },
-    updateCredentials: (value) => {
-      dispatch(sessionAction.updateCredentials(value))
-    },
-    resetSessionError: () => {
-      dispatch(sessionAction.resetSessionError())
-    },
-    togglePasswordVisible: () => {
-      dispatch(sessionAction.togglePasswordVisible())
+    resetError: () => {
+      dispatch(userAction.resetError())
     }
-  };
-};
+  }
+}
 
 // Inject state and action creators to the presentation layer
-export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LoginPage)
