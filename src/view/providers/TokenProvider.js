@@ -21,8 +21,6 @@
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
-
-// react
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -106,7 +104,7 @@ class TokenProvider extends React.PureComponent {
 
   // Timer instance
   timeoutID = null;
-  expected = 1000;
+  expected = 0;
 
   /**
    * Stop timer on un mount
@@ -133,17 +131,15 @@ class TokenProvider extends React.PureComponent {
         this.stopTimer();
       }
 
-    } else {
-      // refresh threshold and autoRefresh
-      if ((this.state.refreshPending && this.props.autoRefresh) &&
-        (this.state.expiresIn === this.props.refreshThreshold - 1)) {
-        this.handleRefresh();
-      }
+    }
 
-      // remove threshold
-      if (this.state.expiresIn === this.props.removeThreshold) {
-        this.handleRemove();
-      }
+    if ((this.state.refreshPending && this.props.autoRefresh) &&
+      (this.state.expiresIn === this.props.refreshThreshold - 1) ) {
+      this.handleRefresh();
+    }
+
+    if (this.state.expiresIn === this.props.removeThreshold) {
+      this.handleRemove();
     }
   }
 
@@ -158,11 +154,12 @@ class TokenProvider extends React.PureComponent {
       this.timeoutID = null;
     }
 
-    // Get expected second for next step
+    // Get expected second for next step before starting the timer
     this.expected = Date.now() + this.props.interval;
-    this.timeoutID = setTimeout(() => {
-      this.step(true, duration);
-    }, 100);
+    // start the timer and pass in the step function
+    this.timeoutID = setTimeout(this.step, this.props.interval);
+    // Set start state
+    this.setState({ expiresIn: duration, refreshPending: false });
   };
 
   /**
@@ -175,86 +172,50 @@ class TokenProvider extends React.PureComponent {
       this.timeoutID = null;
     }
 
-    this.setState(state => {
-      return {
-        ...state,
-        expiresIn: 0,
-        refreshPending: false,
-      }
-    });
+    // Reset state to initial after stopping the timer
+    this.setState({ expiresIn: 0, refreshPending: false });
   };
 
   /**
-   * Stepper function that should be executed every interval
-   * It adjust itself for drifting
-   * @param {boolean} isStarted - flag indicated if a new timer has been created
-   * @param {number} duration - number of seconds the timer should run when started
+   * Stepper function that executed every interval
    * @private
    */
-  step = (isStarted, duration) => {
+  step = () => {
     let drift = Date.now() - this.expected;
     if (drift > this.props.interval) {
       console.log('Timer has drifted (drift > interval)', drift, this.props.interval);
     }
-    if (this.timeoutID) {
-      this.countDownDuration(isStarted, duration);
-    }
+
+    // The worker function that update states and may cause drifting
+    this.countDownDuration();
+    if (this.timeoutID) clearTimeout(this.timeoutID);
 
     this.expected += this.props.interval;
-
-    if (this.timeoutID) {
-      clearTimeout(this.timeoutID);
-      this.timeoutID = setTimeout(() => {
-        this.step(false, duration);
-      }, Math.max(0, this.props.interval - drift));
-    }
+    this.timeoutID = setTimeout(this.step, Math.max(0, this.props.interval - drift));
   };
 
   /**
    * Function that runs within the step function
-   * @param {boolean} isStarted - flag indicated if a new timer has been created
-   * @param {number} duration - number of seconds the timer should run when started
    * @private
    */
-  countDownDuration = (isStarted, duration) => {
-    if (isStarted) {
-      this.setState(() => {
-        return {
-          expiresIn: duration,
-          refreshPending: false,
-        }
-      });
-    } else {
-      switch(this.state.expiresIn) {
-        case this.props.refreshThreshold:
-          this.setState(state => {
-            return {
-              ...state,
-              expiresIn: state.expiresIn -1,
-              refreshPending: true,
-            }
-          });
-          break;
+  countDownDuration = () => {
+    switch(this.state.expiresIn) {
+      case this.props.refreshThreshold:
+        this.setState(prevState => {
+          return { expiresIn: prevState.expiresIn - 1, refreshPending: true }
+        });
+        break;
 
-        // Should not occur but is here just for safety
-        case 0:
-          this.setState(state => {
-            return {
-              ...state,
-              expiresIn: 0,
-              refreshPending: false,
-            }
-          });
-          break;
+      // Should not occur but is here just for safety
+      case 0:
+        this.setState({ expiresIn: 0, refreshPending: false });
+        break;
 
-        default:
-          this.setState(prevState => {
-            return {
-              expiresIn: prevState.expiresIn -1
-            }
-          });
-          break;
-      }
+      default:
+        this.setState(prevState => {
+          return { expiresIn: prevState.expiresIn - 1 }
+        });
+        break;
     }
   };
 
