@@ -1,8 +1,6 @@
 /**
- * Description: Container component for the profile page
- *
- * The ProfilePage components supplies data and functions to the profile form
- * and manage the remote operations to the backend
+ * @prettier
+ * @description: Container component for the profile page
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
@@ -11,32 +9,34 @@
  */
 
 // react & redux
-import React from 'react';
-import { connect } from "react-redux";
-import PropTypes from 'prop-types';
+import React from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
-// material-ui
-import Grid from '@material-ui/core/Grid';
-
-// custom component - presentation layer
+// Presentation layer
+import Grid from '@material-ui/core/Grid'
 import Notification from '../components/notification/Notification'
 import LinearProgressbar from '../components/progress/LinearProgressbar'
-import ProfileForm from '../components/forms/ProfileForm';
+import ProfileForm from '../components/forms/ProfileForm'
 
-// Action creators used to update profile state
-import profileAction from "../../store/actions/ProfileActions";
+// Profile actions
+import profileAction from '../../store/actions/ProfileActions'
+import { isEmpty } from '../../utils/helper'
 
 /**
- * ProfilePage
+ * ProfilePage container component
  */
 class ProfilePage extends React.Component {
+  /**
+   * Property type checks
+   */
   static propTypes = {
     /**
      * Data entity to be rendered by the form
      */
-    entity: PropTypes.object.isRequired,
+    profile: PropTypes.object.isRequired,
     /**
-     * Flag indicating fetch actions
+     * Flag indicating fetch state
      */
     isFetching: PropTypes.bool.isRequired,
     /**
@@ -44,28 +44,26 @@ class ProfilePage extends React.Component {
      */
     error: PropTypes.object.isRequired,
     /**
-     * Function to get data from db
+     * Callback mapped to profile action
      */
-    getProfile: PropTypes.func.isRequired,
+    update: PropTypes.func.isRequired,
     /**
-     * Function to update db
+     * Callback mapped to profile action
      */
-    updateProfile: PropTypes.func.isRequired,
+    updateState: PropTypes.func.isRequired,
     /**
-     * Function to update input data in global state
+     * Callback mapped to profile action
      */
-    updateProfileState: PropTypes.func.isRequired,
-    /**
-     * Function to reset error
-     */
-    resetProfileError: PropTypes.func.isRequired,
-  };
+    resetError: PropTypes.func.isRequired
+  }
 
   /**
-   * Get profile on mount
+   * Reset possible errors on un mount
    */
-  componentDidMount() {
-    this.props.getProfile();
+  componentWillUnmount() {
+    if (!isEmpty(this.props.error)) {
+      this.props.resetError()
+    }
   }
 
   /**
@@ -74,86 +72,77 @@ class ProfilePage extends React.Component {
    * @returns {Function}
    */
   handleChange = prop => event => {
-    this.props.updateProfileState({ [prop]: event.target.value });
-  };
+    this.props.updateState({ [prop]: event.target.value })
+  }
 
   /**
    * Event handler for submitting the form
    * @param event
    */
   handleSubmit = event => {
-    event.preventDefault();
-    this.props.updateProfile(this.props.entity);
-  };
+    event.preventDefault()
+    this.props.update(this.props.profile)
+  }
 
   /**
    * Event handler to deal with resetting error notifications
    */
   handleResetError = () => {
-    this.props.resetProfileError();
-  };
+    this.props.resetError()
+  }
 
   render() {
-    const { entity, isFetching, error  } = this.props;
-
+    const { profile, isFetching, error } = this.props
     return (
-      <Grid container spacing={ 0 }>
-        <Grid item xs={ 12 }>
-
-          <Notification
-            variant="error"
-            messages={ error }
-            onResetMessages={ this.handleResetError }
-          />
-
-          <LinearProgressbar
-            isFetching={ isFetching}
-          />
-
+      <Grid container spacing={0}>
+        <Grid item xs={12}>
+          <Notification variant="error" messages={error} onResetMessages={this.handleResetError} />
+          <LinearProgressbar isFetching={isFetching} />
           <ProfileForm
             formLabel="Profile"
-            entity={entity}
-            isFetching={isFetching}
+            entity={profile}
+            disableSubmit={isFetching}
             onChange={this.handleChange}
             onSubmit={this.handleSubmit}
           />
-
         </Grid>
       </Grid>
-    );
+    )
   }
 }
 
 /**
  * Map global state to props
  * @param state
+ * @returns {{profile: *, isFetching: boolean, error: (defaults.user.error|{})}}
  */
 const mapStateToProps = state => ({
-  entity: state.profile.entity,
-  isFetching: state.profile.isFetching,
-  error: state.profile.error,
-});
+  profile: state.user.profile,
+  isFetching: state.user.isFetching,
+  error: state.user.error
+})
 
 /**
- * Map actions to props
+ * Map profile actions to props
  * @param dispatch
+ * @returns {{update: update, updateState: updateState, resetError: resetError}}
  */
 const mapDispatchToProps = dispatch => {
   return {
-    getProfile: () => {
-      dispatch(profileAction.getProfile());
+    update: profile => {
+      dispatch(profileAction.update(profile))
     },
-    updateProfile: profile => {
-      dispatch(profileAction.updateProfile(profile));
+    updateState: profile => {
+      dispatch(profileAction.updateState(profile))
     },
-    updateProfileState: profile => {
-      dispatch(profileAction.updateProfileState(profile))
-    },
-    resetProfileError: () => {
-      dispatch(profileAction.resetProfileError())
+    resetError: () => {
+      dispatch(profileAction.resetError())
     }
-  };
-};
+  }
+}
 
-// Inject state and action creators to presentation layer
-export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage);
+// Connect mapped state and profile actions to component properties
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProfilePage)
