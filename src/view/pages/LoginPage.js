@@ -6,8 +6,6 @@
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
-
-// React & Redux
 import React from 'react'
 import { Redirect } from 'react-router'
 import { connect } from 'react-redux'
