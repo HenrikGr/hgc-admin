@@ -6,8 +6,6 @@
  * @copyright:  Copyright (c) 2018 HGC AB
  * @license: The MIT License (MIT)
  */
-
-// react & redux
 import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
