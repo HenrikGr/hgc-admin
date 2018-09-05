@@ -1,7 +1,6 @@
 /**
  * @prettier
  * @description: Container component for the profile page
- *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2018 HGC AB
