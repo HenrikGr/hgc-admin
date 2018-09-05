@@ -1,25 +1,16 @@
 /**
- * Description LoginForm component
- *
- * The LoginForm component is a controlled component
- * and thus should not hold any state data.
- *
+ * @prettier
+ * @description LoginForm controlled component
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
-
-// react
 import React from "react";
 import PropTypes from "prop-types";
-
-// material-ui
 import Button from "@material-ui/core/Button";
 import FormLabel from "@material-ui/core/FormLabel";
 import { withStyles } from "@material-ui/core/styles";
-
-// custom component
 import TextField from '../fields/TextField';
 import PasswordField from '../fields/PasswordField';
 
@@ -56,23 +47,21 @@ const styles = theme => ({
  * @param formLabel
  * @param entity
  * @param showPassword
- * @param isFetching
+ * @param disableSubmit
  * @param onSubmit
  * @param onChange
  * @param onShowPassword
  * @returns {*}
  * @constructor
  */
-function LoginForm({ classes, formLabel, entity, showPassword, isFetching, onSubmit, onChange, onShowPassword }) {
+function LoginForm({ classes, formLabel, entity, showPassword, disableSubmit, onSubmit, onChange, onShowPassword }) {
   return(
     <div className={ classes.root }>
       <div className={ classes.formWrapper }>
         <form className={ classes.form } onSubmit={ onSubmit }>
-
           <FormLabel component="legend">
             { formLabel }
           </FormLabel>
-
           <TextField
             id="username"
             label="User name"
@@ -81,7 +70,6 @@ function LoginForm({ classes, formLabel, entity, showPassword, isFetching, onSub
             value={ entity.username }
             onChange={ onChange }
           />
-
           <PasswordField
             id="password"
             autoComplete="current-password"
@@ -90,9 +78,8 @@ function LoginForm({ classes, formLabel, entity, showPassword, isFetching, onSub
             onChange={ onChange }
             onShowPassword={ onShowPassword }
           />
-
           <Button
-            disabled={ isFetching }
+            disabled={ disableSubmit }
             type="submit"
             variant="raised"
             color="primary"
@@ -100,7 +87,6 @@ function LoginForm({ classes, formLabel, entity, showPassword, isFetching, onSub
           >
             Login
           </Button>
-
         </form>
       </div>
     </div>
@@ -108,7 +94,7 @@ function LoginForm({ classes, formLabel, entity, showPassword, isFetching, onSub
 }
 
 /**
- * Props API
+ * Property type checks
  */
 LoginForm.propTypes = {
   /**
@@ -128,25 +114,25 @@ LoginForm.propTypes = {
    */
   showPassword: PropTypes.bool.isRequired,
   /**
-   * Flag indicating fetching state
+   * Boolean indicating if submit btn should be disabled
    */
-  isFetching: PropTypes.bool.isRequired,
+  disableSubmit: PropTypes.bool.isRequired,
   /**
-   * Callback function to handle input changes to external state
+   * Callback for input changes
    */
   onChange: PropTypes.func.isRequired,
   /**
-   * Callback function to handle submit data
+   * Callback for form submit
    */
   onSubmit: PropTypes.func.isRequired,
   /**
-   * Function to toggle password visibility
+   * Callback to toggle visible password
    */
-  onShowPassword: PropTypes.func.isRequired,
-};
+  onShowPassword: PropTypes.func.isRequired
+}
 
 /**
- * Default props
+ * Default properties value
  * @type {{formLabel: string, showPassword: boolean, isFetching: boolean}}
  */
 LoginForm.defaultProps = {
