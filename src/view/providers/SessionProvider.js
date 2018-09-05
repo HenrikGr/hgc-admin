@@ -1,8 +1,8 @@
 /**
  * @prettier
- * @description: TokenProvider using the context API
+ * @description: SessionProvider using the context API
  *
- * The token provider exposes a context that can be consumed by other component
+ * The session provider exposes a context that can be consumed by other component
  * and the context that is exposed will have the following shape:
  * - duration, a number that counts down every second until the token has expired,
  * - refreshToken, a function for fetching a new token,
@@ -11,7 +11,7 @@
  * The token provider is dependent a global state management such as Redux
  * as a means to receive token, refresh and remove the token.
  *
- * Once the Token provider receives a new token it will start a timer that
+ * Once the Session provider receives a new token it will start a timer that
  * will count down until the expiration of the token expires.
  *
  * The count down timer does also support refresh threshold, autoRefresh and remove threshold
@@ -26,21 +26,19 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import tokenActions from '../../store/actions/TokenAction'
-import Token from './context/Token'
+import Session from './context/Session'
 
 /**
- * TokenProvider
- * @class TokenProvider
- * @public
+ * SessionProvider
+ * @class SessionProvider
  */
-class TokenProvider extends React.PureComponent {
+class SessionProvider extends React.PureComponent {
   /**
    * Property type check
    */
   static propTypes = {
     /**
      * Auto refresh flag
-     * @public
      */
     autoRefresh: PropTypes.bool.isRequired,
 
@@ -53,19 +51,17 @@ class TokenProvider extends React.PureComponent {
     /**
      * Refresh token threshold
      * TODO: Validate that refreshThreshold is greater then removeThreshold
-     * @public
      */
     refreshThreshold: PropTypes.number.isRequired,
 
     /**
      * Remove token threshold
      * TODO: Must be bigger than 0 and the time it takes to refresh a new token
-     * @public
      */
     removeThreshold: PropTypes.number.isRequired,
 
     /**
-     * Token received
+     * Session received
      * @ignore
      */
     token: PropTypes.object.isRequired,
@@ -74,13 +70,13 @@ class TokenProvider extends React.PureComponent {
      * Refresh function to get a new token
      * @ignore
      */
-    getToken: PropTypes.func.isRequired,
+    refresh: PropTypes.func.isRequired,
 
     /**
      * Remove function to remove the token
      * @ignore
      */
-    removeToken: PropTypes.func.isRequired
+    remove: PropTypes.func.isRequired
   }
 
   /**
@@ -95,7 +91,6 @@ class TokenProvider extends React.PureComponent {
 
   /**
    * Sets initial component state
-   * @private
    */
   state = {
     expiresIn: 0,
@@ -148,7 +143,6 @@ class TokenProvider extends React.PureComponent {
   /**
    * Start/Restart timer
    * @param {number} duration - the duration in seconds when starting a new timer
-   * @private
    */
   startTimer = duration => {
     if (this.timeoutID) {
@@ -166,7 +160,6 @@ class TokenProvider extends React.PureComponent {
 
   /**
    * Stop timer
-   * @private
    */
   stopTimer = () => {
     if (this.timeoutID) {
@@ -180,7 +173,6 @@ class TokenProvider extends React.PureComponent {
 
   /**
    * Stepper function that executed every interval
-   * @private
    */
   step = () => {
     let drift = Date.now() - this.expected
@@ -198,7 +190,6 @@ class TokenProvider extends React.PureComponent {
 
   /**
    * Function that runs within the step function
-   * @private
    */
   countDownDuration = () => {
     switch (this.state.expiresIn) {
@@ -223,27 +214,21 @@ class TokenProvider extends React.PureComponent {
 
   /**
    * Get a new token
-   * @private
    */
   handleRefresh = () => {
-    this.props.getToken()
+    this.props.refresh()
   }
 
   /**
    * Remove token
-   * @private
    */
   handleRemove = () => {
-    this.props.removeToken()
+    this.props.remove()
   }
 
-  /**
-   * Render component
-   * @returns {*}
-   */
   render() {
     return (
-      <Token.Provider
+      <Session.Provider
         value={{
           duration: this.state.expiresIn,
           refreshState: this.state.refreshPending && !this.props.autoRefresh,
@@ -252,7 +237,7 @@ class TokenProvider extends React.PureComponent {
         }}
       >
         {this.props.children}
-      </Token.Provider>
+      </Session.Provider>
     )
   }
 }
@@ -275,10 +260,10 @@ const mapStateToProps = state => {
  */
 const mapDispatchToProps = dispatch => {
   return {
-    getToken: () => {
-      dispatch(tokenActions.get())
+    refresh: () => {
+      dispatch(tokenActions.refresh())
     },
-    removeToken: () => {
+    remove: () => {
       dispatch(tokenActions.remove())
     }
   }
@@ -288,4 +273,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(TokenProvider)
+)(SessionProvider)

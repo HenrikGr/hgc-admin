@@ -1,21 +1,17 @@
 /**
- * Description: UserProvider using the context API
- *
+ * @prettier
+ * @description: UserProvider using the context API
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
-
-// react
-import React from "react";
-import PropTypes from "prop-types";
-
-// Redux
-import { connect } from "react-redux";
+import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
 // User context
-import User from './context/User';
+import User from './context/User'
 
 /**
  * User provider class that provides information about the currant user
@@ -26,25 +22,20 @@ class UserProvider extends React.PureComponent {
   /**
    * Property type check
    * @type {Object}
-   * @private
    */
   static propTypes = {
     /**
      * Flag indicating if the user is authenticated or not
-     * default: false
-     * @type {boolean}
      */
-    isAuth: PropTypes.bool.isRequired,
-  };
+    isAuth: PropTypes.bool.isRequired
+  }
 
   /**
    * Sets initial component state
-   * @type {Object}
-   * @private
    */
   state = {
-    isAuth: false,
-  };
+    isAuth: false
+  }
 
   /**
    * Check if new token received and set the internal state to
@@ -55,7 +46,7 @@ class UserProvider extends React.PureComponent {
    */
   componentDidUpdate(prevProps, prevState) {
     if (this.props.isAuth !== prevState.isAuth) {
-      this.setState({ isAuth: this.props.isAuth});
+      this.setState({ isAuth: this.props.isAuth })
     }
   }
 
@@ -65,25 +56,24 @@ class UserProvider extends React.PureComponent {
    */
   render() {
     return (
-      <User.Provider value={{
-        isAuth: this.props.isAuth,
-      }}>
-        {this.props.children}
-      </User.Provider>
+      <User.Provider value={{ isAuth: this.props.isAuth }}>{this.props.children}</User.Provider>
     )
   }
 }
 
 /**
- * Map global state to props
+ * Map user state to props
  * @param state
- * @returns {{token: (defaults.session.token|{})}}
+ * @returns {{isAuth: boolean}}
  */
 const mapStateToProps = state => {
   return {
-    isAuth: state.session.isAuth,
-  };
-};
+    isAuth: state.user.isAuth
+  }
+}
 
-// Inject redux state to props
-export default connect(mapStateToProps, null)(UserProvider);
+// connect mapped state to component
+export default connect(
+  mapStateToProps,
+  null
+)(UserProvider)

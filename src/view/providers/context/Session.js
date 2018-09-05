@@ -1,6 +1,6 @@
 /**
  * @prettier
- * @description: Export the user context instance
+ * @description: Export the token context instance
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
@@ -8,5 +8,5 @@
  */
 import React from 'react'
 
-const User = React.createContext(null)
-export default User
+const Session = React.createContext('token')
+export default Session
