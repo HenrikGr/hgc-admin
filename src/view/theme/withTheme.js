@@ -1,42 +1,41 @@
 /**
- * Description: Higher order function to injects material-ui.
+ * @prettier
+ * @description: Higher order function to injects material-ui theme
+ *
+ * We are using the material-ui theme provider, css baseline and
+ * creating a palette object to inject in the theme context
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
+import React from 'react'
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import pink from '@material-ui/core/colors/pink'
+import teal from '@material-ui/core/colors/teal'
 
-// React
-import React from 'react';
-
-// material-ui theme provider and css baseline
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-
-// Colors to use
-//import indigo from 'material-ui/colors/indigo';
-import pink from '@material-ui/core/colors/pink';
-import teal from '@material-ui/core/colors/teal';
-//import deepOrange from 'material-ui/colors/deepOrange';
-
-// A theme with custom primary and secondary color.
+/**
+ * Create a theme palette to be injected in the material-ui theme context
+ * @type {object} - custom palette
+ */
 const theme = createMuiTheme({
   palette: {
     //type: 'dark',
     primary: {
       light: teal[300],
       main: teal[500],
-      dark: teal[700],
+      dark: teal[700]
     },
     secondary: {
       lighter: pink[200],
       light: pink[300],
       main: pink[500],
-      dark: pink[700],
-    },
-  },
-});
+      dark: pink[700]
+    }
+  }
+})
 
 /**
  * MuiThemeProvider makes the theme available down the
@@ -44,17 +43,17 @@ const theme = createMuiTheme({
  * @param Component
  * @returns {function(*): *}
  */
-function withRoot(Component) {
-  function WithRoot(props) {
+function withTheme(Component) {
+  function WithTheme(props) {
     return (
       <MuiThemeProvider theme={theme}>
         {/* CssBaseline kick start an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         <Component {...props} />
       </MuiThemeProvider>
-    );
+    )
   }
-  return WithRoot;
+  return WithTheme
 }
 
-export default withRoot;
+export default withTheme
