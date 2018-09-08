@@ -21,7 +21,7 @@ import XHRService, { errorHandler } from "./XHRService";
 import clientSchema from '../schemas/json/client'
 
 // Base entity model
-import Entity from './entity/Entity'
+import Entity from '../schemas/entity/Entity'
 
 // Entity model instance
 const ClientEntity = new Entity(clientSchema);

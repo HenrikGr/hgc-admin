@@ -1,58 +1,14 @@
 /**
- * Description: User business logic module
- *
- * User service exposes a set of function representing business logic for user data.
- * The business logic consist of a set of CRUD API functions and other types of services
- * such as validating inputs before performing the remote calls.
- *
+ * @prettier
+ * @description: User business logic module
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
-
-// query string parser to stringify entity objects when posting
 import qs from 'qs';
-
-// XHR service
 import XHRService, { errorHandler } from "./XHRService";
-
-// Credentials schema
-import userSchema from '../schemas/json/user'
-
-// Base entity model
-import Entity from './entity/Entity'
-
-// Entity model instance
-const UserEntity = new Entity(userSchema);
-
-// XHR instance
 const XHR = XHRService.getInstance();
-
-/**
- * Get user schema
- * @returns {object} - user json schema
- */
-function getSchema() {
-  return userSchema;
-}
-
-/**
- * Get user default entity
- * @returns {object} - user default entity
- */
-function getEntity() {
-  return UserEntity.getEntity();
-}
-
-/**
- * Validate a user object
- * @param {object} user - profile entity
- * @returns {object} - user entity of no error otherwise entity validation exception
- */
-function validate(user) {
-  return UserEntity.isValid(user);
-}
 
 /**
  * Create user
@@ -184,9 +140,6 @@ function deleteByIds(ids) {
  */
 function UserServiceFactory () {
   return {
-    getSchema,
-    getEntity,
-    validate,
     create,
     findByQuery,
     updateById,

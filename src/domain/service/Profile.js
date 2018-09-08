@@ -1,72 +1,29 @@
 /**
- * Description: Profile API service
- *
- * The service expose a set of interface to deal with profile services such as:
- * - getting a profile entity based on json schema,
- * - validating profile based on json schema,
- * - remote XHR calls to get, update profile entity,
+ * @prettier
+ * @description: Profile API service
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
-
 // query string parser to stringify entity objects when posting
-import qs from 'qs';
-
-// XHR service
-import XHRService, { errorHandler } from "./XHRService";
-
-// Credentials schema
-import profileSchema from '../schemas/json/profile'
-
-// Base entity model
-import Entity from './entity/Entity'
-
-// XHR instance
-const XHR = XHRService.getInstance();
-
-// Entity model instance
-const ProfileEntity = new Entity(profileSchema);
-
-/**
- * Get profile schema
- * @returns {object} - profile json schema
- */
-function getSchema() {
-  return profileSchema
-}
-
-/**
- * Get profile default entity
- * @returns {object} - profile default entity
- */
-function getEntity() {
-  return ProfileEntity.getEntity();
-}
-
-/**
- * Validate profile entity
- * @param {object} profile - profile entity
- * @returns {object} - profile entity of no error otherwise entity validation exception
- */
-function validate(profile) {
-  return ProfileEntity.isValid(profile);
-}
+import qs from 'qs'
+import XHRService, { errorHandler } from './XHRService'
+const XHR = XHRService.getInstance()
 
 /**
  * Find or create profile for the authenticated user
  * @returns {Promise<AxiosResponse<any>>}
  */
 function getMe() {
-  return XHR.get("/api/profiles/me")
+  return XHR.get('/api/profiles/me')
     .then(response => {
-      return Promise.resolve(response.data);
+      return Promise.resolve(response.data)
     })
     .catch(error => {
-      return Promise.reject(errorHandler(error));
-    });
+      return Promise.reject(errorHandler(error))
+    })
 }
 
 /**
@@ -75,13 +32,13 @@ function getMe() {
  * @returns {Promise<AxiosResponse<any>>}
  */
 function updateMe(profile) {
-  return XHR.put("/api/profiles/me", qs.stringify(profile))
+  return XHR.put('/api/profiles/me', qs.stringify(profile))
     .then(response => {
-      return Promise.resolve(response.data);
+      return Promise.resolve(response.data)
     })
     .catch(error => {
-      return Promise.reject(errorHandler(error));
-    });
+      return Promise.reject(errorHandler(error))
+    })
 }
 
 /**
@@ -97,13 +54,13 @@ function updateMe(profile) {
  * @returns {Promise<AxiosResponse<any>>}
  */
 function findByQuery(params) {
-  return XHR.get("/api/profiles", { params: params })
+  return XHR.get('/api/profiles', { params: params })
     .then(response => {
-      return Promise.resolve(response.data);
+      return Promise.resolve(response.data)
     })
     .catch(error => {
-      return Promise.reject(errorHandler(error));
-    });
+      return Promise.reject(errorHandler(error))
+    })
 }
 
 /**
@@ -112,13 +69,13 @@ function findByQuery(params) {
  * @returns {Promise<AxiosResponse<any>>}
  */
 function getById(id) {
-  return XHR.get("/api/profiles/" + id)
+  return XHR.get('/api/profiles/' + id)
     .then(response => {
-      return Promise.resolve(response.data);
+      return Promise.resolve(response.data)
     })
     .catch(error => {
-      return Promise.reject(errorHandler(error));
-    });
+      return Promise.reject(errorHandler(error))
+    })
 }
 
 /**
@@ -128,13 +85,13 @@ function getById(id) {
  * @returns {Promise<AxiosResponse<any>>}
  */
 function updateById(id, profile) {
-  return XHR.put("/api/profiles/" + id, qs.stringify(profile))
+  return XHR.put('/api/profiles/' + id, qs.stringify(profile))
     .then(response => {
-      return Promise.resolve(response.data);
+      return Promise.resolve(response.data)
     })
     .catch(error => {
-      return Promise.reject(errorHandler(error));
-    });
+      return Promise.reject(errorHandler(error))
+    })
 }
 
 /**
@@ -143,13 +100,13 @@ function updateById(id, profile) {
  * @returns {Promise<AxiosResponse<any>>}
  */
 function deleteById(id) {
-  return XHR.delete("/api/profiles/" + id)
+  return XHR.delete('/api/profiles/' + id)
     .then(response => {
-      return Promise.resolve(response.data);
+      return Promise.resolve(response.data)
     })
     .catch(error => {
-      return Promise.reject(errorHandler(error));
-    });
+      return Promise.reject(errorHandler(error))
+    })
 }
 
 /**
@@ -158,16 +115,13 @@ function deleteById(id) {
  */
 function ProfileServiceFactory() {
   return {
-    getSchema,
-    getEntity,
-    validate,
     getMe,
     updateMe,
     findByQuery,
     getById,
     updateById,
     deleteById
-  };
+  }
 }
 
-export default new ProfileServiceFactory();
+export default new ProfileServiceFactory()

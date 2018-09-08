@@ -11,6 +11,30 @@
 // Use axios for xhr calls
 import axios from 'axios'
 
+class XHRService {
+  constructor({baseURL, contentType}) {
+    this.instance = axios.create({ baseURL })
+    this.instance.defaults.headers.post['Content-Type'] = contentType
+  }
+
+  getInstance() {
+    return this.instance
+  }
+
+  setAccessToken(token) {
+    const { access_token } = token
+    this.instance.defaults.headers.common['Authorization'] = 'Bearer ' + access_token
+  }
+
+  removeAccessToken() {
+    this.instance.defaults.headers.common['Authorization'] = ''
+  }
+
+
+
+}
+
+
 /**
  * AXIOS default error handler
  * @param error
