@@ -1,5 +1,5 @@
 /**
- * Description: Session/Credential schema
+ * Description: User/Credential schema
  *
  * @author:   Henrik Grönvall
  * @version:  0.0.1

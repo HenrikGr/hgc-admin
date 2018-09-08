@@ -1,26 +1,29 @@
 /**
- * Description: EntityModel class
+ * @prettier
+ * @description: Entity class
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
-
-import { EntityValidationError } from './ValidationException';
-import Ajv from "ajv";
-import { isNotEmpty, isNotEmptyArray, isPassword } from "./customKeywords";
+import Ajv from 'ajv'
+import { isNotEmpty, isNotEmptyArray, isPassword } from './customKeywords'
+import { EntityValidationError } from './ValidationException'
 
 /**
- * EntityModel class
+ * Entity class
  */
 export default class Entity {
-  constructor(schema, {allErrors = true, useDefaults = true, removeAdditional = true, ...props} = {}) {
-    this._schema = schema;
-    this._schemaId = this._schema.$id;
-    this._schemaType = this._schema.type;
+  constructor(
+    schema,
+    { allErrors = true, useDefaults = true, removeAdditional = true, ...props } = {}
+  ) {
+    this._schema = schema
+    this._schemaId = this._schema.$id
+    this._schemaType = this._schema.type
 
     // Set default entity type to either object or array
-    this._entity = this._schemaType === 'object' ? {} : [];
+    this._entity = this._schemaType === 'object' ? {} : []
 
     // Internal ajv validator
     this._validator = new Ajv({
@@ -28,26 +31,27 @@ export default class Entity {
       useDefaults: useDefaults,
       removeAdditional: removeAdditional,
       coerceTypes: 'array',
-      ...props,
-    }).addKeyword('isNotEmpty', isNotEmpty)
+      ...props
+    })
+      .addKeyword('isNotEmpty', isNotEmpty)
       .addKeyword('isNotEmptyArray', isNotEmptyArray)
       .addKeyword('isPassword', isPassword)
-      .compile(schema);
+      .compile(schema)
 
-    if (this._schemaId ==="http://hgc.se/client.json") {
+    if (this._schemaId === 'http://hgc.se/client.json') {
       let test = {
         grants: ['password'],
-        redirectUris: ["http://localhost:3000/callback"],
-        name: "HGC-OAUTH",
-        scope: "admin account test",
-      };
-      let result = this._validator(test);
-      console.log(result, this._validator.errors);
+        redirectUris: ['http://localhost:3000/callback'],
+        name: 'HGC-OAUTH',
+        scope: 'admin account test'
+      }
+      let result = this._validator(test)
+      console.log(result, this._validator.errors)
     }
 
     // Build default entity from the schema
     // TODO: Warn if not able to create default entity
-    this._validator(this._entity);
+    this._validator(this._entity)
   }
 
   /**
@@ -62,7 +66,7 @@ export default class Entity {
       error.details &&
       error.details.find &&
       error.details.find(detail => detail.dataPath && detail.dataPath.substring(1) === name)
-    );
+    )
   }
 
   /**
@@ -72,8 +76,8 @@ export default class Entity {
    * @returns {string} - the error message
    */
   getErrorMessage(name, error) {
-    const scopedError = this.getError(name, error) || {};
-    return (scopedError && scopedError.message) || '';
+    const scopedError = this.getError(name, error) || {}
+    return (scopedError && scopedError.message) || ''
   }
 
   // noinspection JSMethodCanBeStatic
@@ -85,11 +89,11 @@ export default class Entity {
   getErrorMessages(error) {
     if (error) {
       if (Array.isArray(error.details)) {
-        return error.details.reduce((acc, {message}) => acc.concat(message), []);
+        return error.details.reduce((acc, { message }) => acc.concat(message), [])
       }
-      return [error.message || error];
+      return [error.message || error]
     }
-    return [];
+    return []
   }
 
   /**
@@ -98,7 +102,7 @@ export default class Entity {
    * JSONSchema instance
    */
   getEntity() {
-    return this._entity;
+    return this._entity
   }
 
   /**
@@ -106,7 +110,7 @@ export default class Entity {
    * @param {object} entity - entity object to be validated
    */
   validate(entity) {
-    this._validator(entity);
+    this._validator(entity)
 
     // if error throw a ValidationException error
     if (this._validator.errors && this._validator.errors.length) {
@@ -121,10 +125,10 @@ export default class Entity {
    */
   isValid(entity) {
     try {
-      this.validate(entity);
+      this.validate(entity)
     } catch (validationException) {
       return validationException.errors
     }
-    return entity;
+    return entity
   }
 }
