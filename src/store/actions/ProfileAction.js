@@ -20,7 +20,7 @@ import {
 } from '../actions/constants'
 
 /**
- * Helper function to validate data via profileService API
+ * Helper function to validate fetched data via profileSchemaService
  * @param {object} json - json object returned from profileService API
  * @returns {Function}
  * @private
