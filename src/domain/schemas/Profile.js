@@ -49,4 +49,5 @@ function ProfileSchemaFactory() {
   }
 }
 
+// Export interface
 export default new ProfileSchemaFactory()

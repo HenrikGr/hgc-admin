@@ -38,17 +38,6 @@ export default class Entity {
       .addKeyword('isPassword', isPassword)
       .compile(schema)
 
-    if (this._schemaId === 'http://hgc.se/client.json') {
-      let test = {
-        grants: ['password'],
-        redirectUris: ['http://localhost:3000/callback'],
-        name: 'HGC-OAUTH',
-        scope: 'admin account test'
-      }
-      let result = this._validator(test)
-      console.log(result, this._validator.errors)
-    }
-
     // Build default entity from the schema
     // TODO: Warn if not able to create default entity
     this._validator(this._entity)
