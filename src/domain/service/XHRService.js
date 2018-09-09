@@ -1,7 +1,6 @@
 /**
- * Description: Creates a new XHR instance of axios and set up some
- * configuration according to the API.
- *
+ * @prettier
+ * @description: XHR Service, using axios
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
@@ -20,15 +19,7 @@ export const errorHandler = error => {
   if (error.response) {
     // The request was made and the server responded with a status code
     // that falls out of the range of 2xx
-    let result = {
-      message: error.response.data.message
-    }
-
-    for (let field in error.response.data.errors) {
-      result[field] = error.response.data.errors[field]
-    }
-
-    return result
+    return error.response.data
   } else if (error.request) {
     // The request was made but no response was received
     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -41,7 +32,7 @@ export const errorHandler = error => {
 }
 
 /**
- * XHR Service factory singleton
+ * XHR Service factory
  * @constructor
  */
 function XHRServiceFactory() {

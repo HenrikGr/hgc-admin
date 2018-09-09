@@ -1,6 +1,12 @@
 /**
  * @prettier
- * @description: User business logic module
+ * @description: User API services
+ *
+ * All api calls return a promise, either resolved or rejected which means
+ * it can be used in async / await or other promise based functions.
+ *
+ * The error handler is a default axios error handler with no modifications.
+ *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
@@ -8,12 +14,18 @@
  */
 import qs from 'qs';
 import XHRService, { errorHandler } from "./XHRService";
-const XHR = XHRService.getInstance();
+
+/**
+ * XHR instance
+ * @private
+ */
+const XHR = XHRService.getInstance()
 
 /**
  * Create user
  * @param {object} user - user entity
  * @returns {Promise<AxiosResponse<any>>}
+ * @public
  */
 function create(user) {
   return XHR.post("/api/users", qs.stringify(user))
@@ -36,6 +48,7 @@ function create(user) {
  * - etc...
  * @param {object} params - query object
  * @returns {Promise<AxiosResponse<any>>}
+ * @public
  */
 function findByQuery(params) {
   return XHR.get("/api/users", { params: params })
@@ -52,6 +65,7 @@ function findByQuery(params) {
  * @param {string} id - id key for a user
  * @param {object} user - user entity
  * @returns {Promise<AxiosResponse<any>>}
+ * @public
  */
 function updateById(id, user) {
   return XHR.put("/api/users/" + id, qs.stringify(user))
@@ -68,6 +82,7 @@ function updateById(id, user) {
  * @param {array} ids - array of ids to be updated with the user entity
  * @param {object} user - user entity
  * @returns {Promise<any>}
+ * @public
  */
 function updateByIds(ids, user) {
   const body = qs.stringify(user);
@@ -96,6 +111,7 @@ function updateByIds(ids, user) {
  * Delete user by id
  * @param {string} id - id key for a user
  * @returns {Promise<AxiosResponse<any>>}
+ * @public
  */
 function deleteById(id) {
   return XHR.delete("/api/users/" + id)
@@ -110,8 +126,9 @@ function deleteById(id) {
 
 /**
  * Delete multiple users by ids
- * @param {string} ids - array of ids for a users to be deleted
+ * @param {array} ids - array of ids for a users to be deleted
  * @returns {Promise<any>}
+ * @public
  */
 function deleteByIds(ids) {
   // Create array of promise calls for each user ids
@@ -135,10 +152,10 @@ function deleteByIds(ids) {
 
 
 /**
- * Export interface for the user service
+ * Interface constructor for the user api service
  * @constructor
  */
-function UserServiceFactory () {
+function UserAPIFactory () {
   return {
     create,
     findByQuery,
@@ -149,5 +166,4 @@ function UserServiceFactory () {
   };
 }
 
-// Export interface
-export default new UserServiceFactory();
+export default new UserAPIFactory();

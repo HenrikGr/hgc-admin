@@ -1,6 +1,12 @@
 /**
  * @prettier
- * @description: Session services
+ * @description: Token API services
+ *
+ * All api calls return a promise, either resolved or rejected which means
+ * it can be used in async / await or other promise based functions.
+ *
+ * The error handler is a default axios error handler with no modifications.
+ *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
@@ -8,6 +14,11 @@
  */
 import XHRService, { errorHandler } from './XHRService'
 const API_CLIENT_ID = process.env.REACT_APP_CLIENT_ID
+
+/**
+ * XHR instance
+ * @private
+ */
 const XHR = XHRService.getInstance()
 
 /**
@@ -69,6 +80,7 @@ function refresh(refresh_token) {
  * The header is used for all API services after it is set as long as
  * the user is still logged in.
  * @param {object} token - access token
+ * @private
  */
 function setAuthorizationHeader(token) {
   XHRService.setAuthorizationHeader(token)
@@ -77,6 +89,7 @@ function setAuthorizationHeader(token) {
 /**
  * Remove authorization header (access token) from XHR service
  * Is used when logging out
+ * @private
  */
 function removeAuthorizationHeader() {
   XHRService.removeAuthorizationHeader()
@@ -91,11 +104,11 @@ function remove() {
 }
 
 /**
- * Factory for credentials service interface
+ * Interface constructor for the token api service
  * @constructor
  * @public
  */
-const TokenServiceFactory = () => {
+function TokenAPIFactory() {
   return {
     get,
     refresh,
@@ -103,4 +116,4 @@ const TokenServiceFactory = () => {
   }
 }
 
-export default new TokenServiceFactory()
+export default new TokenAPIFactory()
