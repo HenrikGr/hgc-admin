@@ -1,6 +1,5 @@
 /**
  * @prettier
- *
  * @description: The module creates the redux store
  *
  * When creating the store we are setting up the root reducer,
@@ -14,7 +13,6 @@
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
-
 import { createStore, applyMiddleware } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension/logOnlyInProduction'
 import rootReducer from './reducers/RootReducers'
@@ -23,12 +21,9 @@ import thunk from './middleware/thunk'
 /**
  * Create the store
  * @type {*}
+ * @public
  */
-const store = createStore(
-  rootReducer,
-  composeWithDevTools(
-    applyMiddleware(thunk)
-  )
-)
+const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)))
 
+// Export store
 export default store
