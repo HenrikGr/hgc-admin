@@ -1,7 +1,7 @@
 /**
  * @prettier
- *
  * @description: Thunk middleware
+ *
  * Redux middleware that allow redux action creators to return
  * functions as well. Redux does not support this out of box.
  *

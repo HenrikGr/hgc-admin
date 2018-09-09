@@ -1,7 +1,7 @@
 /**
  * @prettier
- *
  * @description Console logger middleware
+ *
  * The middleware logs action types to the console
  *
  * @author:   Henrik Grönvall
