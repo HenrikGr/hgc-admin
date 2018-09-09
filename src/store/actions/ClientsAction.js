@@ -1,55 +1,51 @@
 /**
- * Description: Module containing action creators for the clients state.
- *
- * The clients actions consist of remote CRUD operations to retrieve client
- * information to the state.
- *
- * There is also helpers action creators that describe the new state that should be set
- * during the remote calls in case of start, success or failure.
- *
- * The remote calls using clients service module that contains business logic
- * for client information.
- *
+ * @prettier
+ * @description: Client action creator service
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
-
-// Module dependencies
-import clientService from "../../domain/service/Client";
+import clientSchema from '../../domain/schemas/Client'
+import clientAPI from '../../domain/service/Client'
 import {
-  LOG_STATUS,
-  CLIENT_VALIDATION_FAILED,
-  CLIENTS_FETCHING,
-  CLIENTS_ERROR,
+  VALIDATION_ERROR,
+  //FETCH_VALIDATION_ERROR,
+  FETCH_START,
+  FETCH_ERROR,
+  FETCH_SUCCESS,
+  RESET_ERROR,
   CLIENTS_GET_SUCCESS,
   //CLIENTS_UPDATE_SUCCESS,
   CLIENT_CREATE_SUCCESS,
   CLIENT_UPDATE_SUCCESS,
   CLIENT_DELETE_SUCCESS,
-  CLIENT_RESET_ERROR
-} from "./constants";
+  CLIENT_SET_SELECTED,
+  CLIENT_RESET_SELECTED,
+  CLIENT_UPDATE_STATE
+} from './constants'
 
 /**
  * Action creator - create client
- * @param {object} client - user entity object
  * @returns {Function}
+ * @public
  */
-function createClient(client) {
-  return function(dispatch) {
-    dispatch({ type: LOG_STATUS, payload: "Start create user" });
-    const errors = clientService.validate(client);
+function createClient() {
+  return function(dispatch, getState) {
+    const { entity } = getState().clients
+    const errors = clientSchema.validate(entity)
     if (errors.message) {
-      dispatch({ type: CLIENT_VALIDATION_FAILED, payload: errors });
+      dispatch({ type: VALIDATION_ERROR, payload: errors })
     } else {
-      dispatch({ type: CLIENTS_FETCHING });
-      clientService.create(client)
+      dispatch({ type: FETCH_START })
+      clientAPI
+        .create(entity)
         .then(json => {
-          dispatch({ type: CLIENT_CREATE_SUCCESS, payload: json });
+          dispatch({ type: FETCH_SUCCESS })
+          dispatch({ type: CLIENT_CREATE_SUCCESS, payload: json })
         })
         .catch(errors => {
-          dispatch({ type: CLIENTS_ERROR, payload: errors });
+          dispatch({ type: FETCH_ERROR, payload: errors })
         })
     }
   }
@@ -59,41 +55,44 @@ function createClient(client) {
  * Action creator - fetching clients information
  * @param {object} params - query params
  * @returns {Function}
+ * @public
  */
 function getClients(params) {
   return function(dispatch) {
-    dispatch({ type: LOG_STATUS, payload: "Start get clients" });
-    dispatch({ type: CLIENTS_FETCHING });
-    clientService.findByQuery(params)
+    dispatch({ type: FETCH_START })
+    clientAPI
+      .findByQuery(params)
       .then(json => {
-        dispatch({ type: CLIENTS_GET_SUCCESS, payload: json.docs });
+        dispatch({ type: FETCH_SUCCESS })
+        dispatch({ type: CLIENTS_GET_SUCCESS, payload: json.docs })
       })
       .catch(errors => {
-        dispatch({ type: CLIENTS_ERROR, payload: errors });
+        dispatch({ type: FETCH_ERROR, payload: errors })
       })
-  };
+  }
 }
 
 /**
  * Action creator - updating client by id
- * @param {string} id - client entity id string
- * @param {object} client - client entity object
  * @returns {Function}
+ * @public
  */
-function updateClientById(id, client) {
-  return function(dispatch) {
-    dispatch({ type: LOG_STATUS, payload: "Update client by id: " + id });
-    const errors = clientService.validate(client);
+function updateClientById() {
+  return function(dispatch, getState) {
+    const { selectedId, entity } = getState().clients
+    const errors = clientSchema.validate(entity)
     if (errors.message) {
-      dispatch({ type: CLIENT_VALIDATION_FAILED, payload: errors });
+      dispatch({ type: VALIDATION_ERROR, payload: errors })
     } else {
-      dispatch({ type: CLIENTS_FETCHING });
-      clientService.updateById(id, client)
+      dispatch({ type: FETCH_START })
+      clientAPI
+        .updateById(selectedId, entity)
         .then(json => {
-          dispatch({ type: CLIENT_UPDATE_SUCCESS, payload: json });
+          dispatch({ type: FETCH_SUCCESS })
+          dispatch({ type: CLIENT_UPDATE_SUCCESS, payload: json })
         })
         .catch(errors => {
-          dispatch({ type: CLIENTS_ERROR, payload: errors });
+          dispatch({ type: FETCH_ERROR, payload: errors })
         })
     }
   }
@@ -101,45 +100,79 @@ function updateClientById(id, client) {
 
 /**
  * Action creator - delete client by id
- * @param {string} id - client entity id string
  * @returns {Function}
+ * @public
  */
-function deleteClientById(id) {
-  return function(dispatch) {
-    dispatch({ type: LOG_STATUS, payload: "Delete client by id: " + id });
-    dispatch({ type: CLIENTS_FETCHING });
-    clientService.deleteById(id)
+function deleteClientById() {
+  return function(dispatch, getState) {
+    const { selectedId } = getState().clients
+    dispatch({ type: FETCH_START })
+    clientAPI
+      .deleteById(selectedId)
       .then(() => {
-        dispatch({ type: CLIENT_DELETE_SUCCESS, payload: id });
+        dispatch({ type: FETCH_SUCCESS })
+        dispatch({ type: CLIENT_DELETE_SUCCESS, payload: selectedId })
       })
       .catch(errors => {
-        dispatch({ type: CLIENTS_ERROR, payload: errors });
+        dispatch({ type: FETCH_ERROR, payload: errors })
       })
   }
 }
 
 /**
-* Action creator - Used to reset error
-* @returns {{type: string}}
-*/
+ * Action creator - Used to reset error
+ * @returns {{type: string}}
+ * @public
+ */
 function resetError() {
-  return { type: CLIENT_RESET_ERROR }
+  return { type: RESET_ERROR }
 }
 
 /**
- * Factory for clients action creator interface
- * @constructor
+ * Action creator - set selected data (selectedId, entry)
+ * @param {object} entry - client entry with ._id as selectedId
+ * @returns {{type: string, payload: *}}
+ * @public
  */
-export const ClientActionFactory = (() => {
+function setSelected(entry) {
+  return { type: CLIENT_SET_SELECTED, payload: entry }
+}
+
+/**
+ * Reset selected data
+ * @returns {{type: string}}
+ * @public
+ */
+function resetSelected() {
+  return { type: CLIENT_RESET_SELECTED }
+}
+
+/**
+ * Update selected entity from input values
+ * @param value
+ * @returns {{type: string, payload: *}}
+ * @public
+ */
+function updateState(value) {
+  return { type: CLIENT_UPDATE_STATE, payload: value }
+}
+
+/**
+ * Interface constructor for clients action creators
+ * @constructor
+ * @private
+ */
+export const ClientActionFactory = () => {
   return {
     getClients,
     createClient,
     updateClientById,
     deleteClientById,
     resetError,
+    setSelected,
+    updateState,
+    resetSelected
   }
-});
+}
 
-// Export the interface
-export default new ClientActionFactory();
-
+export default new ClientActionFactory()
