@@ -1,27 +1,32 @@
 /**
  * @prettier
- * @description: Reducers
+ * @description: Fetch reducers
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
 import defaults from './DefaultState'
-import { LOG_STATUS } from '../actions/constants'
+import { FETCH_START, FETCH_SUCCESS, FETCH_ERROR } from '../actions/constants'
 
 /**
- * Status state branch reducer
- * @param {object} state - status branch of global state
+ * Fetch reducer
+ * @param {object} state - isFetching flag of global state
  * @param {object} action - object with payload key, used to update state
  * @returns {object} - updated status branch of the global state
  */
-const statusReducer = (state = defaults.status, action) => {
+const fetchReducer = (state = defaults.isFetching, action) => {
   switch (action.type) {
-    case LOG_STATUS:
-      return action.payload
+    case FETCH_START:
+      return true
+
+    case FETCH_SUCCESS:
+    case FETCH_ERROR:
+      return false
+
     default:
       return state
   }
 }
 
-export default statusReducer
+export default fetchReducer

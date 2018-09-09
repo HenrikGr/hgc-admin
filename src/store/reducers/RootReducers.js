@@ -1,33 +1,24 @@
 /**
- * Description: Reducers
- *
- * GENERAL
- * Reducers are pure JavaScript functions that:
- * - Create a new state, given the current state and an action
- * - Centralize data mutations
- * - Can act on all or part of the state
- * - Can be combined and reused
- *
- * Because they're pure functions, reducers have no side effects,
- * so they're easy to read, test, and debug. And you can compose reducers,
- * which makes it easy to implement simple reducers that are concerned
- * with only a portion of the overall application state.
- *
+ * @prettier
+ * @description: Root reducer
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
+import { combineReducers } from 'redux'
+import statusReducer from './StatusReducer'
+import errorReducer from './ErrorReducer'
+import fetchReducer from './FetchReducer'
+import userReducer from './UserReducer'
+import usersReducer from './UsersReducer'
+import clientsReducer from './ClientsReducer'
 
-// Module dependencies
-import { combineReducers } from "redux";
-import statusReducer from './StatusReducer';
-import sessionReducer from './SessionReducer';
-import profileReducer from './ProfileReducer';
-import usersReducer from './UsersReducer';
-import clientsReducer from './ClientsReducer';
-
+// default/initial global state
 import defaultState from './DefaultState'
+
+// Action constant
+import { REMOVE_TOKEN } from '../actions/constants'
 
 /**
  * Combine different state branch reducers to one app reducer
@@ -35,37 +26,30 @@ import defaultState from './DefaultState'
  */
 const appReducer = combineReducers({
   status: statusReducer,
-  session: sessionReducer,
-  profile: profileReducer,
+  error: errorReducer,
+  isFetching: fetchReducer,
+  user: userReducer,
   users: usersReducer,
-  clients: clientsReducer,
-});
+  clients: clientsReducer
+})
 
 /**
- * A root reducer
+ * A root reducer to manage state wide operations
  * @see https://stackoverflow.com/questions/35622588/how-to-reset-the-state-of-a-redux-store
- * @param state
- * @param action
- * @returns {*}
+ * @param {object} state - global state
+ * @param {object} action - object with payload key, used to update state
+ * @returns {object} - updated global state or the combined branch reducers
  */
 const rootReducer = (state, action) => {
-  switch(action.type) {
-    case "REMOVE_SESSION":
-      return defaultState;
-
-    case "RESET_ERROR":
-      return {
-        ...state,
-        session: { ...state.session, error: {} },
-        profile: { ...state.profile, error: {}},
-        users: { ...state.users, error: {}},
-        clients: { ...state.clients, error: {}},
-      };
-
+  switch (action.type) {
+    // reset the state to default - used when user logging out or session times out
+    case REMOVE_TOKEN:
+      return defaultState
 
     default:
+      // Use the app reducer for all specific branches
       return appReducer(state, action)
   }
-};
+}
 
-export default rootReducer;
+export default rootReducer
