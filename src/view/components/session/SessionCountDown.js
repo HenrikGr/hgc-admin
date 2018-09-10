@@ -133,6 +133,7 @@ class SessionCountDown extends React.PureComponent {
     if (this.timeoutID) {
       console.log('Clear timer when starting')
       workerTimers.clearTimeout(this.timeoutID)
+      this.timeoutID = null;
     }
 
     // Get start time
@@ -159,6 +160,7 @@ class SessionCountDown extends React.PureComponent {
     if (this.timeoutID) {
       console.log('Clear timer when stopping')
       workerTimers.clearTimeout(this.timeoutID)
+      this.timeoutID = null;
     }
 
     // Reset state to initial after stopping the timer
@@ -186,6 +188,7 @@ class SessionCountDown extends React.PureComponent {
       // Clear timeout
       if (this.timeoutID) {
         workerTimers.clearTimeout(this.timeoutID)
+        this.timeoutID = null;
       }
       // Set a new expected time one second ahead
       this.expected += this.props.interval
