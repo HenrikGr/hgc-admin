@@ -13,12 +13,12 @@
  * @param errors
  * @constructor
  */
-function ValidationExceptions(name, errors) {
-  this.name = name || "Validation exception";
+function ErrorExceptions(name, errors) {
+  this.name = name || 'Error exception'
   this.errors = errors
 }
-ValidationExceptions.prototype = Object.create(Error.prototype);
-ValidationExceptions.prototype.constructor = ValidationExceptions;
+ErrorExceptions.prototype = Object.create(Error.prototype)
+ErrorExceptions.prototype.constructor = ErrorExceptions
 
 /**
  * Entity validation error constructor
@@ -27,21 +27,20 @@ ValidationExceptions.prototype.constructor = ValidationExceptions;
  * @constructor
  */
 function EntityValidationError(errors, entity) {
-  let entityError = { message: 'Validation error'};
+  let entityError = { message: 'Validation error' }
   for (let key of Object.keys(entity)) {
-    let error = (errors && errors.find && errors.find(entry => entry.dataPath && entry.dataPath.substring(1) === key));
+    let error =
+      errors &&
+      errors.find &&
+      errors.find(entry => entry.dataPath && entry.dataPath.substring(1) === key)
     if (error && error.message) {
-      entityError[key] = error.message;
+      entityError[key] = error.message
     }
   }
-
   // Call the base validation error constructor
-  ValidationExceptions.call(this, "Entity validation exception", entityError)
+  ErrorExceptions.call(this, 'Entity validation exception', entityError)
 }
-EntityValidationError.prototype = Object.create(ValidationExceptions.prototype);
+EntityValidationError.prototype = Object.create(ErrorExceptions.prototype)
 
 
-
-export {
-  EntityValidationError,
-}
+export { EntityValidationError }
