@@ -8,9 +8,7 @@
  */
 import tokenAction from './TokenAction'
 import profileAction from './ProfileAction'
-import {
-  RESET_ERROR
-} from './constants'
+import { RESET_ERROR } from './constants'
 
 /**
  * Helper function that dispatches actions from an array
@@ -30,7 +28,6 @@ async function dispatchProcessor(array, fn) {
   } catch (error) {
     return Promise.reject(error)
   }
-
   return Promise.resolve(results)
 }
 
