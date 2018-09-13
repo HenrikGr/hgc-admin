@@ -48,7 +48,7 @@ const TokenSchemaFactory = () => {
   return {
     getSchema,
     getEntity,
-    validate,
+    validate
   }
 }
 
