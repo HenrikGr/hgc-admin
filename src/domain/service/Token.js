@@ -27,7 +27,7 @@ const XHR = XHRService.getInstance()
  * @returns {Promise<AxiosResponse<any> | never | never>}
  * @public
  */
-function get(credentials) {
+function post(credentials) {
   let body =
     'username=' +
     encodeURIComponent(credentials.username) +
@@ -110,7 +110,7 @@ function remove() {
  */
 function TokenAPIFactory() {
   return {
-    get,
+    post,
     refresh,
     remove
   }
