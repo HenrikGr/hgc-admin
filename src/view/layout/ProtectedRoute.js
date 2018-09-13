@@ -1,8 +1,10 @@
 /**
  * @prettier
  * @description: PrivateRoute component used for protected routes
- * The component checks if the isAuth boolean flag is NOT set in
- * and then re-direct the user to the login route
+ *
+ * The component consumes the user state context provided by
+ * the higher order component withUserState
+ *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
@@ -10,11 +12,17 @@
  */
 import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
-import { withUserAuth } from '../providers/withUserContext'
+
+// global store
+import store from '../../store'
+
+// helper
+import { isEmpty } from '../../utils/helper'
 
 /**
  * Protected route handler
  * @param Component
+ * @param context
  * @param rest
  * @returns {*}
  * @constructor
@@ -23,7 +31,8 @@ const ProtectedRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={props => {
-      return !props.isAuth ? (
+      const { token } = store.getState().user
+      return !isEmpty(token) ? (
         <Component {...props} />
       ) : (
         <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
@@ -32,4 +41,4 @@ const ProtectedRoute = ({ component: Component, ...rest }) => (
   />
 )
 
-export default withUserAuth(ProtectedRoute)
+export default ProtectedRoute
