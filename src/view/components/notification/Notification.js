@@ -8,15 +8,18 @@
  */
 import React from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+
 import Snackbar from '@material-ui/core/Snackbar'
 import NotificationContent from './NotificationContent'
+import { RESET_ERROR } from '../../../store/actions/constants'
 
 /**
  * Notification component
  * @class
  * @public
  */
-class Notification extends React.Component {
+class Notification extends React.PureComponent {
   /**
    * Property type checks
    * @type {Object}
@@ -51,9 +54,14 @@ class Notification extends React.Component {
      * Callback to reset messages
      * @callback
      */
-    onResetMessages: PropTypes.func
+    onReset: PropTypes.func
   }
 
+  /**
+   * Default properties
+   * @type {{vertical: string, horizontal: string, autoHideDuration: number, variant: string, messages: {}}}
+   * @private
+   */
   static defaultProps = {
     vertical: 'top',
     horizontal: 'center',
@@ -71,7 +79,7 @@ class Notification extends React.Component {
   }
 
   /**
-   * Ensure the snackbar opens when new message arrived
+   * Ensure the snackbar opens when new messages arrived
    * @param prevProps
    * @param prevState
    */
@@ -86,7 +94,7 @@ class Notification extends React.Component {
   }
 
   /**
-   * Event handle to close error snack bar
+   * Event handle to close snack bar
    * @param event
    * @param reason
    */
@@ -97,8 +105,8 @@ class Notification extends React.Component {
 
     this.setState({ open: false })
 
-    if (this.props.onResetMessages) {
-      this.props.onResetMessages()
+    if (this.props.onReset) {
+      this.props.onReset()
     }
   }
 
@@ -123,4 +131,25 @@ class Notification extends React.Component {
   }
 }
 
-export default Notification
+/**
+ * Map isFetching state to prop
+ * @param state
+ * @returns {{isFetching: *}}
+ */
+const mapStateToProps = state => ({
+  messages: state.error
+})
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onReset: () => {
+      dispatch({ type: RESET_ERROR })
+    }
+  }
+}
+
+// Connect mapped state to component properties
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Notification)
