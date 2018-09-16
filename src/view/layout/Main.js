@@ -8,29 +8,31 @@
  */
 import React from 'react'
 import PropTypes from 'prop-types'
+
+// React router
 import { Route, Switch } from 'react-router-dom'
+
+// material-ui
 import { withStyles } from '@material-ui/core/styles'
 
 // custom route handler for protected routes
-import ProtectedRoute from '../ProtectedRoute'
+import ProtectedRoute from './ProtectedRoute'
 
 // Content pages
-import NotFoundPage from '../../pages/NotFound'
-import ClientPage from '../../pages/ClientPage'
-import UsersPage from '../../pages/UsersPage'
-import DashboardPage from '../../pages/DashboardPage'
-import ProfilePage from '../../pages/ProfilePage'
-import LoginFormPage from '../../pages/LoginPage'
-import LandingPage from '../../pages/LandingPage'
+import NotFoundPage from '../pages/NotFound'
+import ClientPage from '../pages/ClientPage'
+import UsersPage from '../pages/UsersPage'
+import DashboardPage from '../pages/DashboardPage'
+import ProfilePage from '../pages/ProfilePage'
+import LoginFormPage from '../pages/LoginPage'
+import LandingPage from '../pages/LandingPage'
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.default,
-    marginTop: '56px',
-    [theme.breakpoints.up('sm')]: {
-      marginTop: '64px'
-    }
+    paddingTop: 64
+    //position: 'relative',
+    //height: '100vh'
   }
 })
 
@@ -64,7 +66,7 @@ Main.propTypes = {
    * Classes to extend style
    * @private
    */
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object
 }
 
 // Inject styles
