@@ -11,7 +11,7 @@ import PropTypes from 'prop-types'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import withTheme from './view/theme/withTheme'
-import AppLayout from './view/layout/AppLayout'
+import Layout from './view/layout/Layout'
 
 /**
  * App component that provides the global store
@@ -22,7 +22,7 @@ import AppLayout from './view/layout/AppLayout'
 const App = ({ store }) => (
   <Provider store={store}>
     <Router>
-      <AppLayout />
+      <Layout />
     </Router>
   </Provider>
 )
