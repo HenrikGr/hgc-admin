@@ -1,6 +1,6 @@
 /**
- * Description: LinearProgressbar component
- *
+ * @prettier
+ * @description: LinearProgressbar component
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
@@ -10,17 +10,20 @@
 // react
 import React from 'react';
 import PropTypes from 'prop-types';
-
-// material-ui
+import { connect } from 'react-redux'
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { withStyles } from '@material-ui/core/styles';
 
-const styles = {
+const styles = theme => ({
   root: {
-    flexGrow: 1,
-    height: "5px"
+    top: 0,
+    width: '100%',
+    position: 'fixed',
+    height: "5px",
+    backgroundColor: theme.palette.primary.main,
+    zIndex: theme.zIndex.drawer + 2
   },
-};
+});
 
 /**
  * LinearProgressbar
@@ -52,14 +55,15 @@ LinearProgressbar.propTypes = {
 };
 
 /**
- * Default props
- * @type {{isFetching: boolean}}
+ * Map isFetching state to prop
+ * @param state
+ * @returns {{isFetching: *}}
  */
-LinearProgressbar.defaultProps = {
-  isFetching: false,
-};
+const mapStateToProps = state => ({
+  isFetching: state.isFetching,
+})
 
-/**
- * Export component
- */
-export default withStyles(styles)(LinearProgressbar);
+// Connect mapped state to component properties
+export default connect(
+  mapStateToProps,
+)(withStyles(styles)(LinearProgressbar))
