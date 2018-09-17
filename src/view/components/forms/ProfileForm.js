@@ -16,28 +16,17 @@ import TextField from '../fields/TextField'
 const styles = theme => ({
   root: {
     display: 'flex',
-    flexDirection: 'column'
-  },
-  progress: {
-    flexGrow: 1,
-    height: '5px'
-  },
-  formWrapper: {
-    display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    margin: theme.spacing.unit * 3
   },
   form: {
-    display: 'flex',
+    display: 'inline-flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    marginTop: '80px',
     width: '100%',
     [theme.breakpoints.up('sm')]: {
       width: '552px'
     }
-  },
-  formControl: {
-    margin: theme.spacing.unit
   },
   button: {
     margin: theme.spacing.unit
@@ -58,35 +47,44 @@ const styles = theme => ({
 function ProfileForm({ classes, formLabel, entity, disableSubmit, onChange, onSubmit }) {
   return (
     <div className={classes.root}>
-      <div className={classes.formWrapper}>
-        <form className={classes.form} onSubmit={onSubmit}>
-          <FormLabel component="legend">{formLabel}</FormLabel>
-          <TextField
-            id="email"
-            type="email"
-            label="Email"
-            value={entity.email}
-            onChange={onChange}
-          />
-          <TextField
-            id="firstName"
-            label="First name"
-            value={entity.firstName}
-            onChange={onChange}
-          />
-          <TextField id="lastName" label="Last name" value={entity.lastName} onChange={onChange} />
-          <TextField id="phone" type="tel" label="Phone" value={entity.phone} onChange={onChange} />
-          <Button
-            disabled={disableSubmit}
-            type="submit"
-            variant="raised"
-            color="primary"
-            className={classes.button}
-          >
-            Save
-          </Button>
-        </form>
-      </div>
+      <form className={classes.form} onSubmit={onSubmit}>
+        <FormLabel component="legend">{formLabel}</FormLabel>
+        <TextField
+          id="email"
+          type="email"
+          label="Email"
+          value={entity.email}
+          onChange={onChange}
+        />
+        <TextField
+          id="firstName"
+          label="First name"
+          value={entity.firstName}
+          onChange={onChange}
+        />
+        <TextField
+          id="lastName"
+          label="Last name"
+          value={entity.lastName}
+          onChange={onChange}
+        />
+        <TextField
+          id="phone"
+          type="tel"
+          label="Phone"
+          value={entity.phone}
+          onChange={onChange}
+        />
+        <Button
+          disabled={disableSubmit}
+          type="submit"
+          variant="raised"
+          color="primary"
+          className={classes.button}
+        >
+          Save
+        </Button>
+      </form>
     </div>
   )
 }
