@@ -12,14 +12,10 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 // Presentation layer
-import Grid from '@material-ui/core/Grid'
 import LoginForm from '../components/forms/LoginForm'
-import Notification from '../components/notification/Notification'
-import LinearProgressbar from '../components/progress/LinearProgressbar'
 
 // Action creators used to update session state
 import userAction from '../../store/actions/UserAction'
-import { isEmpty } from '../../utils/helper'
 
 /**
  * LoginPage container component
@@ -29,28 +25,24 @@ import { isEmpty } from '../../utils/helper'
 class LoginPage extends React.PureComponent {
   /**
    * Property type checks
+   * @type {Object}
    */
   static propTypes = {
     /**
      * Flag indicating if user successfully logged in
+     * @public
      */
-    isAuth: PropTypes.bool.isRequired,
+    isAuthenticated: PropTypes.bool.isRequired,
     /**
      * Flag indicating fetch state
+     * @public
      */
     isFetching: PropTypes.bool.isRequired,
     /**
-     * error object
-     */
-    error: PropTypes.object.isRequired,
-    /**
      * Callback mapped to user action
+     * @public
      */
-    logIn: PropTypes.func.isRequired,
-    /**
-     * Callback mapped to user action
-     */
-    resetError: PropTypes.func.isRequired
+    logIn: PropTypes.func.isRequired
   }
 
   /**
@@ -61,15 +53,6 @@ class LoginPage extends React.PureComponent {
     password: '',
     showPassword: false,
     redirectToReferrer: false
-  }
-
-  /**
-   * Reset possible errors on un mount
-   */
-  componentWillUnmount() {
-    if (!isEmpty(this.props.error)) {
-      this.props.resetError()
-    }
   }
 
   /**
@@ -104,52 +87,40 @@ class LoginPage extends React.PureComponent {
   }
 
   /**
-   * Event handler to reset validation errors
+   * Render component
+   * @returns {*}
    */
-  handleReset = () => {
-    if (!isEmpty(this.props.error)) {
-      this.props.resetError()
-    }
-  }
-
   render() {
-    const { isAuth, isFetching, error } = this.props
+    const { isAuthenticated, isFetching } = this.props
     const { username, password, showPassword } = this.state
 
-    if (isAuth) {
+    if (isAuthenticated) {
       const { from } = this.props.location.state || { from: { pathname: '/dashboard' } }
       return <Redirect to={from} />
     }
 
     return (
-      <Grid container spacing={0}>
-        <Grid item xs={12}>
-          <Notification variant="error" messages={error} onResetMessages={this.handleReset} />
-          <LinearProgressbar isFetching={isFetching} />
-          <LoginForm
-            formLabel="Log in"
-            entity={{ username, password }}
-            showPassword={showPassword}
-            disableSubmit={isFetching}
-            onSubmit={this.handleSubmit}
-            onChange={this.handleChange}
-            onShowPassword={this.handleShowPassword}
-          />
-        </Grid>
-      </Grid>
+      <LoginForm
+        formLabel="Log in"
+        entity={{ username, password }}
+        showPassword={showPassword}
+        disableSubmit={isFetching}
+        onSubmit={this.handleSubmit}
+        onChange={this.handleChange}
+        onShowPassword={this.handleShowPassword}
+      />
     )
   }
 }
 
 /**
- * Map state to props
+ * Map state data to props
  * @param state
  * @returns {{isAuth: boolean, isFetching: boolean, error: (defaults.user.error|{})}}
  */
 const mapStateToProps = state => ({
-  isAuth: state.user.isAuth,
-  isFetching: state.user.isFetching,
-  error: state.user.error
+  isAuthenticated: state.user.isAuth,
+  isFetching: state.isFetching
 })
 
 /**
@@ -161,14 +132,11 @@ const mapDispatchToProps = dispatch => {
   return {
     logIn: credentials => {
       dispatch(userAction.logIn(credentials))
-    },
-    resetError: () => {
-      dispatch(userAction.resetError())
     }
   }
 }
 
-// Connect mapped state and user actions to component properties
+// Connect mapped state data and user actions to component properties
 export default connect(
   mapStateToProps,
   mapDispatchToProps
