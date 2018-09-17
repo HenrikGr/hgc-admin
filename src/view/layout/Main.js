@@ -7,13 +7,7 @@
  * @license: The MIT License (MIT)
  */
 import React from 'react'
-import PropTypes from 'prop-types'
-
-// React router
 import { Route, Switch } from 'react-router-dom'
-
-// material-ui
-import { withStyles } from '@material-ui/core/styles'
 
 // custom route handler for protected routes
 import ProtectedRoute from './ProtectedRoute'
@@ -27,47 +21,23 @@ import ProfilePage from '../pages/ProfilePage'
 import LoginFormPage from '../pages/LoginPage'
 import LandingPage from '../pages/LandingPage'
 
-const styles = theme => ({
-  root: {
-    flexGrow: 1,
-    paddingTop: 64
-    //position: 'relative',
-    //height: '100vh'
-  }
-})
-
 /**
  * Main content component
  * @returns {*}
  * @constructor
  */
-function Main({ classes }) {
+function Main() {
   return (
-    <main className={classes.root}>
-      <Switch>
-        <Route exact={true} path="/" component={LandingPage} />
-        <Route path="/login" component={LoginFormPage} />
-        <ProtectedRoute path="/dashboard" component={DashboardPage} />
-        <ProtectedRoute path="/profile" component={ProfilePage} />
-        <ProtectedRoute path="/users" component={UsersPage} />
-        <ProtectedRoute path="/clients" component={ClientPage} />
-        <Route path="*" component={NotFoundPage} />
-      </Switch>
-    </main>
+    <Switch>
+      <Route exact={true} path="/" component={LandingPage} />
+      <Route path="/login" component={LoginFormPage} />
+      <ProtectedRoute path="/dashboard" component={DashboardPage} />
+      <ProtectedRoute path="/profile" component={ProfilePage} />
+      <ProtectedRoute path="/users" component={UsersPage} />
+      <ProtectedRoute path="/clients" component={ClientPage} />
+      <Route path="*" component={NotFoundPage} />
+    </Switch>
   )
 }
 
-/**
- * Property type check
- * @type {Object}
- */
-Main.propTypes = {
-  /**
-   * Classes to extend style
-   * @private
-   */
-  classes: PropTypes.object
-}
-
-// Inject styles
-export default withStyles(styles)(Main)
+export default Main
