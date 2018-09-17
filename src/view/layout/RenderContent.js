@@ -10,6 +10,7 @@ import React from 'react'
 
 // material-ui
 import Grid from '@material-ui/core/Grid/Grid'
+import { withStyles } from '@material-ui/core/styles'
 
 // Content components
 import DrawerMenu from './DrawerMenu'
@@ -18,26 +19,33 @@ import Main from './Main'
 // User context
 import { withUserState } from '../providers/withUserContext'
 
+const styles = theme => ({
+  toolbar: theme.mixins.toolbar
+})
+
 /**
  * RenderContent component
+ * @param {object} classes
  * @param {object} context - user context
  * @returns {*}
  * @constructor
  * @public
  */
-function RenderContent({ context }) {
+function RenderContent({ classes, context }) {
   return context.isAuth ? (
     <React.Fragment>
-      <Grid item xs={2}>
+      <Grid component="nav" item xs={2}>
         <DrawerMenu />
       </Grid>
-      <Grid item xs={10}>
+      <Grid component="main" item xs={10}>
+        <div className={classes.toolbar} />
         <Main />
       </Grid>
     </React.Fragment>
   ) : (
     <React.Fragment>
-      <Grid item xs={12}>
+      <Grid component="main" item xs={12}>
+        <div className={classes.toolbar} />
         <Main />
       </Grid>
     </React.Fragment>
@@ -45,4 +53,4 @@ function RenderContent({ context }) {
 }
 
 // Inject styles
-export default withUserState(RenderContent)
+export default withStyles(styles)(withUserState(RenderContent))
