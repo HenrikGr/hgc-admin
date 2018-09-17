@@ -17,6 +17,8 @@ import PeopleIcon from '@material-ui/icons/People'
 import DraftsIcon from '@material-ui/icons/Drafts'
 import BookmarkIcon from '@material-ui/icons/Bookmark'
 import { withStyles } from '@material-ui/core/styles'
+
+// Custom component
 import { ListItemLink } from '../components/links/index'
 
 const styles = theme => ({
