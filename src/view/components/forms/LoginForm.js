@@ -1,6 +1,8 @@
 /**
  * @prettier
- * @description LoginForm controlled component
+ * @description LoginForm component
+ *
+ * The component is a controlled component and responsible for rendering the login form
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
@@ -17,13 +19,15 @@ import PasswordField from '../fields/PasswordField'
 const styles = theme => ({
   root: {
     display: 'flex',
+    flex: '1 0 auto',
     justifyContent: 'center',
-    margin: theme.spacing.unit * 3
+    marginTop: theme.spacing.unit * 8
   },
   form: {
     display: 'inline-flex',
-    flexDirection: 'column',
+    flexFlow: 'column nowrap',
     justifyContent: 'center',
+    margin: theme.spacing.unit * 3,
     width: '100%',
     [theme.breakpoints.up('sm')]: {
       width: '552px'
@@ -96,7 +100,7 @@ function LoginForm({
  */
 LoginForm.propTypes = {
   /**
-   * Used to style the form
+   * Object to create or extend the styles
    * @private
    */
   classes: PropTypes.object.isRequired,
@@ -106,7 +110,7 @@ LoginForm.propTypes = {
    */
   formLabel: PropTypes.string.isRequired,
   /**
-   * Data entity to be rendered as inputs
+   * Data entity to be rendered
    * @public
    */
   entity: PropTypes.object.isRequired,
@@ -135,16 +139,6 @@ LoginForm.propTypes = {
    * @public
    */
   onShowPassword: PropTypes.func.isRequired
-}
-
-/**
- * Default properties value
- * @type {{formLabel: string, showPassword: boolean, isFetching: boolean}}
- */
-LoginForm.defaultProps = {
-  formLabel: 'Log in',
-  showPassword: false,
-  isFetching: false
 }
 
 // Inject styles into the component
