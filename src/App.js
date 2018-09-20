@@ -8,10 +8,19 @@
  */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { BrowserRouter as Router } from 'react-router-dom'
+import { BrowserRouter as Router, Switch } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import withTheme from './view/theme/withTheme'
-import Layout from './view/layout/Layout'
+
+import LandingPage from './view/pages/LandingPage'
+import LoginFormPage from './view/pages/LoginPage'
+import DashboardPage from './view/pages/DashboardPage'
+import ProfilePage from './view/pages/ProfilePage'
+import UsersPage from './view/pages/UsersPage'
+import ClientPage from './view/pages/ClientPage'
+import NotFoundPage from './view/pages/NotFound'
+
+import DefaultLayout, { AuthenticatedLayout } from './view/layout/DefaultLayout'
 
 /**
  * App component that provides the global store
@@ -22,7 +31,15 @@ import Layout from './view/layout/Layout'
 const App = ({ store }) => (
   <Provider store={store}>
     <Router>
-      <Layout />
+      <Switch>
+        <DefaultLayout exact={true} path="/" component={LandingPage} />
+        <DefaultLayout path="/login" component={LoginFormPage} />
+        <AuthenticatedLayout path="/dashboard" component={DashboardPage} />
+        <AuthenticatedLayout path="/profile" component={ProfilePage} />
+        <AuthenticatedLayout path="/users" component={UsersPage} />
+        <AuthenticatedLayout path="/clients" component={ClientPage} />
+        <AuthenticatedLayout path="*" component={NotFoundPage} />
+      </Switch>
     </Router>
   </Provider>
 )
