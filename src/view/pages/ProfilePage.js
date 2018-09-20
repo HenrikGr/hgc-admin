@@ -1,6 +1,11 @@
 /**
  * @prettier
- * @description: Container component for the profile page
+ * @description: Container component for the ProfileForm component
+ *
+ * The container component is responsible to
+ * - update global state for the presentation layer such as update edited profile information
+ * - connect to the global state and action creators to deal with state updates
+ *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2018 HGC AB
@@ -11,14 +16,10 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 // Presentation layer
-import Grid from '@material-ui/core/Grid'
-import Notification from '../components/notification/Notification'
-import LinearProgressbar from '../components/progress/LinearProgressbar'
 import ProfileForm from '../components/forms/ProfileForm'
 
 // Profile actions
-import profileAction from '../../store/actions/ProfileActions'
-import { isEmpty } from '../../utils/helper'
+import profileAction from '../../store/actions/ProfileAction'
 
 /**
  * ProfilePage container component
@@ -26,45 +27,33 @@ import { isEmpty } from '../../utils/helper'
 class ProfilePage extends React.Component {
   /**
    * Property type checks
+   * @type {Object}
    */
   static propTypes = {
     /**
-     * Data entity to be rendered by the form
+     * Profile entity to be rendered by the form
+     * @private
      */
     profile: PropTypes.object.isRequired,
     /**
      * Flag indicating fetch state
+     * @private
      */
     isFetching: PropTypes.bool.isRequired,
     /**
-     * error object
-     */
-    error: PropTypes.object.isRequired,
-    /**
-     * Callback mapped to profile action
+     * Callback to update profile
+     * @private
      */
     update: PropTypes.func.isRequired,
     /**
-     * Callback mapped to profile action
+     * Callback to update global state with data
+     * @private
      */
-    updateState: PropTypes.func.isRequired,
-    /**
-     * Callback mapped to profile action
-     */
-    resetError: PropTypes.func.isRequired
+    updateState: PropTypes.func.isRequired
   }
 
   /**
-   * Reset possible errors on un mount
-   */
-  componentWillUnmount() {
-    if (!isEmpty(this.props.error)) {
-      this.props.resetError()
-    }
-  }
-
-  /**
-   * Event handler to deal with input field changes
+   * Event handler - onChange on input elements
    * @param prop
    * @returns {Function}
    */
@@ -73,37 +62,28 @@ class ProfilePage extends React.Component {
   }
 
   /**
-   * Event handler for submitting the form
+   * Event handler - onSubmit on form
    * @param event
    */
   handleSubmit = event => {
     event.preventDefault()
-    this.props.update(this.props.profile)
+    this.props.update()
   }
 
   /**
-   * Event handler to deal with resetting error notifications
+   * Render component
+   * @returns {*}
    */
-  handleResetError = () => {
-    this.props.resetError()
-  }
-
   render() {
-    const { profile, isFetching, error } = this.props
+    const { profile, isFetching } = this.props
     return (
-      <Grid container spacing={0}>
-        <Grid item xs={12}>
-          <Notification variant="error" messages={error} onResetMessages={this.handleResetError} />
-          <LinearProgressbar isFetching={isFetching} />
-          <ProfileForm
-            formLabel="Profile"
-            entity={profile}
-            disableSubmit={isFetching}
-            onChange={this.handleChange}
-            onSubmit={this.handleSubmit}
-          />
-        </Grid>
-      </Grid>
+      <ProfileForm
+        formLabel="Profile"
+        entity={profile}
+        disableSubmit={isFetching}
+        onChange={this.handleChange}
+        onSubmit={this.handleSubmit}
+      />
     )
   }
 }
@@ -111,29 +91,25 @@ class ProfilePage extends React.Component {
 /**
  * Map global state to props
  * @param state
- * @returns {{profile: *, isFetching: boolean, error: (defaults.user.error|{})}}
+ * @returns {{profile: (defaults.user.profile|{}|i.user.profile), isFetching: *}}
  */
 const mapStateToProps = state => ({
   profile: state.user.profile,
-  isFetching: state.user.isFetching,
-  error: state.user.error
+  isFetching: state.isFetching
 })
 
 /**
  * Map profile actions to props
  * @param dispatch
- * @returns {{update: update, updateState: updateState, resetError: resetError}}
+ * @returns {{update: update, updateState: updateState}}
  */
 const mapDispatchToProps = dispatch => {
   return {
-    update: profile => {
-      dispatch(profileAction.update(profile))
+    update: () => {
+      dispatch(profileAction.update())
     },
     updateState: profile => {
       dispatch(profileAction.updateState(profile))
-    },
-    resetError: () => {
-      dispatch(profileAction.resetError())
     }
   }
 }
