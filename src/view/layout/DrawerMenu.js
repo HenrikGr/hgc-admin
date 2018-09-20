@@ -42,7 +42,7 @@ function DrawerMenu({ classes }) {
   return (
     <Drawer variant="permanent" classes={{ paper: classes.drawerPaper }}>
       <div className={classes.toolbar} />
-      <List className={classes.list} component="nav">
+      <List className={classes.list}>
         <ListItemLink to="/dashboard" primary="Dashboard" icon={<DashboardIcon />} />
         <ListItemLink to="/users" primary="Users" icon={<PeopleIcon />} />
         <ListItemLink to="/clients" primary="Clients" icon={<DraftsIcon />} />
