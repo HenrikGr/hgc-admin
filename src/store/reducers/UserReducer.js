@@ -9,8 +9,10 @@
 import defaults from './DefaultState'
 import {
   FETCH_TOKEN_SUCCESS,
+  FETCH_REFRESH_TOKEN_SUCCESS,
   FETCH_PROFILE_SUCCESS,
-  UPDATE_PROFILE_STATE
+  FETCH_PROFILE_UPDATE_SUCCESS,
+  PROFILE_UPDATE_STATE
 } from '../actions/constants'
 
 /**
@@ -22,6 +24,7 @@ import {
 const userReducer = (state = defaults.user, action) => {
   switch (action.type) {
     case FETCH_TOKEN_SUCCESS:
+    case FETCH_REFRESH_TOKEN_SUCCESS:
       return {
         ...state,
         isAuth: true,
@@ -29,15 +32,11 @@ const userReducer = (state = defaults.user, action) => {
       }
 
     case FETCH_PROFILE_SUCCESS:
+    case FETCH_PROFILE_UPDATE_SUCCESS:
+    case PROFILE_UPDATE_STATE:
       return {
         ...state,
         profile: action.payload
-      }
-
-    case UPDATE_PROFILE_STATE:
-      return {
-        ...state,
-        profile: { ...state.profile, ...action.payload }
       }
 
     default:

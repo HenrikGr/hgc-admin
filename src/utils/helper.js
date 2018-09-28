@@ -168,7 +168,7 @@ export function isEmpty(obj) {
  * @param seconds
  * @returns {string}
  */
-export const formatExpiresIn = ({ hours, minutes, seconds }) => {
+export const formatDuration = ({ hours, minutes, seconds }) => {
   hours = hours < 10 ? "0" + hours : hours;
   minutes = minutes < 10 ? "0" + minutes : minutes;
   seconds = seconds < 10 ? "0" + seconds : seconds;
@@ -187,3 +187,54 @@ export const parseHHMMSS = seconds => {
     seconds: (seconds % 60) | 0
   };
 };
+
+/**
+ *
+ * @param fn
+ * @param granularity
+ * @param errorFunc
+ * @constructor
+ */
+export function AdjustTimer(fn, granularity, errorFunc) {
+  this.timeoutID = null;
+  this.expected = granularity;
+  this.granularity = granularity;
+
+  this.start = () => {
+    this.expected = Date.now() + this.granularity;
+    if (this.timeoutID) {
+      clearTimeout(this.timeoutID);
+      this.timeoutID = null;
+    }
+
+    this.timeoutID = setTimeout(step, this.granularity);
+  };
+
+  this.stop = () => {
+    if (this.timeoutID) {
+      clearTimeout(this.timeoutID);
+      this.timeoutID = null;
+    }
+  };
+
+  const step = () => {
+    let drift = Date.now() - this.expected;
+    if (drift > this.granularity) {
+      if (errorFunc) errorFunc();
+    }
+
+    if (this.timeoutID) {
+      fn();
+    }
+
+    this.expected += this.granularity;
+
+    if (this.timeoutID) {
+      clearTimeout(this.timeoutID);
+      this.timeoutID = setTimeout(step, Math.max(0, this.granularity-drift));
+    }
+  }
+}
+
+
+

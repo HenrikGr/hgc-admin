@@ -11,15 +11,31 @@
  * @license: The MIT License (MIT)
  */
 
-import React from 'react';
-//import { BrowserRouter as Router, Route, Link, Redirect } from 'react-router-dom'
+import React from 'react'
 
+// material-ui
+import { withStyles } from '@material-ui/core/styles'
 
-const DashboardPage = ({...rest}) => (
-  <div>
+const styles = theme => ({
+  root: {
+    display: 'flex',
+    flex: '1 0 auto',
+    justifyContent: 'center',
+    marginTop: theme.spacing.unit * 8
+  }
+})
+
+/**
+ * DashboardPage
+ * @param classes
+ * @param rest
+ * @returns {*}
+ * @constructor
+ */
+const DashboardPage = ({ classes, ...rest }) => (
+  <div className={classes.root}>
     <h2>Dashboard page</h2>
   </div>
-);
+)
 
-
-export default DashboardPage;
+export default withStyles(styles)(DashboardPage)

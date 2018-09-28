@@ -8,7 +8,6 @@
  */
 import userSchemaService from '../../domain/schemas/User'
 import clientSchemaService from '../../domain/schemas/Client'
-import UIModel from '../../domain/ui-service/UIModel'
 
 /**
  * Default global state
@@ -30,7 +29,7 @@ const defaults = {
     entities: []
   },
   clients: {
-    uiModel: new UIModel(clientSchemaService.getSchema()).getUIModel(),
+    schema: clientSchemaService.getSchema(),
     selectedId: '',
     entity: clientSchemaService.getEntity(),
     entities: []

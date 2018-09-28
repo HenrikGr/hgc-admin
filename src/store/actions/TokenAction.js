@@ -7,37 +7,16 @@
  * @license: The MIT License (MIT)
  */
 import credentialsSchemaService from '../../domain/schemas/Credentials'
-import tokenSchemaService from '../../domain/schemas/Token'
-import tokenService from '../../domain/service/Token'
+import API from '../../domain/service/Token'
 import {
   VALIDATION_ERROR,
-  FETCH_VALIDATION_ERROR,
   FETCH_START,
   FETCH_ERROR,
   FETCH_SUCCESS,
   FETCH_TOKEN_SUCCESS,
+  FETCH_REFRESH_TOKEN_SUCCESS,
   REMOVE_TOKEN
 } from '../actions/constants'
-
-/**
- * Helper function to validate fetched data via tokenSchemaService
- * @param {object} json - json object returned from profileService API
- * @returns {Function}
- * @private
- */
-function fetchValidate(json) {
-  return dispatch => {
-    const error = tokenSchemaService.validate(json)
-    if (error.message) {
-      dispatch({ type: FETCH_VALIDATION_ERROR, payload: error })
-      return Promise.reject(error)
-    } else {
-      dispatch({ type: FETCH_SUCCESS })
-      dispatch({ type: FETCH_TOKEN_SUCCESS, payload: json })
-      return Promise.resolve(json)
-    }
-  }
-}
 
 /**
  * Get a token
@@ -46,20 +25,23 @@ function fetchValidate(json) {
  * @public
  */
 function get(credentials) {
-  return async function(dispatch) {
+  return function(dispatch) {
     const error = credentialsSchemaService.validate(credentials)
     if (error.message) {
       dispatch({ type: VALIDATION_ERROR, payload: error })
       return Promise.reject(error)
     } else {
-      try {
-        dispatch({ type: FETCH_START })
-        const json = await tokenService.get(credentials)
-        return dispatch(fetchValidate(json))
-      } catch (error) {
-        dispatch({ type: FETCH_ERROR, payload: error })
-        return Promise.reject(error)
-      }
+      dispatch({ type: FETCH_START })
+      return API.post(credentials)
+        .then(json => {
+          dispatch({ type: FETCH_SUCCESS })
+          dispatch({ type: FETCH_TOKEN_SUCCESS, payload: json })
+          return Promise.resolve(json)
+        })
+        .catch(error => {
+          dispatch({ type: FETCH_ERROR, payload: error })
+          return Promise.reject(error)
+        })
     }
   }
 }
@@ -70,16 +52,19 @@ function get(credentials) {
  * @public
  */
 function refresh() {
-  return async function(dispatch, getState) {
+  return function(dispatch, getState) {
     const { refresh_token } = getState().user.token
-    try {
-      dispatch({ type: FETCH_START })
-      const json = await tokenService.refresh(refresh_token)
-      return dispatch(fetchValidate(json))
-    } catch (error) {
-      dispatch({ type: FETCH_ERROR, payload: error })
-      return Promise.reject(error)
-    }
+    dispatch({ type: FETCH_START })
+    return API.refresh(refresh_token)
+      .then(json => {
+        dispatch({ type: FETCH_SUCCESS })
+        dispatch({ type: FETCH_REFRESH_TOKEN_SUCCESS, payload: json })
+        return Promise.resolve(json)
+      })
+      .catch(error => {
+        dispatch({ type: FETCH_ERROR, payload: error })
+        return Promise.reject(error)
+      })
   }
 }
 
@@ -90,7 +75,7 @@ function refresh() {
  * @public
  */
 function remove() {
-  tokenService.remove()
+  API.remove()
   return { type: REMOVE_TOKEN }
 }
 

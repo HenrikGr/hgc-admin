@@ -6,9 +6,8 @@
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
-
-import React from 'react';
-import User from './context/User';
+import React from 'react'
+import User from './context/User'
 
 /**
  * Higher order component to provide User context to components
@@ -16,13 +15,9 @@ import User from './context/User';
  * @returns {function(*): *}
  */
 export default function withUserContext(Component) {
-  return function WithSessionContext(props) {
-    return (
-      <User.Consumer>
-        { value => <Component {...props} context={ value } />}
-      </User.Consumer>
-    );
-  };
+  return function WithUserContext(props) {
+    return <User.Consumer>{value => <Component {...props} context={value} />}</User.Consumer>
+  }
 }
 
 /**
@@ -30,15 +25,12 @@ export default function withUserContext(Component) {
  * @param Component
  * @returns {function(*): *}
  */
-export function withUserAuth(Component) {
-  return function WithUserAuth(props) {
+export function withUserState(Component) {
+  return function WithUserState(props) {
     return (
       <User.Consumer>
-        { ({ isAuth }) => <Component
-          {...props}
-          isAuth={ isAuth }
-        />}
+        {value => <Component {...props} context={{ isAuth: value.isAuth }} />}
       </User.Consumer>
-    );
-  };
+    )
+  }
 }

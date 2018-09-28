@@ -21,13 +21,9 @@ const styles = theme => ({
     zIndex: theme.zIndex.drawer + 1
   },
   title: {
-    flex: 1,
-    marginRight: 24
+    flex: '1 0 auto',
+    marginRight: theme.spacing.unit * 3
   },
-  homeBtn: {
-    marginLeft: -12,
-    marginRight: 20
-  }
 })
 
 /**

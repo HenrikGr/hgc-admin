@@ -8,18 +8,18 @@
  */
 import defaults from './DefaultState'
 import {
-  CLIENTS_GET_SUCCESS,
-  //CLIENTS_UPDATE_SUCCESS,
-  CLIENT_CREATE_SUCCESS,
-  CLIENT_UPDATE_SUCCESS,
-  CLIENT_DELETE_SUCCESS,
+  FETCH_CLIENTS_SUCCESS,
+  FETCH_CLIENT_CREATE_SUCCESS,
+  FETCH_CLIENT_UPDATE_SUCCESS,
+  FETCH_CLIENT_DELETE_SUCCESS,
+
   CLIENT_SET_SELECTED,
   CLIENT_RESET_SELECTED,
   CLIENT_UPDATE_STATE
 } from '../actions/constants'
 
 // Array helper functions
-import { appendElement, removeById, updateElement } from '../../utils/helper'
+//import { appendElement, removeById, updateElement } from '../../utils/helper'
 
 /**
  * Clients state branch reducer
@@ -30,7 +30,7 @@ import { appendElement, removeById, updateElement } from '../../utils/helper'
  */
 const clientsReducer = (state = defaults.clients, action) => {
   switch (action.type) {
-    case CLIENTS_GET_SUCCESS:
+    case FETCH_CLIENTS_SUCCESS:
       return {
         ...state,
         selectedId: action.payload[0]._id,
@@ -38,26 +38,28 @@ const clientsReducer = (state = defaults.clients, action) => {
         entities: action.payload
       }
 
-    case CLIENT_CREATE_SUCCESS:
+    case FETCH_CLIENT_CREATE_SUCCESS:
       return {
         ...state,
         selectedId: action.payload._id,
         entity: action.payload,
-        entities: appendElement(state.entities, action.payload)
+        entities: [...state.entities, ...action.payload]
       }
 
-    case CLIENT_DELETE_SUCCESS:
+    case FETCH_CLIENT_DELETE_SUCCESS:
+      // Filter out the entity to be deleted
+      const newEntities = state.entities.filter(entity => entity._id !== action.payload)
       return {
         ...state,
-        selectedId: state.entities[0]._id,
-        entity: state.entities[0],
-        entities: removeById(state.entities, action.payload)
+        selectedId: newEntities[0]._id,
+        entity: newEntities[0],
+        entities: newEntities
       }
 
-    case CLIENT_UPDATE_SUCCESS:
+    case FETCH_CLIENT_UPDATE_SUCCESS:
       return {
         ...state,
-        entities: updateElement(state.entities, action.payload)
+        entities: state.entities.map(entity => ((entity._id === action.payload._id ? action.payload: entity))),
       }
 
     case CLIENT_SET_SELECTED:
@@ -77,7 +79,7 @@ const clientsReducer = (state = defaults.clients, action) => {
       return {
         ...state,
         selectedId: '',
-        entity: { ...defaults.clients.entity }
+        entity: action.payload
       }
 
     default:

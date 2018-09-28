@@ -3,6 +3,6 @@ applications:
     memory: 256M
     instances: 1
     domain: eu-gb.mybluemix.net
-    name: hgc
-    host: hgc
+    name: hgc-admin
+    host: hgc-admin
     disk_quota: 1024M

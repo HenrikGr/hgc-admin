@@ -1,35 +1,22 @@
 /**
- * Description: Container component for the profile page
- *
- * The Profile container components supplies profile state trough props and basic CRUD operations
- * such to retrieve and update profile information.
- *
- * The profile state supplied to the presentation layer can hold the following states;
- * - isFetching, when a remote call to retrieve or update profile data is performed,
- * - error, if remote call or client validation fails.
- * - profile, if remote calls are successful.
- *
+ * @prettier
+ * @description: Container component for the client page
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2018 HGC AB
  * @license: The MIT License (MIT)
  */
-
-// react & redux
-import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from "react-redux";
-
-// Material-ui
-import Grid from '@material-ui/core/Grid';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
 // Custom components
-import ClientToolbar from '../components/Toolbars/ClientToolbar';
-import ClientForm from '../components/forms/ClientForm';
-import ErrorSnackbar from '../components/error/ErrorSnackbar';
+import SchemaForm from '../components/schemaform/SchemaForm'
+import SchemaFormHeader from '../components/schemaform/SchemaFormHeader'
+import SchemaFormProvider from '../providers/SchemaFormProvider'
 
 // Action creators used to update clients store
-import actions from "../../store/actions/ClientsAction";
+import clientAction from '../../store/actions/ClientsAction'
 
 /**
  * Client page component
@@ -40,31 +27,19 @@ class ClientPage extends React.Component {
    */
   static propTypes = {
     /**
-     * Classes, can be used to override css styles
-     */
-    classes: PropTypes.object,
-    /**
-     * Data object schema
+     * Schema used to build the ui model
      */
     schema: PropTypes.object.isRequired,
     /**
-     * Default data from schema
+     * Selected entity
      */
-    defaultItem: PropTypes.object.isRequired,
+    entity: PropTypes.object.isRequired,
     /**
-     * Data array
+     * Entity array
      */
-    items: PropTypes.array.isRequired,
+    entities: PropTypes.array.isRequired,
     /**
-     * Loading indicator
-     */
-    isFetching: PropTypes.bool.isRequired,
-    /**
-     * Error object
-     */
-    error: PropTypes.object.isRequired,
-    /**
-     * Find method
+     * Find entities function
      */
     find: PropTypes.func.isRequired,
     /**
@@ -72,137 +47,138 @@ class ClientPage extends React.Component {
      */
     create: PropTypes.func.isRequired,
     /**
-     * Update method
+     * Update entity function
      */
     update: PropTypes.func.isRequired,
     /**
-     * Delete method
+     * Remove entity function
      */
     remove: PropTypes.func.isRequired,
     /**
-     * Reset error method
+     * Set selected data
      */
-    resetError: PropTypes.func.isRequired,
-  };
-
-  componentDidMount() {
-    this.props.find({page: 0, sort: 'createdAt'});
+    setSelected: PropTypes.func.isRequired,
+    /**
+     * Update selected data
+     */
+    updateState: PropTypes.func.isRequired,
+    /**
+     * Reset selected data
+     */
+    resetSelected: PropTypes.func.isRequired
   }
 
-  state = {
-    selectedId: '',
-    selectedItem: this.props.defaultItem,
-  };
+  /**
+   * Fetch entities by query params
+   */
+  componentDidMount() {
+    this.props.find({ page: 0, sort: 'name' })
+  }
 
-  handleSelect = (event, value) => {
-    const selectedItem = this.props.items.filter(item => ( item._id === value));
-    this.setState({
-      selectedId: value,
-      selectedItem: selectedItem[0],
-    });
-  };
+  /**
+   * Update global state with edited entity
+   * @param entity
+   */
+  handleChange = entity => {
+    this.props.updateState(entity)
+  }
 
-  handleChange = (prop, value) => {
-    let selectedItem = {...this.state.selectedItem};
-    selectedItem[prop] = value;
-    this.setState({ selectedItem });
-  };
+  /**
+   * Create a new or update entity
+   * If the entity has an _id prop it should be updated otherwise it is a new entity
+   * @param entity
+   */
+  handleSubmit = entity => {
+    if (entity._id) {
+      this.props.update(entity._id)
+    } else {
+      this.props.create(entity)
+    }
+  }
 
-  handleReset = () => {
-    const { defaultItem } = this.props;
-    this.setState({ selectedId: '', selectedItem: Object.assign({}, defaultItem)});
-  };
+  /**
+   * Remove entity by id
+   * @param entity
+   */
+  handleRemove = entity => {
+    this.props.remove(entity._id)
+  }
 
-  handleCreate = () => {
-    this.props.create(this.state.selectedItem)
-  };
+  handleSelect = entity => {
+    this.props.setSelected(entity)
+  }
 
-  handleUpdate = () => {
-    this.props.update(this.state.selectedId, this.state.selectedItem)
-  };
+  /**
+   * Reset selected entity with default entity from provider
+   * @param defaultEntity
+   */
+  handleReset = defaultEntity => {
+    this.props.resetSelected(defaultEntity)
+  }
 
-  handleRemove = id => {
-
-  };
-
-  handleResetError = () => {
-    this.props.resetError();
-  };
-
+  /**
+   * Render component
+   * @returns {*}
+   */
   render() {
-    const { schema, defaultItem, items, isFetching, error } = this.props;
-    const { selectedItem, selectedId } = this.state;
+    const { schema, entity, entities } = this.props
 
-    return(
-      <Grid container spacing={ 0 }>
+    return (
+      <React.Fragment>
+        <SchemaFormProvider
+          formLabel="Client"
+          schema={schema}
+          entity={entity}
+          entities={entities}
+          onChange={this.handleChange}
+          onSubmit={this.handleSubmit}
+          onRemove={this.handleRemove}
+          onReset={this.handleReset}
+          onSelect={this.handleSelect}
+        >
+          <SchemaFormHeader />
+          <SchemaForm />
 
-        <Grid item xs={ 12 }>
-
-          <ErrorSnackbar
-            error={ error }
-            onResetError={ this.handleResetError }
-          />
-
-          <ClientToolbar
-            title="Clients"
-            items={ items }
-            selectedId={ selectedId }
-            onSelect={ this.handleSelect }
-          />
-
-          <ClientForm
-            formLabel="Client"
-            schema={ schema }
-            defaultItem={ defaultItem }
-            isFetching={ isFetching }
-            selectedItem={ selectedItem }
-            selectedId={ selectedId }
-            onChange={ this.handleChange }
-            onReset={ this.handleReset }
-            onCreate={ this.handleCreate }
-            onUpdate={ this.handleUpdate }
-            onRemove={ this.handleRemove }
-          />
-
-        </Grid>
-
-      </Grid>
+        </SchemaFormProvider>
+      </React.Fragment>
     )
   }
 }
 
 const mapStateToProps = state => ({
   schema: state.clients.schema,
-  defaultItem: state.clients.defaultClient,
-  items: state.clients.docs,
-  isFetching: state.clients.isFetching,
-  error: state.clients.error,
-});
+  entity: state.clients.entity,
+  entities: state.clients.entities
+})
 
 const mapDispatchToProps = dispatch => {
   return {
     find: qp => {
-      dispatch(actions.getClients(qp));
+      dispatch(clientAction.getClients(qp))
     },
-    create: data => {
-      dispatch(actions.createClient(data));
+    create: (entity) => {
+      dispatch(clientAction.createClient(entity))
     },
-    update: (id, data) => {
-      dispatch(actions.updateClientById(id, data));
+    update: (id) => {
+      dispatch(clientAction.updateClientById(id))
     },
-    remove: id => {
-      dispatch(actions.deleteClientById(id));
+    remove: (id) => {
+      dispatch(clientAction.deleteClientById(id))
     },
-    resetError: () => {
-      dispatch(actions.resetError());
+    setSelected: entry => {
+      dispatch(clientAction.setSelected(entry))
+    },
+    updateState: entity => {
+      dispatch(clientAction.updateState(entity))
+    },
+    resetSelected: (defaultEntity) => {
+      dispatch(clientAction.resetSelected(defaultEntity))
     }
-  };
-};
+  }
+}
 
 // Inject state and action creators to presentation layer
-export default connect(mapStateToProps, mapDispatchToProps)(ClientPage);
-
-
-
-
-
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ClientPage)

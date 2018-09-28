@@ -15,11 +15,11 @@ import {
   FETCH_ERROR,
   FETCH_SUCCESS,
   RESET_ERROR,
-  CLIENTS_GET_SUCCESS,
-  //CLIENTS_UPDATE_SUCCESS,
-  CLIENT_CREATE_SUCCESS,
-  CLIENT_UPDATE_SUCCESS,
-  CLIENT_DELETE_SUCCESS,
+  FETCH_CLIENTS_SUCCESS,
+  FETCH_CLIENT_CREATE_SUCCESS,
+
+  FETCH_CLIENT_UPDATE_SUCCESS,
+  FETCH_CLIENT_DELETE_SUCCESS,
   CLIENT_SET_SELECTED,
   CLIENT_RESET_SELECTED,
   CLIENT_UPDATE_STATE
@@ -42,7 +42,7 @@ function createClient() {
         .create(entity)
         .then(json => {
           dispatch({ type: FETCH_SUCCESS })
-          dispatch({ type: CLIENT_CREATE_SUCCESS, payload: json })
+          dispatch({ type: FETCH_CLIENT_CREATE_SUCCESS, payload: json })
         })
         .catch(errors => {
           dispatch({ type: FETCH_ERROR, payload: errors })
@@ -64,7 +64,7 @@ function getClients(params) {
       .findByQuery(params)
       .then(json => {
         dispatch({ type: FETCH_SUCCESS })
-        dispatch({ type: CLIENTS_GET_SUCCESS, payload: json.docs })
+        dispatch({ type: FETCH_CLIENTS_SUCCESS, payload: json.docs })
       })
       .catch(errors => {
         dispatch({ type: FETCH_ERROR, payload: errors })
@@ -89,7 +89,7 @@ function updateClientById() {
         .updateById(selectedId, entity)
         .then(json => {
           dispatch({ type: FETCH_SUCCESS })
-          dispatch({ type: CLIENT_UPDATE_SUCCESS, payload: json })
+          dispatch({ type: FETCH_CLIENT_UPDATE_SUCCESS, payload: json })
         })
         .catch(errors => {
           dispatch({ type: FETCH_ERROR, payload: errors })
@@ -100,18 +100,18 @@ function updateClientById() {
 
 /**
  * Action creator - delete client by id
+ * @param selectedId
  * @returns {Function}
  * @public
  */
-function deleteClientById() {
-  return function(dispatch, getState) {
-    const { selectedId } = getState().clients
+function deleteClientById(selectedId) {
+  return function(dispatch) {
     dispatch({ type: FETCH_START })
     clientAPI
       .deleteById(selectedId)
       .then(() => {
         dispatch({ type: FETCH_SUCCESS })
-        dispatch({ type: CLIENT_DELETE_SUCCESS, payload: selectedId })
+        dispatch({ type: FETCH_CLIENT_DELETE_SUCCESS, payload: selectedId })
       })
       .catch(errors => {
         dispatch({ type: FETCH_ERROR, payload: errors })
@@ -140,11 +140,12 @@ function setSelected(entry) {
 
 /**
  * Reset selected data
- * @returns {{type: string}}
+ * @param defaultEntry
+ * @returns {{type: string, payload: *}}
  * @public
  */
-function resetSelected() {
-  return { type: CLIENT_RESET_SELECTED }
+function resetSelected(defaultEntry) {
+  return { type: CLIENT_RESET_SELECTED, payload: defaultEntry }
 }
 
 /**

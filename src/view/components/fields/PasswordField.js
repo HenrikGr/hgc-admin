@@ -8,24 +8,24 @@
  */
 
 // react
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react'
+import PropTypes from 'prop-types'
 
 // material-ui
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControl from "@material-ui/core/FormControl";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import IconButton from "@material-ui/core/IconButton";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import Visibility from "@material-ui/icons/Visibility";
-import { withStyles } from "@material-ui/core/styles";
+import Input from '@material-ui/core/Input'
+import InputLabel from '@material-ui/core/InputLabel'
+import FormControl from '@material-ui/core/FormControl'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import IconButton from '@material-ui/core/IconButton'
+import VisibilityOff from '@material-ui/icons/VisibilityOff'
+import Visibility from '@material-ui/icons/Visibility'
+import { withStyles } from '@material-ui/core/styles'
 
 const styles = theme => ({
   root: {
     margin: theme.spacing.unit
-  },
-});
+  }
+})
 
 /**
  * PasswordField
@@ -44,32 +44,29 @@ function PasswordField(props) {
     label,
     showPassword,
     onChange,
-    onShowPassword
-  } = props;
+    onShow
+  } = props
 
-  return(
-    <FormControl className={ classes.root }>
-      <InputLabel
-        htmlFor={ id }
-        required={ required }
-      >
-        { label }
+  return (
+    <FormControl className={classes.root}>
+      <InputLabel htmlFor={id} required={required}>
+        {label}
       </InputLabel>
       <Input
-        id={ id }
-        disabled={ disabled }
-        type={ showPassword ? 'text' : 'password' }
-        value={ value }
-        autoComplete={ autoComplete }
-        onChange={ onChange(id) }
+        id={id}
+        disabled={disabled}
+        type={showPassword ? 'text' : 'password'}
+        value={value}
+        autoComplete={autoComplete}
+        onChange={onChange(id)}
         endAdornment={
           <InputAdornment position="end">
             <IconButton
               aria-label="Toggle password visibility"
-              onClick={ onShowPassword }
-              onMouseDown={ onShowPassword }
+              onClick={onShow}
+              onMouseDown={onShow}
             >
-              { showPassword ? <VisibilityOff /> : <Visibility /> }
+              {showPassword ? <VisibilityOff /> : <Visibility />}
             </IconButton>
           </InputAdornment>
         }
@@ -88,15 +85,17 @@ PasswordField.propTypes = {
   label: PropTypes.string.isRequired,
   showPassword: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
-  onShowPassword: PropTypes.func.isRequired,
-};
+  onShow: PropTypes.func.isRequired
+}
 
 PasswordField.defaultProps = {
+  id:"password",
   disabled: false,
   required: true,
-  label: "Password",
-  showPassword: false,
-};
+  autoComplete: 'current-password',
+  label: 'Password',
+  showPassword: false
+}
 
 // Inject styles
-export default withStyles(styles)(PasswordField);
+export default withStyles(styles)(PasswordField)

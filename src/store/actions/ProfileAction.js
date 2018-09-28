@@ -6,38 +6,17 @@
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
-import profileSchemaService from '../../domain/schemas/Profile'
-import profileService from '../../domain/service/Profile'
+//import API from '../../domain/service/xhr/Profile'
+import API from '../../domain/service/Profile'
 import {
-  VALIDATION_ERROR,
-  FETCH_VALIDATION_ERROR,
   FETCH_START,
   FETCH_ERROR,
   FETCH_SUCCESS,
   RESET_ERROR,
   FETCH_PROFILE_SUCCESS,
-  UPDATE_PROFILE_STATE
+  FETCH_PROFILE_UPDATE_SUCCESS,
+  PROFILE_UPDATE_STATE
 } from '../actions/constants'
-
-/**
- * Helper function to validate fetched data via profileSchemaService
- * @param {object} json - json object returned from profileService API
- * @returns {Function}
- * @private
- */
-function fetchValidate(json) {
-  return dispatch => {
-    const error = profileSchemaService.validate(json)
-    if (error.message) {
-      dispatch({ type: FETCH_VALIDATION_ERROR, payload: error })
-      return Promise.reject(error)
-    } else {
-      dispatch({ type: FETCH_SUCCESS })
-      dispatch({ type: FETCH_PROFILE_SUCCESS, payload: json })
-      return Promise.resolve(json)
-    }
-  }
-}
 
 /**
  * Get profile information for the current user via profile service API
@@ -45,40 +24,38 @@ function fetchValidate(json) {
  * @public
  */
 function getMe() {
-  return async dispatch => {
-    try {
-      dispatch({ type: FETCH_START })
-      const json = await profileService.getMe()
-      return dispatch(fetchValidate(json))
-    } catch (error) {
-      dispatch({ type: FETCH_ERROR, payload: error })
-      return Promise.reject(error)
-    }
+  return dispatch => {
+    dispatch({ type: FETCH_START })
+    return API.getMe()
+      .then(json => {
+        dispatch({ type: FETCH_SUCCESS })
+        dispatch({ type: FETCH_PROFILE_SUCCESS, payload: json })
+        return Promise.resolve(json)
+      })
+      .catch(error => {
+        dispatch({ type: FETCH_ERROR, payload: error })
+        return Promise.reject(error)
+      })
   }
 }
 
 /**
  * Update profile information via profile service API
- * @param {object} profile - profile entity
  * @returns {Function}
  * @public
  */
-function update(profile) {
-  return async dispatch => {
-    const error = profileSchemaService.validate(profile)
-    if (error.message) {
-      dispatch({ type: VALIDATION_ERROR, payload: error })
-      return Promise.reject(error)
-    } else {
-      try {
-        dispatch({ type: FETCH_START })
-        const json = await profileService.updateMe(profile)
-        return dispatch(fetchValidate(json))
-      } catch (error) {
+function update() {
+  return (dispatch, getState) => {
+    const { profile } = getState().user
+    dispatch({ type: FETCH_START })
+    return API.updateMe(profile)
+      .then(json => {
+        dispatch({ type: FETCH_SUCCESS })
+        dispatch({ type: FETCH_PROFILE_UPDATE_SUCCESS, payload: json })
+      })
+      .catch(error => {
         dispatch({ type: FETCH_ERROR, payload: error })
-        return Promise.reject(error)
-      }
-    }
+      })
   }
 }
 
@@ -89,7 +66,7 @@ function update(profile) {
  * @public
  */
 function updateState(value) {
-  return { type: UPDATE_PROFILE_STATE, payload: value }
+  return { type: PROFILE_UPDATE_STATE, payload: value }
 }
 
 /**

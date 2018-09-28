@@ -1,6 +1,16 @@
 /**
  * @prettier
- * @description: UserProvider using the context API
+ * @description: UserProvider
+ *
+ * The user provider component is a controlled component and the state and
+ * action creators are passed in as props.
+ *
+ * The user provider is a means to share user state and callbacks via the context API
+ * to other sub components further down the tree, thus eliminates the need for connecting
+ * via Redux connect
+ *
+ * Other component can consumes the user stat and action creators via the context API
+ *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
@@ -12,9 +22,10 @@ import { connect } from 'react-redux'
 
 // User context
 import User from './context/User'
+import userActions from '../../store/actions/UserAction'
 
 /**
- * User provider class that provides information about the currant user
+ * User provider class provides information about the currant user
  * @class UserProvider
  * @public
  */
@@ -25,29 +36,45 @@ class UserProvider extends React.PureComponent {
    */
   static propTypes = {
     /**
-     * Flag indicating if the user is authenticated or not
+     * User state object
+     * @private
      */
-    isAuth: PropTypes.bool.isRequired
+    user: PropTypes.object.isRequired,
+    /**
+     * Callback
+     * @private
+     */
+    logIn: PropTypes.func.isRequired,
+    /**
+     * Callback
+     * @private
+     */
+    refreshSession: PropTypes.func.isRequired,
+    /**
+     * Callback
+     * @private
+     */
+    logOut: PropTypes.func.isRequired
   }
 
-  /**
-   * Sets initial component state
-   */
-  state = {
-    isAuth: false
-  }
+  state = {}
 
-  /**
-   * Check if new token received and set the internal state to
-   * reflect if the user is authenticated or not.
-   * TODO: Should add more user specific information such as profile information
-   * @param prevProps
-   * @param prevState
-   */
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.isAuth !== prevState.isAuth) {
-      this.setState({ isAuth: this.props.isAuth })
+    if (this.props.user !== prevProps.user) {
+      this.setState({...this.props.user})
     }
+  }
+
+  handleLogIn = () => {
+    this.props.logIn()
+  }
+
+  refreshSession = () => {
+    this.props.refreshSession()
+  }
+
+  handleLogOut = () => {
+    this.props.logOut();
   }
 
   /**
@@ -56,7 +83,16 @@ class UserProvider extends React.PureComponent {
    */
   render() {
     return (
-      <User.Provider value={{ isAuth: this.props.isAuth }}>{this.props.children}</User.Provider>
+      <User.Provider
+        value={{
+          ...this.state,
+          logIn: this.handleLogIn,
+          refreshSession: this.refreshSession,
+          logOut: this.handleLogOut
+        }}
+      >
+        {this.props.children}
+      </User.Provider>
     )
   }
 }
@@ -68,12 +104,31 @@ class UserProvider extends React.PureComponent {
  */
 const mapStateToProps = state => {
   return {
-    isAuth: state.user.isAuth
+    user: state.user
   }
 }
 
-// connect mapped state to component
+/**
+ * Map user actions to props
+ * @param dispatch
+ * @returns {{logIn: logIn, refreshSession: refreshSession, logOut: logOut}}
+ */
+const mapDispatchToProps = dispatch => {
+  return {
+    logIn: () => {
+      dispatch(userActions.logIn())
+    },
+    refreshSession: () => {
+      dispatch(userActions.refreshSession())
+    },
+    logOut: () => {
+      dispatch(userActions.logOut())
+    }
+  }
+}
+
+// connect mapped user state and user actions to component
 export default connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(UserProvider)

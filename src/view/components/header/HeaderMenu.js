@@ -18,20 +18,10 @@ import IconButton from '@material-ui/core/IconButton'
 import AccountCircle from '@material-ui/icons/AccountCircle'
 import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
-import { withStyles } from '@material-ui/core/styles'
 import { LogInLink, ProfileLink, HomeLink } from '../links'
 
 // Consume user state from user context
 import withUserContext from '../../providers/withUserContext'
-
-const styles = {
-  root: {
-    marginRight: 8
-  },
-  button: {
-    margin: 8
-  }
-}
 
 /**
  * HeaderMenu component
@@ -44,11 +34,6 @@ class HeaderMenu extends React.PureComponent {
    * @type {Object}
    */
   static propTypes = {
-    /**
-     * Classes to extend the style of the component
-     * @private
-     */
-    classes: PropTypes.object.isRequired,
     /**
      * User context from the user provider
      * @private
@@ -73,53 +58,47 @@ class HeaderMenu extends React.PureComponent {
   }
 
   render() {
-    const { classes, context } = this.props
+    const { context } = this.props
     const { anchorEl } = this.state
     const open = Boolean(anchorEl)
 
-    return (
-      <div className={classes.root}>
-        {!context.isAuth ? (
-          <Button
-            className={classes.button}
-            component={LogInLink}
-            variant="raised"
-            color="secondary"
-          >
-            Login
-          </Button>
-        ) : (
-          <React.Fragment>
-            <IconButton
-              aria-owns={open ? 'menu-appbar' : null}
-              aria-haspopup="true"
-              onClick={this.handleClick}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-              open={open}
-              onClose={this.handleClose}
-            >
-              <MenuItem component={ProfileLink} onClick={this.handleClose}>
-                Profile
-              </MenuItem>
-              <Divider />
-              <MenuItem component={HomeLink} onClick={this.handleLogout}>
-                Logout
-              </MenuItem>
-            </Menu>
-          </React.Fragment>
-        )}
-      </div>
+    return !context.isAuth ? (
+      <Button
+        component={LogInLink}
+        variant="raised"
+        color="secondary"
+      >
+        Login
+      </Button>
+    ) : (
+      <React.Fragment>
+        <IconButton
+          aria-owns={open ? 'menu-appbar' : null}
+          aria-haspopup="true"
+          onClick={this.handleClick}
+          color="inherit"
+        >
+          <AccountCircle />
+        </IconButton>
+        <Menu
+          id="menu-appbar"
+          anchorEl={anchorEl}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+          open={open}
+          onClose={this.handleClose}
+        >
+          <MenuItem component={ProfileLink} onClick={this.handleClose}>
+            Profile
+          </MenuItem>
+          <Divider />
+          <MenuItem component={HomeLink} onClick={this.handleLogout}>
+            Logout
+          </MenuItem>
+        </Menu>
+      </React.Fragment>
     )
   }
 }
 
-// Inject token context and styles
-export default withStyles(styles)(withUserContext(HeaderMenu))
+export default withUserContext(HeaderMenu)

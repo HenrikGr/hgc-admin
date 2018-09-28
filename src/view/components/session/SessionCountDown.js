@@ -11,6 +11,8 @@ import PropTypes from 'prop-types'
 
 // Web worker variants of setInterval, etc...
 import * as workerTimers from 'worker-timers';
+
+// Session components rendered as children
 import SessionClock from './SessionClock'
 import SessionDialog from './SessionDialog'
 

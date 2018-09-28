@@ -9,6 +9,7 @@
 
 // react
 import React from "react";
+import PropTypes from "prop-types";
 
 // material-ui
 import Button from "@material-ui/core/Button";
@@ -17,48 +18,66 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import withMobileDialog from '@material-ui/core/withMobileDialog';
 
 /**
  * AlertDialog component
  */
 class AlertDialog extends React.Component {
-  state = {
-    open: false
+  static propTypes = {
+    open: PropTypes.bool.isRequired,
+    title: PropTypes.string.isRequired,
+    message: PropTypes.string.isRequired,
+    cancel: PropTypes.string.isRequired,
+    confirm: PropTypes.string.isRequired,
+    onResponse: PropTypes.func.isRequired,
   };
 
-  handleClickOpen = () => {
-    this.setState({ open: true });
+  static defaultProps = {
+    title: 'Title',
+    message: 'message ....?',
+    cancel: 'Disagree',
+    confirm: 'Accept',
+  };
+
+  state = {
+    open: false
   };
 
   handleClose = () => {
     this.setState({ open: false });
   };
 
+  handleConfirmation = (confirm) => {
+    this.props.onResponse(confirm);
+    this.setState({ open: false });
+  };
+
   render() {
+    const { open, title, message, cancel, confirm } = this.props;
+
     return (
       <div>
-        <Button onClick={this.handleClickOpen}>Open alert dialog</Button>
         <Dialog
-          open={this.state.open}
+          open={open}
           onClose={this.handleClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
           <DialogTitle id="alert-dialog-title">
-            {"Use Google's location service?"}
+            {title}
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              Let Google help apps determine location. This means sending
-              anonymous location data to Google, even when no apps are running.
+              {message}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleClose} color="primary">
-              Disagree
+            <Button onClick={() => this.handleConfirmation(false)} color="primary">
+              {cancel}
             </Button>
-            <Button onClick={this.handleClose} color="primary" autoFocus>
-              Agree
+            <Button onClick={() => this.handleConfirmation(true)} color="primary" autoFocus>
+              {confirm}
             </Button>
           </DialogActions>
         </Dialog>
@@ -67,4 +86,4 @@ class AlertDialog extends React.Component {
   }
 }
 
-export default AlertDialog;
+export default withMobileDialog()(AlertDialog);

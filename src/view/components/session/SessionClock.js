@@ -16,11 +16,12 @@ import { withStyles } from '@material-ui/core/styles'
 // Helper functions to parse and format a number
 import { parseHHMMSS, formatDuration } from '../../../utils/helper'
 
-const styles = {
+const styles = theme => ({
   root: {
-    marginRight: 24
+    flex: '0 0 auto',
+    marginRight: theme.spacing.unit * 3
   }
-}
+})
 
 /**
  * Function that gets a number from the token context and render it as
