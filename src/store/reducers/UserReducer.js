@@ -33,10 +33,18 @@ const userReducer = (state = defaults.user, action) => {
 
     case FETCH_PROFILE_SUCCESS:
     case FETCH_PROFILE_UPDATE_SUCCESS:
-    case PROFILE_UPDATE_STATE:
       return {
         ...state,
         profile: action.payload
+      }
+
+    case PROFILE_UPDATE_STATE:
+      return {
+        ...state,
+        profile: {
+          ...state.profile,
+          ...action.payload
+        }
       }
 
     default:
