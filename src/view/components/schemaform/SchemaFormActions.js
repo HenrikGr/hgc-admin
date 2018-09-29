@@ -8,58 +8,73 @@
  */
 import React from 'react'
 import PropTypes from 'prop-types'
-import Tooltip from '@material-ui/core/Tooltip'
-import IconButton from '@material-ui/core/IconButton'
-import ClearIcon from '@material-ui/icons/Clear'
-import SaveIcon from '@material-ui/icons/Save'
-import DeleteIcon from '@material-ui/icons/Delete'
 
+// material-ui
+import Button from '@material-ui/core/Button/Button'
+import { withStyles } from '@material-ui/core/styles'
+
+// Form context
+import Form from '../../providers/context/Form'
+
+const styles = theme => ({
+  root: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    paddingLeft: theme.spacing.unit * 3,
+    paddingRight: theme.spacing.unit * 3
+  },
+  button: {
+    margin: theme.spacing.unit
+  }
+})
 
 /**
  * SchemaFormActions
- * @param isSelected
- * @param onSubmit
- * @param onRemove
- * @param onReset
  * @returns {*}
  * @constructor
  */
-function SchemaFormActions({ isSelected, onSubmit, onRemove, onReset }) {
-  return isSelected ? (
-    <React.Fragment>
-      <Tooltip title="Save">
-        <IconButton aria-label="Save record" onClick={onSubmit}>
-          <SaveIcon />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Delete">
-        <IconButton aria-label="Delete" onClick={onRemove}>
-          <DeleteIcon />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Clear">
-        <IconButton aria-label="Clear form" onClick={onReset}>
-          <ClearIcon />
-        </IconButton>
-      </Tooltip>
-    </React.Fragment>
-  ) : (
-    <Tooltip title="Create">
-      <IconButton aria-label="Create record" onClick={onSubmit}>
-        <SaveIcon />
-      </IconButton>
-    </Tooltip>
+function SchemaFormActions({ classes }) {
+  return (
+    <Form.Consumer>
+      {({ selectedId, onSubmit, onRemove, onReset }) => {
+        return selectedId !== '' ? (
+          <div className={classes.root}>
+            <Button className={classes.button} variant="raised" color="primary" onClick={onSubmit}>
+              Save
+            </Button>
+            <Button
+              className={classes.button}
+              variant="outlined"
+              color="secondary"
+              onClick={onRemove}
+            >
+              Delete
+            </Button>
+            <Button className={classes.button} variant="outlined" color="default" onClick={onReset}>
+              Reset
+            </Button>
+          </div>
+        ) : (
+          <div className={classes.root}>
+            <Button className={classes.button} variant="raised" color="primary" onClick={onSubmit}>
+              Save
+            </Button>
+          </div>
+        )
+      }}
+    </Form.Consumer>
   )
 }
 
 /**
- * Props API
+ * Property type check
+ * @type {Object}
  */
 SchemaFormActions.propTypes = {
-  isSelected: PropTypes.bool.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-  onRemove: PropTypes.func.isRequired,
-  onReset: PropTypes.func.isRequired
+  /**
+   * Classes, can be used to override css styles
+   */
+  classes: PropTypes.object.isRequired
 }
 
-export default SchemaFormActions
+export default withStyles(styles)(SchemaFormActions)

@@ -1,7 +1,6 @@
 /**
  * @prettier
- * @description:
- *
+ * @description: SchemaFormMappedFields
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
@@ -16,9 +15,13 @@ import SelectField from '../fields/SelectField'
 import { isEmpty } from '../../../utils/helper'
 
 /**
- * Mapped field
+ * SchemaFormMappedFields
  */
-export default class MappedFields extends React.PureComponent {
+export default class SchemaFormMappedFields extends React.PureComponent {
+  /**
+   * Property type check
+   * @type {Object}
+   */
   static propTypes = {
     entity: PropTypes.object.isRequired,
     uiModel: PropTypes.object.isRequired,
@@ -52,6 +55,10 @@ export default class MappedFields extends React.PureComponent {
     )
   }
 
+  /**
+   * Map fields according to the uiModel
+   * @returns {Array}
+   */
   getMappedFields = () => {
     const { uiModel } = this.props
     let fields = []

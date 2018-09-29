@@ -1,7 +1,6 @@
 /**
  * @prettier
  * @description:
- *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
@@ -15,9 +14,9 @@ import FormLabel from '@material-ui/core/FormLabel'
 import { withStyles } from '@material-ui/core/styles'
 
 // custom component
-import MappedFields from './MappedFields'
+import SchemaFormMappedFields from './SchemaFormMappedFields'
+import SchemaFormActions from './SchemaFormActions'
 import Form from '../../providers/context/Form'
-import Button from '@material-ui/core/Button/Button'
 
 const styles = {
   root: {
@@ -40,12 +39,10 @@ function SchemaForm({ classes }) {
     <Form.Consumer>
       {({ formLabel, uiModel, entity, onSubmit, onChange }) => {
         return (
-          <form className={classes.root} onSubmit={onSubmit}>
+          <form className={classes.root}>
             <FormLabel component="legend">{formLabel}</FormLabel>
-            <MappedFields uiModel={uiModel} entity={entity} onChange={onChange} />
-            <Button type="submit" variant="raised" color="primary">
-              Save
-            </Button>
+            <SchemaFormMappedFields uiModel={uiModel} entity={entity} onChange={onChange} />
+            <SchemaFormActions />
           </form>
         )
       }}
@@ -53,13 +50,15 @@ function SchemaForm({ classes }) {
   )
 }
 
+/**
+ * Property type check
+ * @type {Object}
+ */
 SchemaForm.propTypes = {
-  classes: PropTypes.object.isRequired,
-  formLabel: PropTypes.string,
-  uiModel: PropTypes.object,
-  entity: PropTypes.object,
-  onSubmit: PropTypes.func,
-  onChange: PropTypes.func,
+  /**
+   * Classes, can be used to override css styles
+   */
+  classes: PropTypes.object.isRequired
 }
 
 export default withStyles(styles)(SchemaForm)
