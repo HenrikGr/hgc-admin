@@ -21,7 +21,7 @@
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.5",
     "redux": "^4.0.0",
-    "worker-timers": "^4.0.47"
+    "worker-timers": "^4.0.51"
   },
   "devDependencies": {
     "enzyme": "^3.6.0",
