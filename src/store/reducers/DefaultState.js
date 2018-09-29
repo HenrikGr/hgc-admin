@@ -29,7 +29,6 @@ const defaults = {
     entities: []
   },
   clients: {
-    schema: clientSchemaService.getSchema(),
     selectedId: '',
     entity: clientSchemaService.getEntity(),
     entities: []
