@@ -12,11 +12,15 @@ import { connect } from 'react-redux'
 
 // Custom components
 import SchemaForm from '../components/schemaform/SchemaForm'
-import SchemaFormHeader from '../components/schemaform/SchemaFormHeader'
+import SchemaFormToolbar from '../components/schemaform/SchemaFormToolbar'
+import SchemaFormToolbarNavigator from '../components/schemaform/SchemaFormToolbarNavigator'
 import SchemaFormProvider from '../providers/SchemaFormProvider'
 
 // Action creators used to update clients store
 import clientAction from '../../store/actions/ClientsAction'
+
+// JSON schema service
+import clientSchemaService from '../../domain/schemas/Client'
 
 /**
  * Client page component
@@ -27,9 +31,9 @@ class ClientPage extends React.Component {
    */
   static propTypes = {
     /**
-     * Schema used to build the ui model
+     * Selected client id
      */
-    schema: PropTypes.object.isRequired,
+    selectedId: PropTypes.string.isRequired,
     /**
      * Selected entity
      */
@@ -121,13 +125,13 @@ class ClientPage extends React.Component {
    * @returns {*}
    */
   render() {
-    const { schema, entity, entities } = this.props
-
+    const { selectedId, entity, entities } = this.props
     return (
       <React.Fragment>
         <SchemaFormProvider
           formLabel="Client"
-          schema={schema}
+          schema={clientSchemaService.getSchema()}
+          selectedId={selectedId}
           entity={entity}
           entities={entities}
           onChange={this.handleChange}
@@ -136,9 +140,10 @@ class ClientPage extends React.Component {
           onReset={this.handleReset}
           onSelect={this.handleSelect}
         >
-          <SchemaFormHeader />
+          <SchemaFormToolbar>
+            <SchemaFormToolbarNavigator />
+          </SchemaFormToolbar>
           <SchemaForm />
-
         </SchemaFormProvider>
       </React.Fragment>
     )
@@ -146,7 +151,7 @@ class ClientPage extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  schema: state.clients.schema,
+  selectedId: state.clients.selectedId,
   entity: state.clients.entity,
   entities: state.clients.entities
 })
@@ -156,13 +161,13 @@ const mapDispatchToProps = dispatch => {
     find: qp => {
       dispatch(clientAction.getClients(qp))
     },
-    create: (entity) => {
+    create: entity => {
       dispatch(clientAction.createClient(entity))
     },
-    update: (id) => {
+    update: id => {
       dispatch(clientAction.updateClientById(id))
     },
-    remove: (id) => {
+    remove: id => {
       dispatch(clientAction.deleteClientById(id))
     },
     setSelected: entry => {
@@ -171,7 +176,7 @@ const mapDispatchToProps = dispatch => {
     updateState: entity => {
       dispatch(clientAction.updateState(entity))
     },
-    resetSelected: (defaultEntity) => {
+    resetSelected: defaultEntity => {
       dispatch(clientAction.resetSelected(defaultEntity))
     }
   }
