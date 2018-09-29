@@ -159,11 +159,12 @@ function updateState(value) {
 }
 
 /**
- * Interface constructor for clients action creators
+ * Interface constructor to client action creators
+ * @returns {object} - object with client actions
  * @constructor
  * @private
  */
-export const ClientActionFactory = () => {
+function ClientActionFactory() {
   return {
     getClients,
     createClient,
