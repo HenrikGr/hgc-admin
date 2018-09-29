@@ -26,7 +26,7 @@ class SchemaFormProvider extends React.PureComponent {
    * @type {Object}
    */
   static propTypes = {
-    schema: PropTypes.object.isRequired,
+    selectedId: PropTypes.string.isRequired,
     entity: PropTypes.object.isRequired,
     entities: PropTypes.array,
     onChange: PropTypes.func.isRequired,
@@ -49,6 +49,7 @@ class SchemaFormProvider extends React.PureComponent {
     // Set initial state
     this.state = {
       entity: {},
+      selectedId: '',
       uiModel: new UIModel(this.props.schema).getUIModel()
     }
   }
@@ -59,11 +60,10 @@ class SchemaFormProvider extends React.PureComponent {
    * @param prevState
    */
   componentDidUpdate(prevProps, prevState) {
-    console.log('ComponentDidUpdate')
     if (this.props.entity !== prevProps.entity) {
-      console.log('componentDidUpdate - new entity', this.props.entity._id)
       this.setState({
         entity: this.props.entity,
+        selectedId: this.props.selectedId
       })
     }
   }
@@ -113,13 +113,12 @@ class SchemaFormProvider extends React.PureComponent {
     }
   }
 
-
   /**
    * Render the component
    * @returns {*}
    */
   render() {
-    console.log('Form.Provider - render', this.props.entity._id)
+
     return (
       <Form.Provider
         value={{
