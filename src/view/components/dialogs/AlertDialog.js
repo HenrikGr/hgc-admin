@@ -1,13 +1,11 @@
 /**
- * Description
- *
+ * @prettier
+ * @description: AlertDialog
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
-
-// react
 import React from "react";
 import PropTypes from "prop-types";
 
@@ -17,73 +15,64 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+//import DialogTitle from "@material-ui/core/DialogTitle";
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 
 /**
- * AlertDialog component
+ * AlertDialog controlled component
+ * @param open
+ * @param message
+ * @param onClose
+ * @param onResponse
+ * @returns {*}
+ * @constructor
  */
-class AlertDialog extends React.Component {
-  static propTypes = {
-    open: PropTypes.bool.isRequired,
-    title: PropTypes.string.isRequired,
-    message: PropTypes.string.isRequired,
-    cancel: PropTypes.string.isRequired,
-    confirm: PropTypes.string.isRequired,
-    onResponse: PropTypes.func.isRequired,
-  };
+function AlertDialog({ open, message, onClose, onResponse }) {
+  return(
+    <Dialog
+      open={open}
+      onClose={onClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          {message}
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => onResponse(false)} color="primary">
+          Disagree
+        </Button>
+        <Button onClick={() => onResponse(true)} color="primary" autoFocus>
+          Accept
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
+}
 
-  static defaultProps = {
-    title: 'Title',
-    message: 'message ....?',
-    cancel: 'Disagree',
-    confirm: 'Accept',
-  };
-
-  state = {
-    open: false
-  };
-
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
-  handleConfirmation = (confirm) => {
-    this.props.onResponse(confirm);
-    this.setState({ open: false });
-  };
-
-  render() {
-    const { open, title, message, cancel, confirm } = this.props;
-
-    return (
-      <div>
-        <Dialog
-          open={open}
-          onClose={this.handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            {title}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              {message}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => this.handleConfirmation(false)} color="primary">
-              {cancel}
-            </Button>
-            <Button onClick={() => this.handleConfirmation(true)} color="primary" autoFocus>
-              {confirm}
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </div>
-    );
-  }
+/**
+ * Property type check
+ * @type {Object}
+ */
+AlertDialog.propTypes = {
+  /**
+   * Flag to open dialog
+   */
+  open: PropTypes.bool.isRequired,
+  /**
+   * Message
+   */
+  message: PropTypes.string.isRequired,
+  /**
+   * onClose event callback
+   */
+  onClose: PropTypes.func.isRequired,
+  /**
+   * onResponse callback
+   */
+  onResponse: PropTypes.func.isRequired,
 }
 
 export default withMobileDialog()(AlertDialog);
