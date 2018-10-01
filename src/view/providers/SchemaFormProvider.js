@@ -9,14 +9,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-// SchemaForm
+// SchemaForm context
 import Form from './context/Form'
 
+// Schema uiModel and Entity
 import UIModel from '../../domain/ui-service/UIModel'
 import Entity from '../../domain/schemas/entity/Entity'
 
 /**
- *
+ * SchemaFormProvider
  * @class SchemaFormProvider
  * @public
  */
@@ -26,13 +27,37 @@ class SchemaFormProvider extends React.PureComponent {
    * @type {Object}
    */
   static propTypes = {
+    /**
+     * Selected client id
+     */
     selectedId: PropTypes.string.isRequired,
+    /**
+     * Selected entity
+     */
     entity: PropTypes.object.isRequired,
-    entities: PropTypes.array,
+    /**
+     * Entity array
+     */
+    entities: PropTypes.array.isRequired,
+    /**
+     * onChange callback
+     */
     onChange: PropTypes.func.isRequired,
+    /**
+     * onSubmit callback
+     */
     onSubmit: PropTypes.func.isRequired,
+    /**
+     * onRemove callback
+     */
     onRemove: PropTypes.func.isRequired,
+    /**
+     * onReset callback
+     */
     onReset: PropTypes.func.isRequired,
+    /**
+     * onSelect callback
+     */
     onSelect: PropTypes.func.isRequired
   }
 
@@ -43,71 +68,67 @@ class SchemaFormProvider extends React.PureComponent {
   constructor(props) {
     super(props)
 
-    // Create a default entity based on the schema
+    // Create a default entity and uiModel based on the schema
     this.defaultEntity = new Entity(this.props.schema).getEntity()
+    this.uiModel = new UIModel(this.props.schema).getUIModel()
+  }
 
-    // Set initial state
-    this.state = {
-      entity: {},
-      selectedId: '',
-      uiModel: new UIModel(this.props.schema).getUIModel()
+  /**
+   * Event handler for input updates - update global state
+   * @param prop
+   * @returns {Function}
+   */
+  handleChange = prop => event => {
+    const { onChange } = this.props
+    if (typeof onChange === 'function') {
+      onChange(prop, event.target.value)
     }
   }
 
   /**
-   * Set received model in state
-   * @param prevProps
-   * @param prevState
+   * Event handler for submitting form data
+   * @param event
+   * @returns {Function}
    */
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.entity !== prevProps.entity) {
-      this.setState({
-        entity: this.props.entity,
-        selectedId: this.props.selectedId
-      })
-    }
-  }
-
-  handleChange = prop => event => {
-    const { onChange } = this.props
-    let newEntity = { ...this.state.entity }
-    newEntity[prop] = event.target.value
-    this.setState({ entity: newEntity })
-
-    if (typeof onChange === 'function') {
-      onChange(newEntity)
-    }
-  }
-
   handleSubmit = event => {
     const { onSubmit } = this.props
     event.preventDefault()
-
     if (typeof onSubmit === 'function') {
-      onSubmit(this.state.entity)
+      onSubmit()
     }
   }
 
+  /**
+   * Event handler to reset form with schema default values
+   * @returns {Function}
+   */
   handleReset = () => {
     const { onReset } = this.props
-    this.setState({ entity: this.defaultEntity })
-
     if (typeof onReset === 'function') {
       onReset(this.defaultEntity)
     }
   }
 
+  /**
+   * Event handler to handel remove
+   * @returns {Function}
+   */
   handleRemove = () => {
     const { onRemove } = this.props
     if (typeof onRemove === 'function') {
-      onRemove(this.state.entity)
+      onRemove()
     }
   }
 
+  /**
+   * Event handler to provide selected entity
+   * @param event
+   * @param value
+   * @returns {Function}
+   */
   handleSelect = (event, value) => {
     const { entities, onSelect } = this.props
     const selectedEntity = entities.filter(entity => entity._id === value)
-
     if (typeof onSelect === 'function') {
       onSelect(...selectedEntity)
     }
@@ -118,12 +139,13 @@ class SchemaFormProvider extends React.PureComponent {
    * @returns {*}
    */
   render() {
-
     return (
       <Form.Provider
         value={{
-          ...this.state,
+          selectedId: this.props.entity._id ? this.props.entity._id : '',
+          entity: this.props.entity,
           entities: this.props.entities,
+          uiModel: this.uiModel,
           formLabel: this.props.formLabel,
           onChange: this.handleChange,
           onSubmit: this.handleSubmit,
