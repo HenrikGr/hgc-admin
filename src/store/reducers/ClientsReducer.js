@@ -43,7 +43,7 @@ const clientsReducer = (state = defaults.clients, action) => {
         ...state,
         selectedId: action.payload._id,
         entity: action.payload,
-        entities: [...state.entities, ...action.payload]
+        entities: [...state.entities, action.payload]
       }
 
     case FETCH_CLIENT_DELETE_SUCCESS:
