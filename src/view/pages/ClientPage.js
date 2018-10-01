@@ -25,9 +25,10 @@ import clientSchemaService from '../../domain/schemas/Client'
 /**
  * Client page component
  */
-class ClientPage extends React.Component {
+class ClientPage extends React.PureComponent {
   /**
-   * Props API
+   * Property type check
+   * @type {Object}
    */
   static propTypes = {
     /**
@@ -80,36 +81,26 @@ class ClientPage extends React.Component {
   }
 
   /**
-   * Update global state with edited entity
-   * @param entity
+   * Update global state
+   * @param prop
+   * @param value
    */
-  handleChange = entity => {
+  handleChange = (prop, value) => {
+    let entity = { ...this.props.entity }
+    entity[prop] = value
     this.props.updateState(entity)
   }
 
   /**
    * Create a new or update entity
    * If the entity has an _id prop it should be updated otherwise it is a new entity
-   * @param entity
    */
-  handleSubmit = entity => {
-    if (entity._id) {
-      this.props.update(entity._id)
+  handleSubmit = () => {
+    if (this.props.entity._id) {
+      this.props.update()
     } else {
-      this.props.create(entity)
+      this.props.create()
     }
-  }
-
-  /**
-   * Remove entity by id
-   * @param entity
-   */
-  handleRemove = entity => {
-    this.props.remove(entity._id)
-  }
-
-  handleSelect = entity => {
-    this.props.setSelected(entity)
   }
 
   /**
@@ -118,6 +109,21 @@ class ClientPage extends React.Component {
    */
   handleReset = defaultEntity => {
     this.props.resetSelected(defaultEntity)
+  }
+
+  /**
+   * Remove entity
+   */
+  handleRemove = () => {
+    this.props.remove()
+  }
+
+  /**
+   * Handle selected entity
+   * @param entity
+   */
+  handleSelect = entity => {
+    this.props.setSelected(entity)
   }
 
   /**
@@ -150,25 +156,35 @@ class ClientPage extends React.Component {
   }
 }
 
+/**
+ * Map state to properties
+ * @param state
+ * @returns {Object}
+ */
 const mapStateToProps = state => ({
   selectedId: state.clients.selectedId,
   entity: state.clients.entity,
   entities: state.clients.entities
 })
 
+/**
+ * Map action creators to properties
+ * @param dispatch
+ * @returns {Object}
+ */
 const mapDispatchToProps = dispatch => {
   return {
     find: qp => {
-      dispatch(clientAction.getClients(qp))
+      dispatch(clientAction.find(qp))
     },
-    create: entity => {
-      dispatch(clientAction.createClient(entity))
+    create: () => {
+      dispatch(clientAction.create())
     },
-    update: id => {
-      dispatch(clientAction.updateClientById(id))
+    update: () => {
+      dispatch(clientAction.update())
     },
-    remove: id => {
-      dispatch(clientAction.deleteClientById(id))
+    remove: () => {
+      dispatch(clientAction.remove())
     },
     setSelected: entry => {
       dispatch(clientAction.setSelected(entry))
