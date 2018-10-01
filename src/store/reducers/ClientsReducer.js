@@ -12,14 +12,10 @@ import {
   FETCH_CLIENT_CREATE_SUCCESS,
   FETCH_CLIENT_UPDATE_SUCCESS,
   FETCH_CLIENT_DELETE_SUCCESS,
-
   CLIENT_SET_SELECTED,
   CLIENT_RESET_SELECTED,
   CLIENT_UPDATE_STATE
 } from '../actions/constants'
-
-// Array helper functions
-//import { appendElement, removeById, updateElement } from '../../utils/helper'
 
 /**
  * Clients state branch reducer
