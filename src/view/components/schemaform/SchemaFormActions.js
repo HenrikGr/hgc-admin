@@ -10,8 +10,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 // material-ui
-import Button from '@material-ui/core/Button/Button'
 import { withStyles } from '@material-ui/core/styles'
+
+import DeleteButton from '../buttons/DeleteButton'
+import SaveButton from '../buttons/SaveButton'
+import ResetButton from '../buttons/ResetButton'
 
 // Form context
 import Form from '../../providers/context/Form'
@@ -22,9 +25,6 @@ const styles = theme => ({
     justifyContent: 'flex-end',
     paddingLeft: theme.spacing.unit * 3,
     paddingRight: theme.spacing.unit * 3
-  },
-  button: {
-    margin: theme.spacing.unit
   }
 })
 
@@ -39,26 +39,13 @@ function SchemaFormActions({ classes }) {
       {({ selectedId, onSubmit, onRemove, onReset }) => {
         return selectedId !== '' ? (
           <div className={classes.root}>
-            <Button className={classes.button} variant="raised" color="primary" onClick={onSubmit}>
-              Save
-            </Button>
-            <Button
-              className={classes.button}
-              variant="outlined"
-              color="secondary"
-              onClick={onRemove}
-            >
-              Delete
-            </Button>
-            <Button className={classes.button} variant="outlined" color="default" onClick={onReset}>
-              Reset
-            </Button>
+            <SaveButton onSubmit={onSubmit} />
+            <DeleteButton message="Delete this client?" onRemove={onRemove} />
+            <ResetButton onReset={onReset} />
           </div>
         ) : (
           <div className={classes.root}>
-            <Button className={classes.button} variant="raised" color="primary" onClick={onSubmit}>
-              Save
-            </Button>
+            <SaveButton onSubmit={onSubmit} />
           </div>
         )
       }}
