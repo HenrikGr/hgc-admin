@@ -1,6 +1,6 @@
 /**
  * @prettier
- * @description: ScrollableTabs component for selecting an item from a set of items
+ * @description: ScrollableTabs component for selecting an entity from a set of entities
  *
  * The component is a controlled component which means you need to pass in the logic
  * for selection.
@@ -14,27 +14,18 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
-import { withStyles } from '@material-ui/core/styles'
 
-const styles = {
-  container: {
-    //maxWidth: '600px',
-    minWidth: '200px'
-  }
-}
 /**
  * ScrollableTabs
- * @param classes
- * @param items
+ * @param entities
  * @param selectedId
  * @param onSelect
  * @returns {*}
  * @constructor
  */
-function ScrollableTabs({ classes, entities, selectedId, onSelect }) {
+function ScrollableTabs({ entities, selectedId, onSelect }) {
   return (
     <Tabs
-      classes={{ flexContainer: classes.container }}
       value={selectedId === '' ? false : selectedId}
       onChange={onSelect}
       indicatorColor="secondary"
@@ -48,13 +39,22 @@ function ScrollableTabs({ classes, entities, selectedId, onSelect }) {
 }
 
 /**
- * Props API
+ * Property type check
+ * @type {Object}
  */
 ScrollableTabs.propTypes = {
-  classes: PropTypes.object,
+  /**
+   * Entities to select in the tabs
+   */
   entities: PropTypes.array.isRequired,
+  /**
+   * SelectedId of selectedId entity
+   */
   selectedId: PropTypes.string.isRequired,
+  /**
+   * Callback function
+   */
   onSelect: PropTypes.func.isRequired
 }
 
-export default withStyles(styles)(ScrollableTabs)
+export default ScrollableTabs
