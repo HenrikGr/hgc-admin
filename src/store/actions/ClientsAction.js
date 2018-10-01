@@ -17,7 +17,6 @@ import {
   RESET_ERROR,
   FETCH_CLIENTS_SUCCESS,
   FETCH_CLIENT_CREATE_SUCCESS,
-
   FETCH_CLIENT_UPDATE_SUCCESS,
   FETCH_CLIENT_DELETE_SUCCESS,
   CLIENT_SET_SELECTED,
@@ -30,7 +29,7 @@ import {
  * @returns {Function}
  * @public
  */
-function createClient() {
+function create() {
   return function(dispatch, getState) {
     const { entity } = getState().clients
     const errors = clientSchema.validate(entity)
@@ -57,7 +56,7 @@ function createClient() {
  * @returns {Function}
  * @public
  */
-function getClients(params) {
+function find(params) {
   return function(dispatch) {
     dispatch({ type: FETCH_START })
     clientAPI
@@ -77,7 +76,7 @@ function getClients(params) {
  * @returns {Function}
  * @public
  */
-function updateClientById() {
+function update() {
   return function(dispatch, getState) {
     const { selectedId, entity } = getState().clients
     const errors = clientSchema.validate(entity)
@@ -100,12 +99,12 @@ function updateClientById() {
 
 /**
  * Action creator - delete client by id
- * @param selectedId
  * @returns {Function}
  * @public
  */
-function deleteClientById(selectedId) {
-  return function(dispatch) {
+function remove() {
+  return function(dispatch, getState) {
+    const { selectedId } = getState().clients
     dispatch({ type: FETCH_START })
     clientAPI
       .deleteById(selectedId)
@@ -166,10 +165,10 @@ function updateState(value) {
  */
 function ClientActionFactory() {
   return {
-    getClients,
-    createClient,
-    updateClientById,
-    deleteClientById,
+    find,
+    create,
+    update,
+    remove,
     resetError,
     setSelected,
     updateState,
