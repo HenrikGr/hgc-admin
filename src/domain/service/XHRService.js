@@ -1,6 +1,9 @@
 /**
  * @prettier
  * @description: XHR Service, using axios
+ *
+ * The module export a new instance to be reused throughout the application
+ *
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
@@ -9,6 +12,12 @@
 
 // Use axios for xhr calls
 import axios from 'axios'
+
+// Options for the factory
+const options = {
+  baseURL: process.env.REACT_APP_API_URL,
+  contentType: 'application/x-www-form-urlencoded'
+}
 
 /**
  * AXIOS default error handler
@@ -35,26 +44,23 @@ export const errorHandler = error => {
  * XHR Service factory
  * @constructor
  */
-function XHRServiceFactory() {
-  let instance = null
-  let baseURL = process.env.REACT_APP_API_URL
-  let contentType = 'application/x-www-form-urlencoded'
+function XHRServiceFactory(options) {
+  this.instance = axios.create({ baseURL: options.baseURL })
+  this.instance.defaults.headers.post['Content-Type'] = options.contentType
 
   return {
-    getInstance() {
-      instance = axios.create({ baseURL })
-      instance.defaults.headers.post['Content-Type'] = contentType
-      return instance
+    getInstance: () => {
+      return this.instance
     },
-    setAuthorizationHeader(token) {
+    setAuthorizationHeader: token => {
       const { access_token } = token
-      instance.defaults.headers.common['Authorization'] = 'Bearer ' + access_token
+      this.instance.defaults.headers.common['Authorization'] = 'Bearer ' + access_token
     },
-    removeAuthorizationHeader() {
-      instance.defaults.headers.common['Authorization'] = ''
-    }
+    removeAuthorizationHeader: () => {
+      this.instance.defaults.headers.common['Authorization'] = ''
+    },
   }
 }
 
-// Export interface
-export default new XHRServiceFactory()
+// Export an instance of the XHR services
+export default new XHRServiceFactory(options)
