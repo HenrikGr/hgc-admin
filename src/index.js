@@ -6,9 +6,8 @@
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
-
-// Must be first import statement in the app.
-// import './utils/polyfills.js'
+//import './polyfills'
+import './index.css'
 import React from 'react'
 import { render } from 'react-dom'
 import store from './store/index'
