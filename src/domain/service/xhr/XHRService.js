@@ -11,7 +11,8 @@
 // Use axios for xhr calls
 import axios from 'axios'
 import qs from 'qs'
-import Entity from '../../schemas/entity/Entity'
+import JSONSchema from '../../schemas/entity/JSONSchema'
+import config from './config'
 
 /**
  * XHRService class
@@ -19,20 +20,17 @@ import Entity from '../../schemas/entity/Entity'
  * @constructor
  * @public
  */
-export default class XHRService {
-  constructor(
-    {
-      baseURL,
-      contentType = 'application/x-www-form-urlencoded',
-      validateResponses = true
-    },
-    schema
-  ) {
+class XHRService {
+  constructor({ baseURL, contentType = 'application/x-www-form-urlencoded', validateResponses = true }) {
     this.instance = axios.create({ baseURL })
     this.instance.defaults.headers.post['Content-Type'] = contentType
     this.validateResponses = validateResponses
+    this.schemaService = null
+  }
+
+  addSchema(schema) {
     if (this.validateResponses) {
-      this.schemaService = new Entity(schema)
+      this.schemaService = new JSONSchema(schema)
     }
   }
 
@@ -219,3 +217,5 @@ export default class XHRService {
   }
 
 }
+
+export default new XHRService(config)

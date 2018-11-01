@@ -6,7 +6,7 @@
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
-import Entity from '../schemas/entity/Entity'
+import Entity from './Entity'
 
 /**
  * UIModel class

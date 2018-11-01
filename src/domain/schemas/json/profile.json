@@ -13,17 +13,21 @@
     "firstName": {
       "title": "First name",
       "type": "string",
-      "default": ""
+      "default": "",
+      "isNotEmpty": true
     },
     "lastName": {
       "title": "Last name",
       "type": "string",
-      "default": ""
+      "default": "",
+      "isNotEmpty": true
     },
     "email": {
       "title": "Email",
       "type": "string",
-      "default": ""
+      "default": "",
+      "format": "email",
+      "isNotEmpty": true
     },
     "phone": {
       "title": "Phone",

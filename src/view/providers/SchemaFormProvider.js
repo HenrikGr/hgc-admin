@@ -14,7 +14,7 @@ import Form from './context/Form'
 
 // Schema uiModel and Entity
 import UIModel from '../../domain/ui-service/UIModel'
-import Entity from '../../domain/schemas/entity/Entity'
+import Entity from '../../domain/ui-service/Entity'
 
 /**
  * SchemaFormProvider

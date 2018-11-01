@@ -53,8 +53,8 @@ function XHRServiceFactory(options) {
       return this.instance
     },
     setAuthorizationHeader: token => {
-      const { access_token } = token
-      this.instance.defaults.headers.common['Authorization'] = 'Bearer ' + access_token
+      const { access_token, token_type } = token
+      this.instance.defaults.headers.common['Authorization'] = `${token_type} ${access_token}`
     },
     removeAuthorizationHeader: () => {
       this.instance.defaults.headers.common['Authorization'] = ''

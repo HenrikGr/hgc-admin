@@ -7,11 +7,11 @@
  * @license: The MIT License (MIT)
  */
 import Ajv from 'ajv'
-import { isNotEmpty, isNotEmptyArray, isPassword } from './customKeywords'
-import { EntityValidationError } from './ValidationException'
-import joinName from '../../ui-service/joinName'
+import { isNotEmpty, isNotEmptyArray, isPassword } from '../schemas/entity/customKeywords'
+import { EntityValidationError } from '../schemas/entity/ValidationException'
+import joinName from './joinName'
 import invariant from 'fbjs/lib/invariant'
-import resolveRef from '../../ui-service/resolveRef'
+import resolveRef from './resolveRef'
 
 /**
  * Entity class

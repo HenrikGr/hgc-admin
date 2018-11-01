@@ -48,12 +48,6 @@ class LoginPage extends React.PureComponent {
      * @private
      */
     authenticate: PropTypes.func.isRequired,
-
-    /**
-     * Location from React Router
-     * @private
-     */
-    location: PropTypes.object
   }
 
   /**

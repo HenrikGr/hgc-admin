@@ -7,7 +7,8 @@
  * @license: The MIT License (MIT)
  */
 import React from 'react'
-import ScrollableTabs from '../tabs/ScrollableTabs'
+import Tab from '@material-ui/core/Tab/Tab'
+import Tabs from '@material-ui/core/Tabs/Tabs'
 import Form from '../../providers/context/Form'
 
 /**
@@ -19,7 +20,21 @@ function SchemaFormToolbarNavigator() {
   return (
     <Form.Consumer>
       {({ entities, selectedId, entity, onSelect }) => {
-        return <ScrollableTabs entities={entities} selectedId={selectedId} onSelect={onSelect} />
+        return (
+          <Tabs
+            value={selectedId === '' ? false : selectedId}
+            onChange={onSelect}
+            indicatorColor='secondary'
+            textColor='inherit'
+            scrollable
+            scrollButtons={entities.length > 4 ? 'auto' : 'off'}
+          >
+            {entities &&
+              entities.map((entity, index) => (
+                <Tab key={index} label={entity.name} value={entity._id} />
+              ))}
+          </Tabs>
+        )
       }}
     </Form.Consumer>
   )

@@ -12,12 +12,14 @@ import React from 'react'
 import { render } from 'react-dom'
 import store from './store/index'
 import App from './App'
-// import registerServiceWorker from './registerServiceWorker';
+import * as serviceWorker from './serviceWorker'
 
 /**
  * Render the App
  */
 render(<App store={store} />, document.getElementById('root'))
 
-// TODO: Implement the service worker to cache assets
-//registerServiceWorker();
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: http://bit.ly/2vJdu84
+serviceWorker.unregister();

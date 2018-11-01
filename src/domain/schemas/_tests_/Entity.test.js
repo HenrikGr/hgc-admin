@@ -1,5 +1,5 @@
 
-import Entity from '../entity/Entity';
+import Entity from '../../ui-service/Entity';
 import profileSchema from '../json/profile';
 
 /**

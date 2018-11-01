@@ -7,9 +7,11 @@
  * @license: The MIT License (MIT)
  */
 import credentialsSchemaService from '../../domain/schemas/Credentials'
+import tokenSchemaService from '../../domain/schemas/Token'
 import API from '../../domain/service/Token'
 import {
   VALIDATION_ERROR,
+  FETCH_VALIDATION_ERROR,
   FETCH_START,
   FETCH_ERROR,
   FETCH_SUCCESS,
@@ -34,9 +36,15 @@ function get(credentials) {
       dispatch({ type: FETCH_START })
       return API.post(credentials)
         .then(json => {
-          dispatch({ type: FETCH_SUCCESS })
-          dispatch({ type: FETCH_TOKEN_SUCCESS, payload: json })
-          return Promise.resolve(json)
+          const error = tokenSchemaService.validate(json)
+          if (error.message) {
+            dispatch({ type: FETCH_VALIDATION_ERROR, payload: error })
+            return Promise.reject(error)
+          } else {
+            dispatch({ type: FETCH_SUCCESS })
+            dispatch({ type: FETCH_TOKEN_SUCCESS, payload: json })
+            return Promise.resolve(json)
+          }
         })
         .catch(error => {
           dispatch({ type: FETCH_ERROR, payload: error })
@@ -54,17 +62,23 @@ function get(credentials) {
 function refresh() {
   return function(dispatch, getState) {
     const { refresh_token } = getState().user.token
-    dispatch({ type: FETCH_START })
-    return API.refresh(refresh_token)
-      .then(json => {
-        dispatch({ type: FETCH_SUCCESS })
-        dispatch({ type: FETCH_REFRESH_TOKEN_SUCCESS, payload: json })
-        return Promise.resolve(json)
-      })
-      .catch(error => {
-        dispatch({ type: FETCH_ERROR, payload: error })
-        return Promise.reject(error)
-      })
+    const error = tokenSchemaService.validate(refresh_token)
+    if (error.message) {
+      dispatch({ type: FETCH_VALIDATION_ERROR, payload: error })
+      return Promise.reject(error)
+    } else {
+      dispatch({ type: FETCH_START })
+      return API.refresh(refresh_token)
+        .then(json => {
+          dispatch({ type: FETCH_SUCCESS })
+          dispatch({ type: FETCH_REFRESH_TOKEN_SUCCESS, payload: json })
+          return Promise.resolve(json)
+        })
+        .catch(error => {
+          dispatch({ type: FETCH_ERROR, payload: error })
+          return Promise.reject(error)
+        })
+    }
   }
 }
 

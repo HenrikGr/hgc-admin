@@ -6,9 +6,10 @@
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
-//import API from '../../domain/service/xhr/Profile'
+import profileSchemaService from '../../domain/schemas/Profile'
 import API from '../../domain/service/Profile'
 import {
+  VALIDATION_ERROR,
   FETCH_START,
   FETCH_ERROR,
   FETCH_SUCCESS,
@@ -17,6 +18,7 @@ import {
   FETCH_PROFILE_UPDATE_SUCCESS,
   PROFILE_UPDATE_STATE
 } from '../actions/constants'
+
 
 /**
  * Get profile information for the current user via profile service API
@@ -47,15 +49,21 @@ function getMe() {
 function update() {
   return (dispatch, getState) => {
     const { profile } = getState().user
-    dispatch({ type: FETCH_START })
-    return API.updateMe(profile)
-      .then(json => {
-        dispatch({ type: FETCH_SUCCESS })
-        dispatch({ type: FETCH_PROFILE_UPDATE_SUCCESS, payload: json })
-      })
-      .catch(error => {
-        dispatch({ type: FETCH_ERROR, payload: error })
-      })
+    const error = profileSchemaService.validate(profile)
+    if (error.message) {
+      dispatch({ type: VALIDATION_ERROR, payload: error })
+      //return Promise.reject(error)
+    } else {
+      dispatch({ type: FETCH_START })
+      return API.updateMe(profile)
+        .then(json => {
+          dispatch({ type: FETCH_SUCCESS })
+          dispatch({ type: FETCH_PROFILE_UPDATE_SUCCESS, payload: json })
+        })
+        .catch(error => {
+          dispatch({ type: FETCH_ERROR, payload: error })
+        })
+    }
   }
 }
 

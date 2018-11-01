@@ -10,10 +10,10 @@ const API_CLIENT_ID = process.env.REACT_APP_CLIENT_ID
  * @constructor
  * @public
  */
-class TokenAPI extends XHRService {
+class TokenAPI {
   constructor(config, schema, clientId) {
-    super(config, schema)
     this.clientId = clientId
+
   }
 
   /**
