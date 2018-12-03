@@ -11,10 +11,13 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 // Custom components
-import SchemaForm from '../components/schemaform/SchemaForm'
-import SchemaFormToolbar from '../components/schemaform/SchemaFormToolbar'
-import SchemaFormToolbarNavigator from '../components/schemaform/SchemaFormToolbarNavigator'
-import SchemaFormProvider from '../providers/SchemaFormProvider'
+import Form from '../components/schemaform/Form'
+import TabsNavigator from '../components/navigator/TabsNavigator'
+import ToolbarActions from '../components/toolbars/ToolbarActions'
+
+// context providers
+import FormProvider from '../providers/FormProvider'
+import NavigationProvider from '../providers/NavigationProvider'
 
 // Action creators used to update clients store
 import clientAction from '../../store/actions/ClientsAction'
@@ -119,38 +122,36 @@ class ClientPage extends React.PureComponent {
   }
 
   /**
-   * Handle selected entity
-   * @param entity
-   */
-  handleSelect = entity => {
-    this.props.setSelected(entity)
-  }
-
-  /**
    * Render component
    * @returns {*}
    */
   render() {
     const { selectedId, entity, entities } = this.props
+
     return (
       <React.Fragment>
-        <SchemaFormProvider
-          formLabel="Client"
-          schema={clientSchemaService.getSchema()}
+        <NavigationProvider
           selectedId={selectedId}
           entity={entity}
           entities={entities}
+          onSelect={this.props.setSelected}
+        >
+          <TabsNavigator variant="dense" />
+        </NavigationProvider>
+
+        <ToolbarActions entity={entity}/>
+
+        <FormProvider
+          formLabel="Client"
+          entity={entity}
           onChange={this.handleChange}
           onSubmit={this.handleSubmit}
           onRemove={this.handleRemove}
           onReset={this.handleReset}
-          onSelect={this.handleSelect}
+          schema={clientSchemaService.getSchema()}
         >
-          <SchemaFormToolbar>
-            <SchemaFormToolbarNavigator />
-          </SchemaFormToolbar>
-          <SchemaForm />
-        </SchemaFormProvider>
+          <Form />
+        </FormProvider>
       </React.Fragment>
     )
   }

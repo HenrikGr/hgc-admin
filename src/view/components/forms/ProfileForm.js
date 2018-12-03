@@ -58,7 +58,7 @@ function ProfileForm({ classes, formLabel, entity, disableSubmit, onChange, onSu
         <Button
           disabled={disableSubmit}
           type="submit"
-          variant="raised"
+          variant="contained"
           color="primary"
           className={classes.button}
         >

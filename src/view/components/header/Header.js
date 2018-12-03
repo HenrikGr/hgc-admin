@@ -38,7 +38,7 @@ function Header({ classes, title }) {
     <AppBar classes={{ root: classes.root }} position="fixed">
       <Toolbar>
         <HeaderIcon />
-        <Typography className={classes.title} variant="title" color="inherit">
+        <Typography className={classes.title} variant="h6" color="inherit">
           {title}
         </Typography>
         <SessionCountDown autoRefresh={true} />

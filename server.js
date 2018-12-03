@@ -7,11 +7,15 @@
  * @license: The MIT License (MIT)
  */
 const express = require('express')
+const helmet = require('helmet')
 const cfenv = require('cfenv')
 const appEnv = cfenv.getAppEnv()
 
 // Create our Express application
 const app = express()
+
+// Use helmet
+app.use(helmet())
 
 // Serve static resources from build directory
 app.use(express.static('./build'))

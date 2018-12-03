@@ -94,6 +94,36 @@ function deleteById(id) {
 }
 
 /**
+ * Find secrets by client name
+ * @param {string} name - name of client
+ * @returns {*|Promise<T | never>}
+ */
+function findSecretsByName(name) {
+  return XHR.get('/api/clients/secret/' + name)
+    .then(response => {
+      return Promise.resolve(response.data)
+    })
+    .catch(error => {
+      return Promise.reject(errorHandler(error))
+    })
+}
+
+/**
+ * Generate secret by name
+ * @param {string} name - name of client
+ * @returns {Promise<any | never>}
+ */
+function generateSecretsByName(name) {
+  return XHR.patch('/api/clients/secret/' + name)
+    .then(response => {
+      return Promise.resolve(response.data)
+    })
+    .catch(error => {
+      return Promise.reject(errorHandler(error))
+    })
+}
+
+/**
  * Interface constructor for the client api service
  * @constructor
  * @public
@@ -103,7 +133,9 @@ function ClientAPIFactory() {
     create,
     findByQuery,
     updateById,
-    deleteById
+    deleteById,
+    findSecretsByName,
+    generateSecretsByName
   }
 }
 

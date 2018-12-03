@@ -97,9 +97,7 @@ class UsersPage extends React.Component {
    * Get data on mount but only if we have not already loaded them
    */
   componentDidMount() {
-    if (this.props.items.length === 0) {
-      this.props.find({ page: 0, sort: 'username' })
-    }
+    this.props.find({ page: 0, sort: 'username' })
   }
 
   render() {

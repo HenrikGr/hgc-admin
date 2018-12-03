@@ -65,7 +65,7 @@ class HeaderMenu extends React.PureComponent {
     return !context.isAuth ? (
       <Button
         component={LogInLink}
-        variant="raised"
+        variant="contained"
         color="secondary"
       >
         Login

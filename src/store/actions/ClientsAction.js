@@ -63,7 +63,7 @@ function find(params) {
       .findByQuery(params)
       .then(json => {
         dispatch({ type: FETCH_SUCCESS })
-        dispatch({ type: FETCH_CLIENTS_SUCCESS, payload: json.docs })
+        dispatch({ type: FETCH_CLIENTS_SUCCESS, payload: json.data })
       })
       .catch(errors => {
         dispatch({ type: FETCH_ERROR, payload: errors })

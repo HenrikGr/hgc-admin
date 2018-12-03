@@ -15,7 +15,8 @@ import { Provider } from 'react-redux'
 import withTheme from './view/theme/withTheme'
 
 // Layout components
-import DefaultLayout, { AuthenticatedLayout } from './view/layout/DefaultLayout'
+import DefaultLayout from './view/layout/DefaultLayout'
+import AuthenticatedLayout from './view/layout/AuthenticatedLayout'
 
 /**
  * Async loading components

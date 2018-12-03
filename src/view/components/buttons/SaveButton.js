@@ -64,7 +64,7 @@ SaveButton.propTypes = {
  * @type {Object}
  */
 SaveButton.defaultProps = {
-  variant: 'raised',
+  variant: 'contained',
   color: 'primary'
 }
 

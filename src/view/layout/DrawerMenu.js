@@ -24,6 +24,7 @@ import { ListItemLink } from '../components/links/index'
 const styles = theme => ({
   drawerPaper: {
     position: 'relative',
+    marginTop: '-64px',
     height: '100vh' // 100% of the viewport height
   },
   toolbar: theme.mixins.toolbar,

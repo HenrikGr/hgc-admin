@@ -32,7 +32,7 @@ const styles = theme => ({
  */
 function SessionClock({ classes, expiresIn }) {
   return (
-    <Typography className={classes.root} variant="title" color="inherit">
+    <Typography className={classes.root} variant="h6" color="inherit">
       {formatDuration(parseHHMMSS(expiresIn))}
     </Typography>
   )

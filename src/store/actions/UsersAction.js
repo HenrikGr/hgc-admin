@@ -35,7 +35,7 @@ function getUsers(params) {
       .findByQuery(params)
       .then(json => {
         dispatch({ type: FETCH_SUCCESS })
-        dispatch({ type: USERS_GET_SUCCESS, payload: json.docs })
+        dispatch({ type: USERS_GET_SUCCESS, payload: json.data })
       })
       .catch(err => {
         dispatch({ type: FETCH_ERROR, payload: err })

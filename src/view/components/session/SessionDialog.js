@@ -91,7 +91,7 @@ class SessionDialog extends React.PureComponent {
         open={openDlg}
       >
         <div style={getModalStyle()} className={classes.paper}>
-          <Typography variant="title" id="refresh-dialog-title">
+          <Typography variant="h6" id="refresh-dialog-title">
             You session is going to expire!
           </Typography>
           <Typography variant="subheading" id="refresh-dialog-description">

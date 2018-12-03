@@ -1,6 +1,6 @@
 /**
  * @prettier
- * @description: SchemaFormProvider
+ * @description: FormProvider
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
@@ -9,36 +9,32 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-// SchemaForm context
-import Form from './context/Form'
+// Form context
+import FormContext from './context/Form'
 
 // Schema uiModel and Entity
 import UIModel from '../../domain/ui-service/UIModel'
 import Entity from '../../domain/ui-service/Entity'
 
 /**
- * SchemaFormProvider
- * @class SchemaFormProvider
+ * FormProvider
+ * @class FormProvider
  * @public
  */
-class SchemaFormProvider extends React.PureComponent {
+class FormProvider extends React.PureComponent {
   /**
    * Property type check
    * @type {Object}
    */
   static propTypes = {
     /**
-     * Selected client id
+     * Label text for the form
      */
-    selectedId: PropTypes.string.isRequired,
+    formLabel: PropTypes.string.isRequired,
     /**
      * Selected entity
      */
     entity: PropTypes.object.isRequired,
-    /**
-     * Entity array
-     */
-    entities: PropTypes.array.isRequired,
     /**
      * onChange callback
      */
@@ -56,9 +52,9 @@ class SchemaFormProvider extends React.PureComponent {
      */
     onReset: PropTypes.func.isRequired,
     /**
-     * onSelect callback
+     * JSON Schema to be used to create uiModel
      */
-    onSelect: PropTypes.func.isRequired
+    schema: PropTypes.object.isRequired,
   }
 
   /**
@@ -121,43 +117,26 @@ class SchemaFormProvider extends React.PureComponent {
   }
 
   /**
-   * Event handler to provide selected entity
-   * @param event
-   * @param value
-   * @returns {Function}
-   */
-  handleSelect = (event, value) => {
-    const { entities, onSelect } = this.props
-    const selectedEntity = entities.filter(entity => entity._id === value)
-    if (typeof onSelect === 'function') {
-      onSelect(...selectedEntity)
-    }
-  }
-
-  /**
    * Render the component
    * @returns {*}
    */
   render() {
     return (
-      <Form.Provider
+      <FormContext.Provider
         value={{
-          selectedId: this.props.entity._id ? this.props.entity._id : '',
-          entity: this.props.entity,
-          entities: this.props.entities,
-          uiModel: this.uiModel,
           formLabel: this.props.formLabel,
+          entity: this.props.entity,
           onChange: this.handleChange,
           onSubmit: this.handleSubmit,
           onReset: this.handleReset,
           onRemove: this.handleRemove,
-          onSelect: this.handleSelect
+          uiModel: this.uiModel,
         }}
       >
         {this.props.children}
-      </Form.Provider>
+      </FormContext.Provider>
     )
   }
 }
 
-export default SchemaFormProvider
+export default FormProvider
