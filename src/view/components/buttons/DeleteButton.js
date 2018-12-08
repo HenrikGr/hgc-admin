@@ -62,7 +62,7 @@ class DeleteButton extends React.PureComponent {
    * @type {{variant: string, color: string, message: string}}
    */
   static defaultProps = {
-    variant: 'text',
+    variant: 'contained',
     color: 'primary',
     message: 'Delete ?'
   }

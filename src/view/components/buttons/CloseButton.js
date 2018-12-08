@@ -1,6 +1,6 @@
 /**
  * @prettier
- * @description: ResetButton
+ * @description: CloseButton
  * @copyright (c) 2018 - present, HGC AB.
  * @licence This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -24,7 +24,7 @@ const styles = theme => ({
 })
 
 /**
- * ResetButton
+ * CloseButton
  * @param classes
  * @param variant
  * @param color
@@ -32,19 +32,19 @@ const styles = theme => ({
  * @returns {*}
  * @constructor
  */
-function ResetButton({ classes, variant, color, onClick }) {
+function CloseButton({ classes, variant, color, onClick }) {
   return (
     <Button className={classes.root} variant={variant} color={color} onClick={onClick}>
-      Reset
+      Close
     </Button>
   )
 }
 
 /**
  * Component props
- * @type {{classes: *, variant: *, color: *, onClick: *}}
+ * @type {{classes: *, variant: *, color: *, onSubmit: *}}
  */
-ResetButton.propTypes = {
+CloseButton.propTypes = {
   /**
    * Classes, can be used to override css styles
    */
@@ -60,17 +60,16 @@ ResetButton.propTypes = {
   /**
    * Callback function
    */
-  onClick: PropTypes.func
+  onSubmit: PropTypes.func
 }
 
 /**
  * Default props
  * @type {{variant: string, color: string}}
  */
-ResetButton.defaultProps = {
+CloseButton.defaultProps = {
   variant: 'outlined',
   color: 'primary'
 }
 
-
-export default withStyles(styles)(ResetButton)
+export default withStyles(styles)(CloseButton)

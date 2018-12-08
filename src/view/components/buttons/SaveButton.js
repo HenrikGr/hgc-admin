@@ -1,10 +1,9 @@
 /**
  * @prettier
  * @description: SaveButton
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 import React from 'react'
 import PropTypes from 'prop-types'
@@ -13,6 +12,11 @@ import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button/Button'
 import { withStyles } from '@material-ui/core/styles'
 
+/**
+ * Component styles
+ * @param theme
+ * @returns {{root: {margin: (number|string)}}}
+ */
 const styles = theme => ({
   root: {
     margin: theme.spacing.unit
@@ -24,21 +28,21 @@ const styles = theme => ({
  * @param classes
  * @param variant
  * @param color
- * @param onSubmit
+ * @param onClick
  * @returns {*}
  * @constructor
  */
-function SaveButton({ classes, variant, color, onSubmit }) {
+function SaveButton({ classes, variant, color, onClick }) {
   return (
-    <Button className={classes.root} variant={variant} color={color} onClick={onSubmit}>
+    <Button className={classes.root} variant={variant} color={color} onClick={onClick}>
       Save
     </Button>
   )
 }
 
 /**
- * Property type check
- * @type {Object}
+ * Component props
+ * @type {{classes: *, variant: *, color: *, onClick: *}}
  */
 SaveButton.propTypes = {
   /**
@@ -56,12 +60,12 @@ SaveButton.propTypes = {
   /**
    * Callback function
    */
-  onSubmit: PropTypes.func
+  onClick: PropTypes.func
 }
 
 /**
- * Default prop typed
- * @type {Object}
+ * Default props
+ * @type {{variant: string, color: string}}
  */
 SaveButton.defaultProps = {
   variant: 'contained',
