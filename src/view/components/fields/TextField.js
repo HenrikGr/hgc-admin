@@ -1,27 +1,24 @@
 /**
- * Description: TextField component
- *
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
+ * @prettier
+ * @description: TextField
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
-
-// react
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react'
+import PropTypes from 'prop-types'
 
 // material-ui
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControl from "@material-ui/core/FormControl";
-import { withStyles } from "@material-ui/core/styles";
+import Input from '@material-ui/core/Input'
+import InputLabel from '@material-ui/core/InputLabel'
+import FormControl from '@material-ui/core/FormControl'
+import { withStyles } from '@material-ui/core/styles'
 
 const styles = theme => ({
   root: {
     margin: theme.spacing.unit
-  },
-});
+  }
+})
 
 /**
  * TextField component
@@ -32,55 +29,57 @@ const styles = theme => ({
 function TextField(props) {
   const {
     classes,
-    id,
-    type,
     disabled,
+    fullWidth,
+    margin,
+    variant,
+    id,
     required,
-    autoComplete,
-    value,
     label,
-    onChange,
-  } = props;
+    value,
+    onChange
+  } = props
 
-  return(
-    <FormControl className={ classes.root }>
-      <InputLabel
-        htmlFor={ id }
-        required={ required }
-      >
-        { label }
-      </InputLabel>
+  return (
+    <FormControl
+      className={classes.root}
+      disabled={disabled}
+      fullWidth={fullWidth}
+      margin={margin}
+      variant={variant}
+    >
+      <InputLabel htmlFor={id} required={required}>{label}</InputLabel>
       <Input
-        id={ id }
-        type={ type }
-        disable={ disabled.toString() }
-        autoComplete={ autoComplete }
-        value={ value }
-        onChange={ onChange(id) }
+        id={id}
+        type='text'
+        value={value}
+        onChange={onChange(id)}
       />
     </FormControl>
-  );
+  )
 }
 
 TextField.propTypes = {
   classes: PropTypes.object,
-  id: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
   disabled: PropTypes.bool.isRequired,
+  fullWidth: PropTypes.bool.isRequired,
+  margin: PropTypes.oneOf(['none', 'dense', 'normal']),
+  variant: PropTypes.oneOf(['standard', 'outlined', 'filled']),
+  id: PropTypes.string.isRequired,
   required: PropTypes.bool.isRequired,
-  autoComplete: PropTypes.string,
-  value: PropTypes.any.isRequired,
   label: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-};
+  value: PropTypes.any.isRequired,
+  onChange: PropTypes.func.isRequired
+}
 
 TextField.defaultProps = {
-  type: "text",
   disabled: false,
+  fullWidth: true,
+  margin: 'normal',
+  variant: 'standard',
   required: false,
-  label: 'label',
-};
-
+  label: 'label'
+}
 
 // Inject styles
-export default withStyles(styles)(TextField);
+export default withStyles(styles)(TextField)

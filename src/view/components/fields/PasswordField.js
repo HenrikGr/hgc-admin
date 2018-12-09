@@ -1,13 +1,10 @@
 /**
- * Description: PasswordField component
- *
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
+ * @prettier
+ * @description: UserNameField
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
-
-// react
 import React from 'react'
 import PropTypes from 'prop-types'
 
@@ -21,6 +18,11 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import Visibility from '@material-ui/icons/Visibility'
 import { withStyles } from '@material-ui/core/styles'
 
+/**
+ * Component styles
+ * @param theme
+ * @returns {{root: {margin: (number|string)}}}
+ */
 const styles = theme => ({
   root: {
     margin: theme.spacing.unit
@@ -34,31 +36,19 @@ const styles = theme => ({
  * @constructor
  */
 function PasswordField(props) {
-  const {
-    classes,
-    id,
-    disabled,
-    required,
-    autoComplete,
-    value,
-    label,
-    showPassword,
-    onChange,
-    onShow
-  } = props
+  const { classes, value, showPassword, onChange, onShow } = props
 
   return (
-    <FormControl className={classes.root}>
-      <InputLabel htmlFor={id} required={required}>
-        {label}
+    <FormControl className={classes.root} fullWidth={true}>
+      <InputLabel htmlFor="password" required={true}>
+        Password
       </InputLabel>
       <Input
-        id={id}
-        disabled={disabled}
+        id="password"
         type={showPassword ? 'text' : 'password'}
         value={value}
-        autoComplete={autoComplete}
-        onChange={onChange(id)}
+        autoComplete="current-password"
+        onChange={onChange('password')}
         endAdornment={
           <InputAdornment position="end">
             <IconButton
@@ -75,25 +65,23 @@ function PasswordField(props) {
   )
 }
 
+/**
+ * Component props
+ * @type {{classes: *, value: *, showPassword: *, onChange: *, onShow: *}}
+ */
 PasswordField.propTypes = {
   classes: PropTypes.object,
-  id: PropTypes.string.isRequired,
-  disabled: PropTypes.bool.isRequired,
-  required: PropTypes.bool.isRequired,
-  autoComplete: PropTypes.string,
   value: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
   showPassword: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
   onShow: PropTypes.func.isRequired
 }
 
+/**
+ * Default props
+ * @type {{showPassword: boolean}}
+ */
 PasswordField.defaultProps = {
-  id:"password",
-  disabled: false,
-  required: true,
-  autoComplete: 'current-password',
-  label: 'Password',
   showPassword: false
 }
 
