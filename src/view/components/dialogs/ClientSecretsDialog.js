@@ -1,49 +1,43 @@
 /**
  * @prettier
- * @description: HGC Oauth2 server
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
+ * @description: Dialog to view or generate new client secrets
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 import React from 'react'
 import PropTypes from 'prop-types'
 
 // material-ui
-import Tooltip from '@material-ui/core/Tooltip'
-import IconButton from '@material-ui/core/IconButton'
-import FeedbackIcon from '@material-ui/icons/Feedback'
-import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
+import Tooltip from '@material-ui/core/Tooltip'
+import IconButton from '@material-ui/core/IconButton'
+import FeedbackIcon from '@material-ui/icons/Feedback'
+import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
+
+// custom components
+import CloseButton from '../buttons/CloseButton'
+
+import clientAPI from '../../../domain/service/Client'
 
 /**
- * DisplaySecretsDialog component
- * @class
- * @public
+ * ClientSecretsDialog component
  */
-class DisplaySecretsDialog extends React.PureComponent {
+class ClientSecretsDialog extends React.PureComponent {
   /**
    * Property type checks
    * @type {Object}
    */
   static propTypes = {
     /**
-     * Entity object
+     * Entity object that should contain secrets
      */
-    entity: PropTypes.object.isRequired,
-    /**
-     * Callback function to fetch secrets
-     */
-    getSecrets: PropTypes.func.isRequired,
-    /**
-     * Callback function to generate secrets
-     */
-    generateSecrets: PropTypes.func.isRequired,
+    client: PropTypes.object.isRequired,
   }
 
   /**
@@ -61,7 +55,7 @@ class DisplaySecretsDialog extends React.PureComponent {
   }
 
   handleGetSecrets = () => {
-    this.props.getSecrets(this.props.entity.name)
+    clientAPI.findSecretsByName(this.props.client.name)
       .then(data => {
         this.setState({
           open: true,
@@ -75,7 +69,7 @@ class DisplaySecretsDialog extends React.PureComponent {
   }
 
   handleGenerateSecrets = () => {
-    this.props.generateSecretsByName(this.props.entity.name)
+    clientAPI.generateSecretsByName(this.props.client.name)
       .then(data => {
         this.setState({
           open: true,
@@ -97,6 +91,7 @@ class DisplaySecretsDialog extends React.PureComponent {
           </IconButton>
         </Tooltip>
         <Dialog
+          fullWidth={true}
           open={this.state.open}
           onClose={this.handleClose}
           aria-labelledby="form-dialog-title"
@@ -104,7 +99,8 @@ class DisplaySecretsDialog extends React.PureComponent {
           <DialogTitle id="form-dialog-title">Client secrets</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Client Id and Client Secret are values you should copy and use in you own app
+              Client Id and Client Secret are values you should copy and use in you own app.
+              If there are no value, you could generate new values once.
             </DialogContentText>
             <TextField
               disabled
@@ -126,14 +122,16 @@ class DisplaySecretsDialog extends React.PureComponent {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleClose} color="primary">
-              Close
-            </Button>
             { !this.state.clientId ? (
-              <Button onClick={this.handleGenerateSecrets} color="primary">
-                Generate secrets
-              </Button>
-            ) : null}
+              <React.Fragment>
+                <Button color="primary" onClick={this.handleGenerateSecrets} >
+                  Generate secrets
+                </Button>
+                <CloseButton color='primary' variant='outlined' onClick={this.handleClose} />
+              </React.Fragment>
+            ) : (
+              <CloseButton color='primary' variant='outlined' onClick={this.handleClose} />
+            )}
           </DialogActions>
         </Dialog>
       </div>
@@ -141,4 +139,4 @@ class DisplaySecretsDialog extends React.PureComponent {
   }
 }
 
-export default DisplaySecretsDialog
+export default ClientSecretsDialog
