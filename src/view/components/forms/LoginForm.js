@@ -1,21 +1,23 @@
 /**
  * @prettier
- * @description LoginForm component
- *
- * The component is a controlled component and responsible for rendering the login form
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
+ * @description: LoginForm
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 import React from 'react'
 import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button'
 import FormLabel from '@material-ui/core/FormLabel'
 import { withStyles } from '@material-ui/core/styles'
-import TextField from '../fields/TextField'
+import UserNameField from '../fields/UserNameField'
 import PasswordField from '../fields/PasswordField'
 
+/**
+ * Component styles
+ * @param theme
+ * @returns {{root: {display: string, flex: string, justifyContent: string, marginTop: number}, form: {display: string, flexFlow: string, justifyContent: string, margin: number, width: string, [p: string]: string}, button: {margin: (number|string)}}}
+ */
 const styles = theme => ({
   root: {
     display: 'flex',
@@ -65,16 +67,11 @@ function LoginForm({
     <div className={classes.root}>
       <form className={classes.form} onSubmit={onSubmit}>
         <FormLabel component="legend">{formLabel}</FormLabel>
-        <TextField
-          id="username"
-          label="User name"
-          required={true}
-          autoComplete="username"
+        <UserNameField
           value={entity.username}
           onChange={onChange}
         />
         <PasswordField
-          id="password"
           value={entity.password}
           showPassword={showPassword}
           onChange={onChange}
