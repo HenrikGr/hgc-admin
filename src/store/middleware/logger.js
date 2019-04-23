@@ -1,23 +1,23 @@
 /**
  * @prettier
- * @description Console logger middleware
- *
- * The middleware logs action types to the console
- *
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
+ * @description: Console logger middleware
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
-// Prefix message to the console
+/**
+ * Message prefix
+ * @type {string}
+ */
 const STR_CONSOLE_PREFIX = 'MIDDLEWARE: Executing action: '
 
 /**
  * Console logger middleware
- * @function
+ * @param store
+ * @returns {function(*): function(*=): *}
  */
-const consoleLogger = () => next => action => {
+const consoleLogger = store => next => action => {
   console.log(STR_CONSOLE_PREFIX + action.type)
   return next(action)
 }

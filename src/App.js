@@ -1,15 +1,14 @@
 /**
  * @prettier
- * @description: App component
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
+ * @description: App
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 import React from 'react'
-import PropTypes from 'prop-types'
 import { BrowserRouter as Router, Switch } from 'react-router-dom'
 import { Provider } from 'react-redux'
+import store from './store'
 
 // material-ui
 import withTheme from './view/theme/withTheme'
@@ -18,52 +17,39 @@ import withTheme from './view/theme/withTheme'
 import DefaultLayout from './view/layout/DefaultLayout'
 import AuthenticatedLayout from './view/layout/AuthenticatedLayout'
 
-/**
- * Async loading components
- * @type {AsyncComponent}
- */
-import asyncComponent from './view/layout/AsyncComponent'
-const AsyncLandingPage = asyncComponent(() => import('./view/pages/LandingPage'))
-const AsyncLoginPage = asyncComponent(() => import('./view/pages/LoginPage'))
-const AsyncDashboardPage = asyncComponent(() => import('./view/pages/DashboardPage'))
-const AsyncProfile = asyncComponent(() => import('./view/pages/ProfilePage'))
-const AsyncUsersPage = asyncComponent(() => import('./view/pages/UsersPage'))
-const AsyncClientPage = asyncComponent(() => import('./view/pages/ClientPage'))
-const AsyncNotFoundPage = asyncComponent(() => import('./view/pages/NotFound'))
+import SessionProvider from './view/providers/SessionProvider'
+import withAsyncImport from './view/hoc/withAsyncImport'
+
+const AsyncLandingPage = withAsyncImport(() => import('./view/pages/LandingPage'))
+const AsyncLoginPage = withAsyncImport(() => import('./view/pages/LoginPage'))
+const AsyncDashboardPage = withAsyncImport(() => import('./view/pages/DashboardPage'))
+const AsyncProfilePage = withAsyncImport(() => import('./view/pages/ProfilePage'))
+const AsyncUsersPage = withAsyncImport(() => import('./view/pages/UsersPage'))
+const AsyncClientPage = withAsyncImport(() => import('./view/pages/ClientPage'))
+const AsyncNotFoundPage = withAsyncImport(() => import('./view/pages/NotFound'))
 
 /**
  * App component
- * @param {Object} store - redux global store
+ * @returns {*}
  * @constructor
- * @public
  */
-const App = ({ store }) => (
+const App = () => (
   <Provider store={store}>
-    <Router>
-      <Switch>
-        <DefaultLayout exact={true} path="/" component={AsyncLandingPage} />
-        <DefaultLayout path="/login" component={AsyncLoginPage} />
-        <AuthenticatedLayout path="/dashboard" component={AsyncDashboardPage} />
-        <AuthenticatedLayout path="/profile" component={AsyncProfile} />
-        <AuthenticatedLayout path="/users" component={AsyncUsersPage} />
-        <AuthenticatedLayout path="/clients" component={AsyncClientPage} />
-        <AuthenticatedLayout path="*" component={AsyncNotFoundPage} />
-      </Switch>
-    </Router>
+    <SessionProvider>
+      <Router>
+        <Switch>
+          <DefaultLayout exact={true} path="/" component={AsyncLandingPage} />
+          <DefaultLayout path="/login" component={AsyncLoginPage} />
+          <AuthenticatedLayout path="/dashboard" component={AsyncDashboardPage} />
+          <AuthenticatedLayout path="/profile" component={AsyncProfilePage} />
+          <AuthenticatedLayout path="/users" component={AsyncUsersPage} />
+          <AuthenticatedLayout path="/clients" component={AsyncClientPage} />
+          <AuthenticatedLayout path="*" component={AsyncNotFoundPage} />
+        </Switch>
+      </Router>
+    </SessionProvider>
   </Provider>
 )
-
-/**
- * Property type check
- * @type {Object}
- */
-App.propTypes = {
-  /**
-   * redux store
-   * @private
-   */
-  store: PropTypes.object.isRequired
-}
 
 // Inject material-ui theme
 export default withTheme(App)

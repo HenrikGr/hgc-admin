@@ -12,7 +12,11 @@ import { connect } from 'react-redux'
 
 import Snackbar from '@material-ui/core/Snackbar'
 import NotificationContent from './NotificationContent'
-import { RESET_ERROR } from '../../../store/actions/constants'
+import { RESET_ERROR } from '../../../store/constants'
+
+function isEmpty(obj) {
+  return Object.keys(obj).length === 0 && obj.constructor === Object;
+}
 
 /**
  * Notification component
@@ -46,12 +50,12 @@ class Notification extends React.PureComponent {
      */
     variant: PropTypes.oneOf(['success', 'warning', 'error', 'info']),
     /**
-     * messages object
+     * Error
      * @public
      */
-    messages: PropTypes.object,
+    error: PropTypes.object,
     /**
-     * Callback to reset messages
+     * Callback to reset error
      * @callback
      */
     onReset: PropTypes.func
@@ -67,30 +71,6 @@ class Notification extends React.PureComponent {
     horizontal: 'center',
     autoHideDuration: 1000 * 6, // 6 seconds
     variant: 'error',
-    messages: {}
-  }
-
-  /**
-   * Initial state
-   * @type {{open: boolean}}
-   */
-  state = {
-    open: false
-  }
-
-  /**
-   * Ensure the snackbar opens when new messages arrived
-   * @param prevProps
-   * @param prevState
-   */
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.messages !== prevProps.messages) {
-      if (this.props.messages.message) {
-        this.setState({ open: true })
-      } else {
-        this.setState({ open: false })
-      }
-    }
   }
 
   /**
@@ -102,9 +82,6 @@ class Notification extends React.PureComponent {
     if (reason === 'clickaway') {
       return
     }
-
-    this.setState({ open: false })
-
     if (this.props.onReset) {
       this.props.onReset()
     }
@@ -117,27 +94,29 @@ class Notification extends React.PureComponent {
           vertical: this.props.vertical,
           horizontal: this.props.horizontal
         }}
-        open={this.state.open}
+        open={!isEmpty(this.props.error)}
         autoHideDuration={this.props.autoHideDuration}
         onClose={this.handleClose}
       >
-        <NotificationContent
-          variant={this.props.variant}
-          messages={this.props.messages}
-          onClose={this.handleClose}
-        />
+        { !isEmpty(this.props.error) ? (
+          <NotificationContent
+            variant={this.props.variant}
+            messages={this.props.error}
+            onClose={this.handleClose}
+          />
+        ) : null}
       </Snackbar>
     )
   }
 }
 
 /**
- * Map isFetching state to prop
+ * Map state to props
  * @param state
- * @returns {{isFetching: *}}
+ * @returns {{messages: *}}
  */
 const mapStateToProps = state => ({
-  messages: state.error
+  error: state.error
 })
 
 const mapDispatchToProps = dispatch => {

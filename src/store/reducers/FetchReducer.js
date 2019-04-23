@@ -6,8 +6,14 @@
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
-import defaults from './DefaultState'
-import { FETCH_START, FETCH_SUCCESS, FETCH_ERROR } from '../actions/constants'
+import defaults from '../DefaultState'
+import {
+  FETCH_START,
+  FETCH_SUCCESS,
+  FETCH_SESSION_SUCCESS,
+  FETCH_REFRESH_SESSION_SUCCESS,
+  FETCH_ERROR
+} from '../constants'
 
 /**
  * Fetch reducer
@@ -21,6 +27,8 @@ const fetchReducer = (state = defaults.isFetching, action) => {
       return true
 
     case FETCH_SUCCESS:
+    case FETCH_SESSION_SUCCESS:
+    case FETCH_REFRESH_SESSION_SUCCESS:
     case FETCH_ERROR:
       return false
 

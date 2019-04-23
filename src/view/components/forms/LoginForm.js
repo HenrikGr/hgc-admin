@@ -6,18 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react'
-import PropTypes from 'prop-types'
+import * as PropTypes from 'prop-types'
+
+// material-ui
 import Button from '@material-ui/core/Button'
 import FormLabel from '@material-ui/core/FormLabel'
 import { withStyles } from '@material-ui/core/styles'
+
+// custom components
 import UserNameField from '../fields/UserNameField'
 import PasswordField from '../fields/PasswordField'
 
-/**
- * Component styles
- * @param theme
- * @returns {{root: {display: string, flex: string, justifyContent: string, marginTop: number}, form: {display: string, flexFlow: string, justifyContent: string, margin: number, width: string, [p: string]: string}, button: {margin: (number|string)}}}
- */
 const styles = theme => ({
   root: {
     display: 'flex',
@@ -40,17 +39,17 @@ const styles = theme => ({
   }
 })
 
-
 /**
  * LoginForm component
- * @param classes
- * @param formLabel
- * @param entity
- * @param showPassword
- * @param disableSubmit
- * @param onSubmit
- * @param onChange
- * @param onShowPassword
+ * @param {React.Props} props - component properties
+ * @param {Object} props.classes - css to style the component
+ * @param {String} props.formLabel - text label
+ * @param {CredentialsEntity} props.entity - credentials entity
+ * @param {Boolean} props.showPassword - show password in plain text
+ * @param {Boolean} props.disableSubmit - disable submit button on submit
+ * @param {Function} props.onSubmit - called to submit the form
+ * @param {Function} props.onChange - called to handle on change event for inputs
+ * @param {Function} props.onShowPassword - called to handle showPassword flag
  * @returns {*}
  * @constructor
  */
@@ -68,10 +67,7 @@ function LoginForm({
     <div className={classes.root}>
       <form className={classes.form} onSubmit={onSubmit}>
         <FormLabel component="legend">{formLabel}</FormLabel>
-        <UserNameField
-          value={entity.username}
-          onChange={onChange}
-        />
+        <UserNameField value={entity.username} onChange={onChange} />
         <PasswordField
           value={entity.password}
           showPassword={showPassword}
@@ -93,51 +89,17 @@ function LoginForm({
 }
 
 /**
- * Property type check
- * @type {Object}
+ * Component properties type check
  */
 LoginForm.propTypes = {
-  /**
-   * Object to create or extend the styles
-   * @private
-   */
   classes: PropTypes.object.isRequired,
-  /**
-   * Form label
-   * @public
-   */
   formLabel: PropTypes.string.isRequired,
-  /**
-   * Data entity to be rendered
-   * @public
-   */
   entity: PropTypes.object.isRequired,
-  /**
-   * Flag indicating password visibility
-   * @public
-   */
   showPassword: PropTypes.bool.isRequired,
-  /**
-   * Boolean indicating if submit btn should be disabled
-   * @public
-   */
   disableSubmit: PropTypes.bool.isRequired,
-  /**
-   * Callback for input changes
-   * @public
-   */
   onChange: PropTypes.func.isRequired,
-  /**
-   * Callback for form submit
-   * @public
-   */
   onSubmit: PropTypes.func.isRequired,
-  /**
-   * Callback to toggle visible password
-   * @public
-   */
   onShowPassword: PropTypes.func.isRequired
 }
 
-// Inject styles into the component
 export default withStyles(styles)(LoginForm)

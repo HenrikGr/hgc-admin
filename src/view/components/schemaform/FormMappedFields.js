@@ -29,7 +29,7 @@ export default class FormMappedFields extends React.PureComponent {
   }
 
   /**
-   * Fet selected entity key
+   * Fet selected services key
    * @param key
    * @returns {*}
    */

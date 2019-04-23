@@ -1,14 +1,9 @@
 /**
  * @prettier
- * @description: Higher order function to injects material-ui theme
- *
- * We are using the material-ui theme provider, css baseline and
- * creating a palette object to inject in the theme context
- *
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
+ * @description: Higher order function to inject a customized material-ui theme
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 import React from 'react'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
@@ -17,8 +12,8 @@ import pink from '@material-ui/core/colors/pink'
 import teal from '@material-ui/core/colors/teal'
 
 /**
- * Create a theme palette to be injected in the material-ui theme context
- * @type {object} - custom palette
+ * Theme instance to be injected in the material-ui theme context
+ * @type {Theme}
  */
 const theme = createMuiTheme({
   /**
@@ -34,7 +29,7 @@ const theme = createMuiTheme({
    * body1 (default) => body2 (default)
    */
   typography: {
-    useNextVariants: true,
+    useNextVariants: true
   },
   palette: {
     //type: 'dark',
@@ -53,8 +48,7 @@ const theme = createMuiTheme({
 })
 
 /**
- * MuiThemeProvider makes the theme available down the
- * React tree thanks to React context.
+ * MuiThemeProvider makes the theme available down the React tree thanks to React context.
  * @param Component
  * @returns {function(*): *}
  */

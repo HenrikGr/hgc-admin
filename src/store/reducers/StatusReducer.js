@@ -6,8 +6,8 @@
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
-import defaults from './DefaultState'
-import { LOG_STATUS } from '../actions/constants'
+import defaults from '../DefaultState'
+import { LOG_STATUS } from '../constants'
 
 /**
  * Status state branch reducer

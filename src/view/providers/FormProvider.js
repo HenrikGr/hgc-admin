@@ -1,10 +1,9 @@
 /**
  * @prettier
  * @description: FormProvider
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 import React from 'react'
 import PropTypes from 'prop-types'
@@ -12,9 +11,8 @@ import PropTypes from 'prop-types'
 // Form context
 import FormContext from './context/Form'
 
-// Schema uiModel and Entity
+// Schema uiModel and UIModel
 import UIModel from '../../domain/ui-service/UIModel'
-import Entity from '../../domain/ui-service/Entity'
 
 /**
  * FormProvider
@@ -22,17 +20,13 @@ import Entity from '../../domain/ui-service/Entity'
  * @public
  */
 class FormProvider extends React.PureComponent {
-  /**
-   * Property type check
-   * @type {Object}
-   */
   static propTypes = {
     /**
      * Label text for the form
      */
     formLabel: PropTypes.string.isRequired,
     /**
-     * Selected entity
+     * Data services to be rendered
      */
     entity: PropTypes.object.isRequired,
     /**
@@ -52,7 +46,7 @@ class FormProvider extends React.PureComponent {
      */
     onReset: PropTypes.func.isRequired,
     /**
-     * JSON Schema to be used to create uiModel
+     * JSON Schema to be used to create uiModel and default data services
      */
     schema: PropTypes.object.isRequired,
   }
@@ -63,9 +57,6 @@ class FormProvider extends React.PureComponent {
    */
   constructor(props) {
     super(props)
-
-    // Create a default entity and uiModel based on the schema
-    this.defaultEntity = new Entity(this.props.schema).getEntity()
     this.uiModel = new UIModel(this.props.schema).getUIModel()
   }
 
@@ -101,7 +92,7 @@ class FormProvider extends React.PureComponent {
   handleReset = () => {
     const { onReset } = this.props
     if (typeof onReset === 'function') {
-      onReset(this.defaultEntity)
+      onReset()
     }
   }
 

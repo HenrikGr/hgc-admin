@@ -20,8 +20,8 @@ import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
 import { LogInLink, ProfileLink, HomeLink } from '../links'
 
-// Consume user state from user context
-import withUserContext from '../../providers/withUserContext'
+// Consume session context
+import withSessionContext from '../../providers/withSessionContext'
 
 /**
  * HeaderMenu component
@@ -35,7 +35,7 @@ class HeaderMenu extends React.PureComponent {
    */
   static propTypes = {
     /**
-     * User context from the user provider
+     * Store context from the user provider
      * @private
      */
     context: PropTypes.object.isRequired
@@ -101,4 +101,4 @@ class HeaderMenu extends React.PureComponent {
   }
 }
 
-export default withUserContext(HeaderMenu)
+export default withSessionContext(HeaderMenu)

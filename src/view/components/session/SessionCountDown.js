@@ -12,12 +12,12 @@ import PropTypes from 'prop-types'
 // Web worker variants of setInterval, etc...
 import * as workerTimers from 'worker-timers';
 
-// Session components rendered as children
+// Store components rendered as children
 import SessionClock from './SessionClock'
 import SessionDialog from './SessionDialog'
 
 // Consumes the user context
-import withUserContext from '../../providers/withUserContext'
+import withSessionContext from '../../providers/withSessionContext'
 
 /**
  * SessionCountDown
@@ -54,7 +54,7 @@ class SessionCountDown extends React.PureComponent {
     removeThreshold: PropTypes.number,
 
     /**
-     * User context
+     * Store context
      * @private
      */
     context: PropTypes.object.isRequired
@@ -253,4 +253,4 @@ class SessionCountDown extends React.PureComponent {
 }
 
 // Connect the mapped state and action creators to the component
-export default withUserContext(SessionCountDown)
+export default withSessionContext(SessionCountDown)

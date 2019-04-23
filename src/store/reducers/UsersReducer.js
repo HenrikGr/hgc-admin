@@ -6,13 +6,13 @@
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
-import defaults from './DefaultState'
+import defaults from '../DefaultState'
 import {
   USERS_GET_SUCCESS,
   USER_CREATE_SUCCESS,
   USER_UPDATE_SUCCESS,
   USER_DELETE_SUCCESS
-} from '../actions/constants'
+} from '../constants'
 
 // Array helper functions
 import { appendElement, removeById, updateElement } from '../../utils/helper'
@@ -28,32 +28,25 @@ const usersReducer = (state = defaults.users, action) => {
     case USERS_GET_SUCCESS:
       return {
         ...state,
-        entities: action.payload,
-        isFetching: false
+        entities: action.payload.data,
       }
 
     case USER_CREATE_SUCCESS:
       return {
         ...state,
         entities: appendElement(state.entities, action.payload),
-        isFetching: false,
-        error: {}
       }
 
     case USER_DELETE_SUCCESS:
       return {
         ...state,
         entities: removeById(state.entities, action.payload),
-        isFetching: false,
-        error: {}
       }
 
     case USER_UPDATE_SUCCESS:
       return {
         ...state,
         entities: updateElement(state.entities, action.payload),
-        isFetching: false,
-        error: {}
       }
 
     default:

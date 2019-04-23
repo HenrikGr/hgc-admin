@@ -66,16 +66,16 @@ const styles = theme => ({
 })
 
 /**
- * Helper function to transform message object into HTML
+ * Helper function to transform message object into HTML string
  * @param messages
  * @returns {string}
  */
 const getMessage = messages => {
-  let msg = ''
-  for (const [key, value] of Object.entries(messages)) {
-    if (key === 'message') {
-      msg = '<div>' + value + '</div></br>'
-    } else {
+  let message = messages.message
+
+  let msg = '<div>' + message + '</div></br>'
+  if (messages.details) {
+    for (const [key, value] of Object.entries(messages.details)) {
       msg = msg + '<div>' + capitalizeFirstLetter(key) + ' ' + value + '</div>'
     }
   }

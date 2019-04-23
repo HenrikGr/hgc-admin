@@ -23,7 +23,7 @@ import { connect } from 'react-redux'
 import DataGrid from '../components/datagrid/DataGrid'
 
 // Action creators
-import actions from '../../store/actions/UsersAction'
+import actions from '../../store/actions/UserActions'
 
 /**
  * Data model for the users data.
@@ -37,7 +37,7 @@ const model = [
     visible: true,
     width: 200,
     disablePadding: false,
-    label: 'User name'
+    label: 'Store name'
   },
   {
     id: 'scope',

@@ -1,14 +1,13 @@
 /**
  * @prettier
- * @description: joinName function that finds property names from a schema
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
+ * @description: joinName function that resolves property names from a schema
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 /**
- * Function
+ * joinName
  * @param parts
  * @returns {any}
  */

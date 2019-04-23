@@ -19,7 +19,7 @@ import PropTypes from 'prop-types'
 import ProfileForm from '../components/forms/ProfileForm'
 
 // Profile actions
-import profileAction from '../../store/actions/ProfileAction'
+import profileAction from '../../store/actions/ProfileActions'
 
 /**
  * ProfilePage container component
@@ -31,23 +31,20 @@ class ProfilePage extends React.Component {
    */
   static propTypes = {
     /**
-     * Profile entity to be rendered by the form
-     * @private
+     * Profile services to be rendered by the form
      */
     profile: PropTypes.object.isRequired,
     /**
      * Flag indicating fetch state
-     * @private
      */
     isFetching: PropTypes.bool.isRequired,
+
     /**
      * Callback to update profile
-     * @private
      */
     update: PropTypes.func.isRequired,
     /**
      * Callback to update global state with data
-     * @private
      */
     updateState: PropTypes.func.isRequired
   }
@@ -94,7 +91,7 @@ class ProfilePage extends React.Component {
  * @returns {{profile: (defaults.user.profile|{}|i.user.profile), isFetching: *}}
  */
 const mapStateToProps = state => ({
-  profile: state.user.profile,
+  profile: state.profile,
   isFetching: state.isFetching
 })
 
@@ -106,7 +103,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => {
   return {
     update: () => {
-      dispatch(profileAction.update())
+      dispatch(profileAction.updateMe())
     },
     updateState: profile => {
       dispatch(profileAction.updateState(profile))

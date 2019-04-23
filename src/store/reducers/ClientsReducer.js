@@ -1,12 +1,11 @@
 /**
  * @prettier
  * @description: Client reducer
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
-import defaults from './DefaultState'
+import defaults from '../DefaultState'
 import {
   FETCH_CLIENTS_SUCCESS,
   FETCH_CLIENT_CREATE_SUCCESS,
@@ -15,21 +14,19 @@ import {
   CLIENT_SET_SELECTED,
   CLIENT_RESET_SELECTED,
   CLIENT_UPDATE_STATE
-} from '../actions/constants'
+} from '../constants'
 
 /**
  * Clients state branch reducer
- * @param {object} state - clients branch of global state
- * @param {object} action - object with payload key, used to update state
- * @returns {object} - updated clients branch of the global state
- * @public
+ * @param {Object} state - clients branch of global state
+ * @param {Object} action - object with payload key, used to update state
+ * @returns {*} - updated clients state branch of the global state
  */
 const clientsReducer = (state = defaults.clients, action) => {
   switch (action.type) {
     case FETCH_CLIENTS_SUCCESS:
       return {
         ...state,
-        selectedId: action.payload[0]._id,
         entity: action.payload[0],
         entities: action.payload
       }
@@ -37,17 +34,15 @@ const clientsReducer = (state = defaults.clients, action) => {
     case FETCH_CLIENT_CREATE_SUCCESS:
       return {
         ...state,
-        selectedId: action.payload._id,
         entity: action.payload,
         entities: [...state.entities, action.payload]
       }
 
     case FETCH_CLIENT_DELETE_SUCCESS:
-      // Filter out the entity to be deleted
+      // Filter out the services to be deleted
       const newEntities = state.entities.filter(entity => entity._id !== action.payload)
       return {
         ...state,
-        selectedId: newEntities[0]._id,
         entity: newEntities[0],
         entities: newEntities
       }
@@ -61,7 +56,6 @@ const clientsReducer = (state = defaults.clients, action) => {
     case CLIENT_SET_SELECTED:
       return {
         ...state,
-        selectedId: action.payload._id,
         entity: action.payload
       }
 
@@ -74,8 +68,7 @@ const clientsReducer = (state = defaults.clients, action) => {
     case CLIENT_RESET_SELECTED:
       return {
         ...state,
-        selectedId: '',
-        entity: action.payload
+        entity: defaults.clients.entity
       }
 
     default:

@@ -18,7 +18,7 @@ import { withStyles } from '@material-ui/core/styles'
 import { HomeLink, DashboardLink } from '../links'
 
 // Consume user state from user context
-import { withUserState } from '../../providers/withUserContext'
+import { withSessionState } from '../../providers/withSessionContext'
 
 const styles = {
   icon: {
@@ -59,11 +59,11 @@ HeaderIcon.propTypes = {
    */
   classes: PropTypes.object.isRequired,
   /**
-   * User context from the user provider
+   * Store context from the user provider
    * @private
    */
   context: PropTypes.object.isRequired
 }
 
 // Inject styles
-export default withStyles(styles)(withUserState(HeaderIcon))
+export default withStyles(styles)(withSessionState(HeaderIcon))

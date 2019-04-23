@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography'
 import { withStyles } from '@material-ui/core/styles'
 import HeaderMenu from './HeaderMenu'
 import HeaderIcon from './HeaderIcon'
-import SessionCountDown from '../session/SessionCountDown'
+//import SessionCountDown from '../session/SessionCountDown'
 
 const styles = theme => ({
   root: {
@@ -34,6 +34,7 @@ const styles = theme => ({
  * @constructor
  */
 function Header({ classes, title }) {
+
   return (
     <AppBar classes={{ root: classes.root }} position="fixed">
       <Toolbar>
@@ -41,7 +42,6 @@ function Header({ classes, title }) {
         <Typography className={classes.title} variant="h6" color="inherit">
           {title}
         </Typography>
-        <SessionCountDown autoRefresh={true} />
         <HeaderMenu />
       </Toolbar>
     </AppBar>

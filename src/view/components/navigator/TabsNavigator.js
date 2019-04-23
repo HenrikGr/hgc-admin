@@ -35,7 +35,7 @@ function TabsNavigator({ variant, selectedItem, items, onChange }) {
           onChange={onChange}
           indicatorColor="secondary"
           textColor="inherit"
-          scrollable
+          variant='scrollable'
           scrollButtons={'off'}
         >
           {items.length > 0 &&

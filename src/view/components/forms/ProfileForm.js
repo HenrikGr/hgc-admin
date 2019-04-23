@@ -85,7 +85,7 @@ ProfileForm.propTypes = {
    */
   formLabel: PropTypes.string.isRequired,
   /**
-   * Data entity to be rendered
+   * Data services to be rendered
    * @public
    */
   entity: PropTypes.object.isRequired,

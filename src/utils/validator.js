@@ -1,7 +1,7 @@
 /**
- * Description: Module providing a validator object to validate input forms
+ * Description: Module providing a services object to validate input forms
  *
- * The validator object is built upon a strategy pattern, meaning we will be
+ * The services object is built upon a strategy pattern, meaning we will be
  * able to add validation function and types on the fly.
  *
  * There are some validation function defined such as;
@@ -9,7 +9,7 @@
  * - isNumber, checks if a value is a number.
  * - isAlphaNum, checks if a value containing only letters and numbers.
  *
- * The validator object also supports a configuration concept where we can
+ * The services object also supports a configuration concept where we can
  * pre-define validation types and function to input field names.
  * This pre-definition is done via the config property og the validation object.
  *
@@ -111,6 +111,6 @@ validator.config = {
 };
 
 /**
- * Export the validator object
+ * Export the services object
  */
 export default validator;

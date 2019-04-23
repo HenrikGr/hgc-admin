@@ -1,19 +1,17 @@
 /**
  * @prettier
- * @description: Thunk middleware
+ * @description: Thunk middleware - middleware that allows action creators to return functions
  *
- * Redux middleware that allow redux action creators to return
- * functions as well. Redux does not support this out of box.
+ * The returned functions can is mostly used to creates a series of action creators
  *
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 /**
- * Middleware function that return a function if the action
- * creator is of type function. Otherwise it returns the object.
+ * Middleware function that return a function if the action creator is of type function.
+ * Otherwise it returns the object.
  * @param extraArgument
  * @returns {function({dispatch?: *, getState?: *}): function(*): function(*=)}
  * @constructor

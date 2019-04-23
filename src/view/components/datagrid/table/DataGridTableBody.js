@@ -138,7 +138,7 @@ class DataGridTableBody extends React.Component {
                   entry.visible && (
                     <TableCell
                       key={index}
-                      numeric={entry.type === "numeric"}
+                      align={entry.type === 'number' ? 'left' : 'center'}
                       padding={entry.disablePadding ? "none" : "default"}
                     >
                       {this.getValue(row[entry.id], entry.type)}

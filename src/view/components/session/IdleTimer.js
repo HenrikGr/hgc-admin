@@ -263,7 +263,7 @@ export default class IdleTimer extends React.Component {
       // Under 200 ms is hard to do
       // continuous activity will bypass this
       // TODO: Cant seem to simulate this event with pageX and pageY for testing
-      // making this block of code unreachable by test suite
+      // making this block of code unreachable by test-plugins suite
       // opened an issue here https://github.com/Rich-Harris/simulant/issues/19
       const elapsed = this.getElapsedTime()
       if (elapsed < 200) {

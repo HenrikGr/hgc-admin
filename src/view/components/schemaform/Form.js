@@ -1,10 +1,9 @@
 /**
  * @prettier
- * @description:
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
+ * @description: Form
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 import React from 'react'
 import PropTypes from 'prop-types'
@@ -14,11 +13,9 @@ import FormLabel from '@material-ui/core/FormLabel'
 import { withStyles } from '@material-ui/core/styles'
 
 // custom component
+import FormActions from './FormActions'
 import FormMappedFields from './FormMappedFields'
 import FormContext from '../../providers/context/Form'
-import SaveButton from '../buttons/SaveButton'
-import DeleteButton from '../buttons/DeleteButton'
-import ResetButton from '../buttons/ResetButton'
 
 const styles = theme => ({
   root: {
@@ -45,22 +42,17 @@ const styles = theme => ({
 function Form({ classes }) {
   return (
     <FormContext.Consumer>
-      {({ selectedId, formLabel, entity, onSubmit, onChange, onRemove, onReset, uiModel }) => {
+      {({ formLabel, entity, onSubmit, onChange, onRemove, onReset, uiModel }) => {
         return (
           <form className={classes.root}>
             <FormLabel component="legend">{formLabel}</FormLabel>
             <FormMappedFields uiModel={uiModel} entity={entity} onChange={onChange} />
-            {selectedId !== '' ? (
-            <div className={classes.actions}>
-              <SaveButton onSubmit={onSubmit} />
-              <DeleteButton message="Delete this client?" onRemove={onRemove} />
-              <ResetButton onReset={onReset} />
-            </div>
-            ) : (
-            <div className={classes.action}>
-              <SaveButton onSubmit={onSubmit} />
-            </div>
-            )}
+            <FormActions
+              entity={entity}
+              onSubmit={onSubmit}
+              onRemove={onRemove}
+              onReset={onReset}
+            />
           </form>
         )
       }}

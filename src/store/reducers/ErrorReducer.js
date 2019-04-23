@@ -6,25 +6,27 @@
  * @copyright:  Copyright (c) 2017 HGC AB
  * @license: The MIT License (MIT)
  */
-import defaults from './DefaultState'
+import defaults from '../DefaultState'
 import {
   VALIDATION_ERROR,
   FETCH_VALIDATION_ERROR,
   FETCH_ERROR,
   RESET_ERROR
-} from '../actions/constants'
+} from '../constants'
 
 /**
- * Error reducer
- * @param {object} state - error branch of global state
- * @param {object} action - object with payload key, used to update state
- * @returns {object} - updated status branch of the global state
+ * Error state reducer
+ * @param {ValidationException} state
+ * @param action
+ * @returns {*}
  */
 const errorReducer = (state = defaults.error, action) => {
   switch (action.type) {
     case VALIDATION_ERROR:
     case FETCH_VALIDATION_ERROR:
     case FETCH_ERROR:
+      // Throw Invariant violations
+      if (action.payload.name === 'Invariant Violation') throw action.payload
       return action.payload
 
     case RESET_ERROR:

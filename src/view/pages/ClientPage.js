@@ -1,14 +1,14 @@
 /**
  * @prettier
- * @description: Container component for the client page
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2018 HGC AB
- * @license: The MIT License (MIT)
+ * @description: ClientPage
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 // Custom components
 import Form from '../components/schemaform/Form'
@@ -17,108 +17,79 @@ import ToolbarActions from '../components/toolbars/ToolbarActions'
 
 // context providers
 import FormProvider from '../providers/FormProvider'
-import NavigationProvider from '../providers/NavigationProvider'
 
 // Action creators used to update clients store
-import clientAction from '../../store/actions/ClientsAction'
-
-// JSON schema service
-import clientSchemaService from '../../domain/schemas/Client'
+import clientActions from '../../store/actions/ClientActions'
+import clientSchema from '../../domain/entity/schemas/client'
 
 /**
- * Client page component
+ * ClientPage
  */
 class ClientPage extends React.PureComponent {
-  /**
-   * Property type check
-   * @type {Object}
-   */
   static propTypes = {
     /**
-     * Selected client id
+     * Selected client
      */
-    selectedId: PropTypes.string.isRequired,
+    selectedClient: PropTypes.object.isRequired,
     /**
-     * Selected entity
+     * Clients array
      */
-    entity: PropTypes.object.isRequired,
+    clients: PropTypes.array.isRequired,
     /**
-     * Entity array
+     * Action creators
      */
-    entities: PropTypes.array.isRequired,
-    /**
-     * Find entities function
-     */
-    find: PropTypes.func.isRequired,
-    /**
-     * Create method
-     */
-    create: PropTypes.func.isRequired,
-    /**
-     * Update entity function
-     */
-    update: PropTypes.func.isRequired,
-    /**
-     * Remove entity function
-     */
-    remove: PropTypes.func.isRequired,
-    /**
-     * Set selected data
-     */
-    setSelected: PropTypes.func.isRequired,
-    /**
-     * Update selected data
-     */
-    updateState: PropTypes.func.isRequired,
-    /**
-     * Reset selected data
-     */
-    resetSelected: PropTypes.func.isRequired
+    actions: PropTypes.object.isRequired,
   }
 
   /**
-   * Fetch entities by query params
+   * Fetch clients by query params
    */
   componentDidMount() {
-    this.props.find({ page: 0, sort: 'name' })
+    this.props.actions.findClientsByQuery({ page: 0, sort: 'name' })
   }
 
   /**
-   * Update global state
+   * Event handler for input elements onChange event
+   * Update entered value in global state
    * @param prop
    * @param value
    */
   handleChange = (prop, value) => {
-    let entity = { ...this.props.entity }
-    entity[prop] = value
-    this.props.updateState(entity)
+    let updatedClient = { ...this.props.selectedClient }
+    updatedClient[prop] = value
+    this.props.actions.updateClientState(updatedClient)
   }
 
   /**
-   * Create a new or update entity
-   * If the entity has an _id prop it should be updated otherwise it is a new entity
+   * Create a new or update services
+   * If the services has an _id prop it should be updated otherwise it is a new services
    */
   handleSubmit = () => {
-    if (this.props.entity._id) {
-      this.props.update()
+    if (this.props.selectedClient._id) {
+      this.props.actions.updateClient()
     } else {
-      this.props.create()
+      this.props.actions.createClient()
     }
   }
 
   /**
-   * Reset selected entity with default entity from provider
-   * @param defaultEntity
+   * Reset selected services
    */
-  handleReset = defaultEntity => {
-    this.props.resetSelected(defaultEntity)
+  handleReset = () => {
+    this.props.actions.resetSelectedClient()
   }
 
   /**
-   * Remove entity
+   * Remove services
    */
   handleRemove = () => {
-    this.props.remove()
+    this.props.actions.removeClient()
+  }
+
+  handleSelect = (event, value) => {
+    const { clients } = this.props
+    const selectedClient = clients.filter(client => client._id === value)
+    this.props.actions.setSelectedClient(...selectedClient)
   }
 
   /**
@@ -126,29 +97,23 @@ class ClientPage extends React.PureComponent {
    * @returns {*}
    */
   render() {
-    const { selectedId, entity, entities } = this.props
-
     return (
       <React.Fragment>
-        <NavigationProvider
-          selectedId={selectedId}
-          entity={entity}
-          entities={entities}
-          onSelect={this.props.setSelected}
-        >
-          <TabsNavigator variant="dense" />
-        </NavigationProvider>
-
-        <ToolbarActions entity={entity}/>
-
+        <TabsNavigator
+          variant="dense"
+          items={this.props.clients}
+          selectedItem={this.props.selectedClient}
+          onChange={this.handleSelect}
+        />
+        <ToolbarActions entity={this.props.selectedClient} />
         <FormProvider
           formLabel="Client"
-          entity={entity}
+          entity={this.props.selectedClient}
           onChange={this.handleChange}
           onSubmit={this.handleSubmit}
           onRemove={this.handleRemove}
           onReset={this.handleReset}
-          schema={clientSchemaService.getSchema()}
+          schema={clientSchema}
         >
           <Form />
         </FormProvider>
@@ -158,46 +123,26 @@ class ClientPage extends React.PureComponent {
 }
 
 /**
- * Map state to properties
+ * Map clients state to props
  * @param state
- * @returns {Object}
+ * @returns {{selectedClient: *, clients: Array}}
  */
-const mapStateToProps = state => ({
-  selectedId: state.clients.selectedId,
-  entity: state.clients.entity,
-  entities: state.clients.entities
-})
-
-/**
- * Map action creators to properties
- * @param dispatch
- * @returns {Object}
- */
-const mapDispatchToProps = dispatch => {
+function mapStateToProps(state) {
   return {
-    find: qp => {
-      dispatch(clientAction.find(qp))
-    },
-    create: () => {
-      dispatch(clientAction.create())
-    },
-    update: () => {
-      dispatch(clientAction.update())
-    },
-    remove: () => {
-      dispatch(clientAction.remove())
-    },
-    setSelected: entry => {
-      dispatch(clientAction.setSelected(entry))
-    },
-    updateState: entity => {
-      dispatch(clientAction.updateState(entity))
-    },
-    resetSelected: defaultEntity => {
-      dispatch(clientAction.resetSelected(defaultEntity))
-    }
+    selectedClient: state.clients.entity,
+    clients: state.clients.entities
   }
 }
+
+/**
+ * Map actions creators to actions prop
+ * @param dispatch
+ * @returns {{actions: ({findClientsByQuery, createClient, updateClient, removeClient, setSelectedClient, updateClientState, resetSelectedClient}|ActionCreator<any>|ActionCreatorsMapObject<any>)}}
+ */
+function mapDispatchToProps(dispatch) {
+  return { actions: bindActionCreators(clientActions, dispatch) }
+}
+
 
 // Inject state and action creators to presentation layer
 export default connect(

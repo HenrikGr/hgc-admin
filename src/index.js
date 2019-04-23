@@ -1,25 +1,24 @@
 /**
  * @prettier
- * @description: Entry point for the application
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
+ * @description: Application entry point
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 //import './polyfills'
 import './index.css'
 import React from 'react'
 import { render } from 'react-dom'
-import store from './store/index'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 
 /**
  * Render the App
  */
-render(<App store={store} />, document.getElementById('root'))
+render(<App />, document.getElementById('root'))
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/2vJdu84
+/**
+ * If you want your app to work offline and load faster, you can change unregister() to register() below
+ * Note this comes with some pitfalls. Learn more about xhr workers: http://bit.ly/2vJdu84
+ */
 serviceWorker.unregister();

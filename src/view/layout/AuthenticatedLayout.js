@@ -1,10 +1,9 @@
 /**
  * @prettier
- * @description: Layouts module
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
+ * @description: AuthenticatedLayout
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 import React from 'react'
 import { Redirect } from 'react-router-dom'
@@ -27,7 +26,7 @@ import store from '../../store'
  * @constructor
  */
 const AuthenticatedLayout = ({ component: Component, ...rest }) => {
-  const { isAuth } = store.getState().user
+  const { isAuth } = store.getState().session
   return (
     <DefaultLayout
       {...rest}

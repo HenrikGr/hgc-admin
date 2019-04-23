@@ -96,7 +96,7 @@ class DataGridTableHeader extends React.Component {
             return entry.visible && (
               <TableCell
                 key={entry.id}
-                numeric={entry.type === 'number'}
+                align={entry.type === 'number' ? 'left' : 'center'}
                 padding={entry.disablePadding ? 'none' : 'default'}
                 sortDirection={orderBy === entry.id ? order : false}
               >

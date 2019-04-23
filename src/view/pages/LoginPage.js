@@ -1,15 +1,9 @@
 /**
  * @prettier
- * @description: Container component for LoginForm component
- *
- * The container component is responsible to maintain
- * - internal state for the presentation layer such as edited credentials, show passwords flags, redirection, etc
- * - connect to the user global state and action creators to deal with authentication, etc
- *
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
+ * @description: LoginPage - container component for LoginForm component
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 import React from 'react'
 import { Redirect } from 'react-router'
@@ -19,40 +13,23 @@ import PropTypes from 'prop-types'
 // Presentation layer
 import LoginForm from '../components/forms/LoginForm'
 
-// Action creators used to update session state
-import userAction from '../../store/actions/UserAction'
+// SessionEntity action creator
+import { logIn } from '../../store/actions/SessionActions'
 
 /**
- * LoginPage container component
- * @class LoginPage
- * @public
+ * LoginPage - container component for the login page
+ *
+ * The container component is responsible to maintain
+ * - internal state for the presentation layer such as edited inputs, show passwords flags, redirection, etc
+ * - connect to the global state tree and action creators to deal with authentication, etc
  */
 class LoginPage extends React.PureComponent {
-  /**
-   * Property type checks
-   * @type {Object}
-   */
   static propTypes = {
-    /**
-     * Flag indicating if user successfully logged in
-     * @private
-     */
-    isAuthenticated: PropTypes.bool.isRequired,
-    /**
-     * Flag indicating fetch state, i.e authenticating
-     * @private
-     */
-    isAuthenticating: PropTypes.bool.isRequired,
-    /**
-     * Callback mapped to user action
-     * @private
-     */
-    authenticate: PropTypes.func.isRequired,
+    isAuth: PropTypes.bool.isRequired,
+    isFetching: PropTypes.bool.isRequired,
+    logIn: PropTypes.func.isRequired
   }
 
-  /**
-   * Sets initial component state
-   */
   state = {
     username: '',
     password: '',
@@ -61,7 +38,7 @@ class LoginPage extends React.PureComponent {
   }
 
   /**
-   * Event handler - onChange event on input elements
+   * Event handler - onChange event on LoginForm input elements
    * @param prop
    * @returns {Function}
    */
@@ -70,13 +47,12 @@ class LoginPage extends React.PureComponent {
   }
 
   /**
-   * Event handler - onSubmit event on form
+   * Event handler - onSubmit event on LoginForm component
    * @param event
    */
   handleSubmit = event => {
-    const { username, password } = this.state
     event.preventDefault()
-    this.props.authenticate({ username, password })
+    this.props.logIn({ username: this.state.username, password: this.state.password })
   }
 
   /**
@@ -91,16 +67,12 @@ class LoginPage extends React.PureComponent {
     })
   }
 
-  /**
-   * Render component
-   * @returns {*}
-   */
   render() {
-    const { isAuthenticated, isAuthenticating, location } = this.props
+    const { isAuth, isFetching, location } = this.props
     const { username, password, showPassword } = this.state
 
-    // Redirect if authentication success
-    if (isAuthenticated) {
+    // Redirect on log in success
+    if (isAuth) {
       const { from } = location.state || { from: { pathname: '/dashboard' } }
       return <Redirect to={from} />
     }
@@ -110,7 +82,7 @@ class LoginPage extends React.PureComponent {
         formLabel="Log in"
         entity={{ username, password }}
         showPassword={showPassword}
-        disableSubmit={isAuthenticating}
+        disableSubmit={isFetching}
         onSubmit={this.handleSubmit}
         onChange={this.handleChange}
         onShowPassword={this.handleShowPassword}
@@ -120,29 +92,26 @@ class LoginPage extends React.PureComponent {
 }
 
 /**
- * Map user and fetching state
- * @param state
- * @returns {{isAuthenticated: boolean, isAuthenticating: *}}
+ * Map state data to props
+ * @param {State} state - Global state tree
+ * @returns {{isAuth: boolean, isFetching: (*|boolean|Boolean)}}
  */
 const mapStateToProps = state => ({
-  isAuthenticated: state.user.isAuth,
-  isAuthenticating: state.isFetching
+  isAuth: state.session.isAuth,
+  isFetching: state.isFetching
 })
 
 /**
- * Map user actions to props
- * @param dispatch
- * @returns {{authenticate: authenticate}}
+ * Map logIn action creator to props
+ * @param {Function} dispatch - action creator dispatcher
+ * @returns {{logIn: (function(*=): *)}}
  */
 const mapDispatchToProps = dispatch => {
   return {
-    authenticate: credentials => {
-      dispatch(userAction.logIn(credentials))
-    }
+    logIn: credentials => dispatch(logIn(credentials))
   }
 }
 
-// Connect mapped state data and user actions to component properties
 export default connect(
   mapStateToProps,
   mapDispatchToProps

@@ -47,7 +47,7 @@ function NotFoundPage(props) {
       <Card className={classes.card}>
         <CardMedia className={classes.media} image={NotFoundImage} title="Contemplative Reptile" />
         <CardContent>
-          <Typography variant="headline" component="h2">
+          <Typography variant="h5">
             Ooops!
           </Typography>
           <Typography component="p">That is not an available resource.</Typography>

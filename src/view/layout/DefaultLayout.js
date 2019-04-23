@@ -1,32 +1,31 @@
 /**
  * @prettier
- * @description: Layouts module
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
+ * @description: DefaultLayout component
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 import React from 'react'
 import { Route } from 'react-router-dom'
 
 // material-ui
 import Grid from '@material-ui/core/Grid/Grid'
+import { withStyles } from '@material-ui/core/styles'
 
 // custom components
 import Notification from '../components/notification/Notification'
 import LinearProgressbar from '../components/progress/LinearProgressbar'
 import Header from '../components/header/Header'
-import { withStyles } from '@material-ui/core/styles'
 
-// User provider
-import UserProvider from '../providers/UserProvider'
-
+/**
+ * Custom styles
+ * @type {{container: {marginTop: string}}}
+ */
 const styles = {
   container: {
     marginTop: '64px'
   }
 }
-
 
 /**
  * Default layout
@@ -40,9 +39,9 @@ const DefaultLayout = ({ component: Component, classes, ...rest }) => {
   return (
     <Route
       {...rest}
-      render={({staticContext, ...matchProps}) => {
+      render={({ staticContext, ...matchProps }) => {
         return (
-          <UserProvider>
+          <React.Fragment>
             <Notification />
             <LinearProgressbar />
             <Header />
@@ -56,7 +55,7 @@ const DefaultLayout = ({ component: Component, classes, ...rest }) => {
             >
               <Component {...matchProps} />
             </Grid>
-          </UserProvider>
+          </React.Fragment>
         )
       }}
     />
