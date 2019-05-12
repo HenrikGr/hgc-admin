@@ -3,9 +3,20 @@
 
 # Ignore node_modules
 /node_modules/
+package-lock.json
+yarn-error.log
+yarn.lock
 
-# Ignore static production build to GITHUB
-/build/
+
+# Ignore environment
 /.env.development
 /.env.production
 /.env
+
+
+# Ignore static production build to GITHUB
+/build/
+/public/
+
+# Ignore caches
+.cache/
