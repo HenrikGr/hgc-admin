@@ -9,19 +9,19 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 // material-ui
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import Tooltip from '@material-ui/core/Tooltip'
-import IconButton from '@material-ui/core/IconButton'
+import Dialog from '@material-ui/core/Dialog/index'
+import DialogActions from '@material-ui/core/DialogActions/index'
+import DialogContent from '@material-ui/core/DialogContent/index'
+import DialogContentText from '@material-ui/core/DialogContentText/index'
+import DialogTitle from '@material-ui/core/DialogTitle/index'
+import Tooltip from '@material-ui/core/Tooltip/index'
+import IconButton from '@material-ui/core/IconButton/index'
 import FeedbackIcon from '@material-ui/icons/Feedback'
-import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
+import TextField from '@material-ui/core/TextField/index'
 
 // custom components
-import CloseButton from '../buttons/CloseButton'
+import CloseButton from '../../components/buttons/CloseButton'
+import GenerateSecretsButton from '../../components/buttons/GenerateSecretsButton'
 
 import { clientMgr } from '../../../domain/entity'
 
@@ -35,9 +35,9 @@ class ClientSecretsDialog extends React.PureComponent {
    */
   static propTypes = {
     /**
-     * UIModel object that should contain secrets
+     * Client entity object
      */
-    client: PropTypes.object.isRequired,
+    client: PropTypes.object.isRequired
   }
 
   /**
@@ -55,7 +55,8 @@ class ClientSecretsDialog extends React.PureComponent {
   }
 
   handleGetSecrets = () => {
-    clientMgr.getClientSecret(this.props.client.name)
+    clientMgr
+      .getClientSecret(this.props.client.name)
       .then(data => {
         this.setState({
           open: true,
@@ -69,7 +70,8 @@ class ClientSecretsDialog extends React.PureComponent {
   }
 
   handleGenerateSecrets = () => {
-    clientMgr.generateClientSecret(this.props.client.name)
+    clientMgr
+      .generateClientSecret(this.props.client.name)
       .then(data => {
         this.setState({
           open: true,
@@ -99,8 +101,8 @@ class ClientSecretsDialog extends React.PureComponent {
           <DialogTitle id="form-dialog-title">Client secrets</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Client Id and Client Secret are values you should copy and use in you own app.
-              If there are no value, you could generate new values once.
+              Client Id and Client Secret are values you should copy and use in you own app. If there are no
+              value, you could generate new values once.
             </DialogContentText>
             <TextField
               disabled
@@ -122,15 +124,15 @@ class ClientSecretsDialog extends React.PureComponent {
             />
           </DialogContent>
           <DialogActions>
-            { !this.state.clientId ? (
+            {!this.state.clientId ? (
               <React.Fragment>
-                <Button color="primary" onClick={this.handleGenerateSecrets} >
+                <GenerateSecretsButton onClick={this.handleGenerateSecrets}>
                   Generate secrets
-                </Button>
-                <CloseButton color='primary' variant='outlined' onClick={this.handleClose} />
+                </GenerateSecretsButton>
+                <CloseButton onClick={this.handleClose} />
               </React.Fragment>
             ) : (
-              <CloseButton color='primary' variant='outlined' onClick={this.handleClose} />
+              <CloseButton onClick={this.handleClose} />
             )}
           </DialogActions>
         </Dialog>

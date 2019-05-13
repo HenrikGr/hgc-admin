@@ -10,17 +10,18 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-// Custom components
-import Form from '../components/schemaform/Form'
-import TabsNavigator from '../components/navigator/TabsNavigator'
-import ToolbarActions from '../components/toolbars/ToolbarActions'
+// Generic custom components
+import TabsNavigator from '../../components/navigator/TabsNavigator'
 
-// context providers
-import FormProvider from '../providers/FormProvider'
+// Client custom component
+import ClientToolbarActions from './ClientToolbarActions'
+import ClientForm from './ClientForm'
 
-// Action creators used to update clients store
-import clientActions from '../../store/actions/ClientActions'
-import clientSchema from '../../domain/entity/schemas/client'
+// Client action creators used to update clients store
+import clientActions from '../../../store/actions/ClientActions'
+
+// Client json schema to be used by form provider
+import clientSchema from '../../../domain/entity/schemas/client'
 
 /**
  * ClientPage
@@ -38,18 +39,18 @@ class ClientPage extends React.PureComponent {
     /**
      * Action creators
      */
-    actions: PropTypes.object.isRequired,
+    actions: PropTypes.object.isRequired
   }
 
   /**
-   * Fetch clients by query params
+   * Fetch clients by query params on mount
    */
   componentDidMount() {
     this.props.actions.findClientsByQuery({ page: 0, sort: 'name' })
   }
 
   /**
-   * Event handler for input elements onChange event
+   * Event handler for form input elements onChange event
    * Update entered value in global state
    * @param prop
    * @param value
@@ -100,13 +101,14 @@ class ClientPage extends React.PureComponent {
     return (
       <React.Fragment>
         <TabsNavigator
-          variant="dense"
           items={this.props.clients}
           selectedItem={this.props.selectedClient}
           onChange={this.handleSelect}
-        />
-        <ToolbarActions entity={this.props.selectedClient} />
-        <FormProvider
+        >
+          <ClientToolbarActions entity={this.props.selectedClient} />
+        </TabsNavigator>
+
+        <ClientForm
           formLabel="Client"
           entity={this.props.selectedClient}
           onChange={this.handleChange}
@@ -114,9 +116,7 @@ class ClientPage extends React.PureComponent {
           onRemove={this.handleRemove}
           onReset={this.handleReset}
           schema={clientSchema}
-        >
-          <Form />
-        </FormProvider>
+        />
       </React.Fragment>
     )
   }
@@ -142,7 +142,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return { actions: bindActionCreators(clientActions, dispatch) }
 }
-
 
 // Inject state and action creators to presentation layer
 export default connect(

@@ -1,6 +1,6 @@
 /**
  * @prettier
- * @description: FormProvider
+ * @description: ClientForm
  * @copyright (c) 2018 - present, HGC AB.
  * @licence This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,18 +8,37 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-// Form context
-import FormContext from './context/Form'
+import FormLabel from '@material-ui/core/FormLabel/index'
+import { withStyles } from '@material-ui/core/styles/index'
+
+import FormFields from './FormFields'
 
 // Schema uiModel and UIModel
-import UIModel from '../../domain/ui-service/UIModel'
+import UIModel from '../../../domain/ui-service/UIModel'
+import SaveButton from '../../components/buttons/SaveButton'
+import DeleteButton from '../../components/buttons/DeleteButton'
+import ResetButton from '../../components/buttons/ResetButton'
+
+const styles = theme => ({
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    maxWidth: '744px',
+    padding: theme.spacing.unit * 3
+  },
+  actions: {
+    display: 'flex',
+    justifyContent: 'flex-end'
+  }
+})
 
 /**
- * FormProvider
- * @class FormProvider
+ * ClientForm
+ * @class ClientForm
  * @public
  */
-class FormProvider extends React.PureComponent {
+class ClientForm extends React.PureComponent {
   static propTypes = {
     /**
      * Label text for the form
@@ -48,7 +67,7 @@ class FormProvider extends React.PureComponent {
     /**
      * JSON Schema to be used to create uiModel and default data services
      */
-    schema: PropTypes.object.isRequired,
+    schema: PropTypes.object.isRequired
   }
 
   /**
@@ -112,22 +131,30 @@ class FormProvider extends React.PureComponent {
    * @returns {*}
    */
   render() {
+    const { classes, formLabel, entity } = this.props
+    const hasEntity = !!entity._id // Control visible buttons based on services exist or not
+
     return (
-      <FormContext.Provider
-        value={{
-          formLabel: this.props.formLabel,
-          entity: this.props.entity,
-          onChange: this.handleChange,
-          onSubmit: this.handleSubmit,
-          onReset: this.handleReset,
-          onRemove: this.handleRemove,
-          uiModel: this.uiModel,
-        }}
-      >
-        {this.props.children}
-      </FormContext.Provider>
+      <form className={classes.root}>
+        <FormLabel component="legend">{formLabel}</FormLabel>
+        <FormFields uiModel={this.uiModel} entity={entity} onChange={this.handleChange} />
+        <div className={classes.actions}>
+          {hasEntity ? (
+            <React.Fragment>
+              <SaveButton onClick={this.handleSubmit} />
+              <DeleteButton message={'Delete ' + entity.name + ' ?'} onClick={this.handleRemove} />
+              <ResetButton onClick={this.handleReset} />
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <SaveButton onClick={this.handleSubmit} />
+              <ResetButton onClick={this.handleReset} />
+            </React.Fragment>
+          )}
+        </div>
+      </form>
     )
   }
 }
 
-export default FormProvider
+export default withStyles(styles)(ClientForm)

@@ -1,23 +1,23 @@
 /**
  * @prettier
- * @description: FormMappedFields
+ * @description: FormFields
  * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 import React from 'react'
 import PropTypes from 'prop-types'
 
 // custom component
-import TextField from '../fields/TextField'
-import SelectField from '../fields/SelectField'
+import TextField from '../../components/fields/TextField'
+import SelectField from '../../components/fields/SelectField'
 import { isEmpty } from '../../../utils/helper'
 
 /**
- * FormMappedFields
+ * FormFields
  */
-export default class FormMappedFields extends React.PureComponent {
+export default class FormFields extends React.PureComponent {
   /**
    * Property type check
    * @type {Object}
@@ -49,15 +49,7 @@ export default class FormMappedFields extends React.PureComponent {
 
   getTextField = key => {
     const { uiModel, entity, onChange } = this.props
-    return (
-      <TextField
-        key={key}
-        id={key}
-        label={uiModel[key].label}
-        value={entity[key]}
-        onChange={onChange}
-      />
-    )
+    return <TextField key={key} id={key} label={uiModel[key].label} value={entity[key]} onChange={onChange} />
   }
 
   /**

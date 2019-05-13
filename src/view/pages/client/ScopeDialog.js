@@ -8,21 +8,21 @@
 import React from 'react'
 
 // material-ui
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import Tooltip from '@material-ui/core/Tooltip'
-import IconButton from '@material-ui/core/IconButton'
+import Dialog from '@material-ui/core/Dialog/index'
+import DialogActions from '@material-ui/core/DialogActions/index'
+import DialogContent from '@material-ui/core/DialogContent/index'
+import DialogContentText from '@material-ui/core/DialogContentText/index'
+import DialogTitle from '@material-ui/core/DialogTitle/index'
+import Tooltip from '@material-ui/core/Tooltip/index'
+import IconButton from '@material-ui/core/IconButton/index'
 import FeedbackOutlinedIcon from '@material-ui/icons/FeedbackOutlined'
-import TextField from '@material-ui/core/TextField'
+import TextField from '@material-ui/core/TextField/index'
 
 // custom components
-import AddButton from '../buttons/AddButton'
-import DeleteButton from '../buttons/DeleteButton'
-import CloseButton from '../buttons/CloseButton'
-import SelectedList from '../list/SelectedList'
+import AddButton from '../../components/buttons/AddButton'
+import DeleteButton from '../../components/buttons/DeleteButton'
+import CloseButton from '../../components/buttons/CloseButton'
+import SelectedList from '../../components/list/SelectedList'
 
 import { scopeMgr } from '../../../domain/entity'
 
@@ -223,7 +223,7 @@ class ScopeDialog extends React.PureComponent {
                 onClick={this.handleDeleteScope}
               />
             )}
-            <CloseButton variant="outlined" color="primary" onClick={this.handleClose} />
+            <CloseButton variant="outlined" onClick={this.handleClose} />
           </DialogActions>
         </Dialog>
       </div>
