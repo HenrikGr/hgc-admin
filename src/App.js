@@ -25,7 +25,7 @@ const AsyncLoginPage = withAsyncImport(() => import('./view/pages/LoginPage'))
 const AsyncDashboardPage = withAsyncImport(() => import('./view/pages/DashboardPage'))
 const AsyncProfilePage = withAsyncImport(() => import('./view/pages/ProfilePage'))
 const AsyncUsersPage = withAsyncImport(() => import('./view/pages/UsersPage'))
-const AsyncClientPage = withAsyncImport(() => import('./view/pages/ClientPage'))
+const AsyncClientPage = withAsyncImport(() => import('./view/pages/client/ClientPage'))
 const AsyncNotFoundPage = withAsyncImport(() => import('./view/pages/NotFound'))
 
 /**
