@@ -36,9 +36,9 @@ class ScopeDialog extends React.PureComponent {
    */
   state = {
     open: false,
-    name: '',
-    selectedItem: '',
-    items: []
+    newScope: '',
+    removeScope: '',
+    scopes: []
   }
 
   /**
@@ -64,8 +64,8 @@ class ScopeDialog extends React.PureComponent {
     return (prevState, currProps) => {
       return {
         ...prevState,
-        name: '',
-        selectedItem: prevState.selectedItem === delta ? '' : delta
+        newScope: '',
+        removeScope: prevState.removeScope === delta ? '' : delta
       }
     }
   }
@@ -79,9 +79,9 @@ class ScopeDialog extends React.PureComponent {
     return (prevState, currProps) => {
       return {
         ...prevState,
-        name: '',
-        selectedItem: '',
-        items: prevState.items.filter(item => item !== delta)
+        newScope: '',
+        removeScope: '',
+        scopes: prevState.scopes.filter(item => item !== delta)
       }
     }
   }
@@ -95,9 +95,9 @@ class ScopeDialog extends React.PureComponent {
     return (prevState, currProps) => {
       return {
         ...prevState,
-        name: '',
-        selectedItem: '',
-        items: [...prevState.items, delta]
+        newScope: '',
+        removeScope: '',
+        scopes: [...prevState.scopes, delta]
       }
     }
   }
@@ -107,7 +107,7 @@ class ScopeDialog extends React.PureComponent {
    */
   handleClickOpen = () => {
     scopeMgr.getAllScopes().then(data => {
-      this.setState({ open: true, name: '', selectedItem: '', items: data })
+      this.setState({ open: true, newScope: '', removeScope: '', scopes: data })
     })
   }
 
@@ -115,27 +115,27 @@ class ScopeDialog extends React.PureComponent {
    * Event handler for the dialog onClose callback event
    */
   handleClose = () => {
-    this.setState({ open: false, name: '' })
+    this.setState({ open: false, newScope: '' })
   }
 
   /**
    * Event handler for the text fields onChange event
-   * @param name
+   * @param newScope
    * @returns {Function}
    */
-  handleChange = name => event => {
+  handleChange = newScope => event => {
     this.setState({
-      [name]: event.target.value
+      [newScope]: event.target.value
     })
   }
 
   /**
    * Event handler that receives the selected item (scope) from the SelectedList component
-   * @param selectedItem
+   * @param removeScope
    */
-  handleSelect = selectedItem => {
-    this.setState(this.setSelectedScope(selectedItem), () => {
-      if (this.state.selectedItem === '') {
+  handleSelect = removeScope => {
+    this.setState(this.setSelectedScope(removeScope), () => {
+      if (this.state.removeScope === '') {
         this.focusTextInput()
       }
     })
@@ -146,7 +146,7 @@ class ScopeDialog extends React.PureComponent {
    */
   handleAddScope = () => {
     scopeMgr
-      .createScope(this.state.name)
+      .createScope(this.state.newScope)
       .then(data => {
         this.setState(this.addScope(data.name), () => {
           this.focusTextInput()
@@ -161,12 +161,12 @@ class ScopeDialog extends React.PureComponent {
    * Event handler for the delete button onClick event
    */
   handleDeleteScope = () => {
-    const { selectedItem } = this.state
-    if (selectedItem !== '') {
+    const { removeScope } = this.state
+    if (removeScope !== '') {
       scopeMgr
-        .deleteScope(selectedItem)
+        .deleteScope(removeScope)
         .then(() => {
-          this.setState(this.removeScope(selectedItem), () => {
+          this.setState(this.removeScope(removeScope), () => {
             this.focusTextInput()
           })
         })
@@ -198,27 +198,28 @@ class ScopeDialog extends React.PureComponent {
           <DialogContent>
             <DialogContentText>Available scope(s)</DialogContentText>
             <SelectedList
-              items={this.state.items}
-              selectedItem={this.state.selectedItem}
+              items={this.state.scopes}
+              selectedItem={this.state.removeScope}
               onSelect={this.handleSelect}
             />
             <TextField
-              disabled={this.state.selectedItem !== ''}
+              disabled={this.state.removeScope !== ''}
               fullWidth
               autoFocus
               type="text"
               margin="dense"
-              label="Scope name"
+              label="Scope"
+              placeholder="Add new scope"
               inputRef={this.textInput}
-              value={this.state.name}
-              onChange={this.handleChange('name')}
+              value={this.state.newScope}
+              onChange={this.handleChange('newScope')}
             />
           </DialogContent>
           <DialogActions>
-            {this.state.name !== '' && <AddButton color="primary" onClick={this.handleAddScope} />}
-            {this.state.selectedItem !== '' && (
+            {this.state.newScope !== '' && <AddButton color="primary" onClick={this.handleAddScope} />}
+            {this.state.removeScope !== '' && (
               <DeleteButton
-                message={'Do you want to delete ' + this.state.selectedItem + ' ?'}
+                message={'Do you want to delete ' + this.state.removeScope + ' ?'}
                 onClick={this.handleDeleteScope}
               />
             )}

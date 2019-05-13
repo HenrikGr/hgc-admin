@@ -48,7 +48,7 @@ class CredentialsEntity {
     this._credentials = {
       username: username,
       password: password,
-      client_id: this._validator.defaultEntity.client_id,
+      client_id: process.env.REACT_APP_CLIENT_ID,
       grant_type: this._validator.defaultEntity.grant_type
     }
   }

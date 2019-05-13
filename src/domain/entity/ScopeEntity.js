@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 import XHRService from './XHRService'
-import Store from './Store'
 
 /**
  * Scope entity
@@ -23,9 +22,8 @@ class ScopeEntity extends XHRService {
    * ScopeEntity constructor
    * @param {Object} options - constructor options
    * @param {string} options.url - resource url identifier
-   * @param {string} options.persistKey - entity persistence key
    */
-  constructor({ url = '/api/scopes', persistKey = null } = {}) {
+  constructor({ url = '/api/scopes' } = {}) {
     super()
 
     /**
@@ -35,22 +33,6 @@ class ScopeEntity extends XHRService {
      * @private
      */
     this._url = url
-
-    /**
-     * Persist entity locally
-     * @type {boolean}
-     * @property
-     * @private
-     */
-    this._localPersist = !!persistKey
-
-    /**
-     * Store to persist entity
-     * @type {Store | null}
-     * @property
-     * @private
-     */
-    this._store = !!persistKey ? new Store(persistKey) : null
   }
 
   async createScope(name) {
