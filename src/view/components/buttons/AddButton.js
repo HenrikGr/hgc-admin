@@ -68,7 +68,7 @@ AddButton.propTypes = {
  * @type {{variant: string, color: string}}
  */
 AddButton.defaultProps = {
-  variant: 'contained',
+  variant: 'outlined',
   color: 'primary'
 }
 
