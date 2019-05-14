@@ -16,6 +16,7 @@ import Tabs from '@material-ui/core/Tabs/Tabs'
 
 /**
  * TabsNavigator
+ * @param children
  * @param variant
  * @param selectedItem
  * @param items
@@ -23,7 +24,7 @@ import Tabs from '@material-ui/core/Tabs/Tabs'
  * @returns {*}
  * @constructor
  */
-function TabsNavigator({ variant, selectedItem, items, onChange }) {
+function TabsNavigator({ children, variant, selectedItem, items, onChange }) {
   // If no id set value false
   const value = selectedItem._id ? selectedItem._id : false
 
@@ -35,13 +36,14 @@ function TabsNavigator({ variant, selectedItem, items, onChange }) {
           onChange={onChange}
           indicatorColor="secondary"
           textColor="inherit"
-          variant='scrollable'
+          variant="scrollable"
           scrollButtons={'off'}
         >
           {items.length > 0 &&
             items.map((item, index) => <Tab key={index} label={item.name} value={item._id} />)}
         </Tabs>
       </Toolbar>
+      {children}
     </Paper>
   )
 }
@@ -66,7 +68,7 @@ TabsNavigator.propTypes = {
 }
 
 TabsNavigator.defaultProps = {
-  variant: 'regular'
+  variant: 'dense'
 }
 
 export default TabsNavigator
