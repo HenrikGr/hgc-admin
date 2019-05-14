@@ -21,7 +21,7 @@ import TextField from '@material-ui/core/TextField/index'
 
 // custom components
 import CloseButton from '../../components/buttons/CloseButton'
-import GenerateSecretsButton from '../../components/buttons/GenerateSecretsButton'
+import CreateButton from '../../components/buttons/CreateButton'
 
 import { clientMgr } from '../../../domain/entity'
 
@@ -126,9 +126,9 @@ class ClientSecretsDialog extends React.PureComponent {
           <DialogActions>
             {!this.state.clientId ? (
               <React.Fragment>
-                <GenerateSecretsButton onClick={this.handleGenerateSecrets}>
+                <CreateButton onClick={this.handleGenerateSecrets}>
                   Generate secrets
-                </GenerateSecretsButton>
+                </CreateButton>
                 <CloseButton onClick={this.handleClose} />
               </React.Fragment>
             ) : (
