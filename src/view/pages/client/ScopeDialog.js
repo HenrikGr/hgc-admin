@@ -58,10 +58,10 @@ class ScopeDialog extends React.PureComponent {
   /**
    * Helper to ensure atomic update of state
    * @param delta
-   * @returns {function(*, *): {[p: string]: *}}
+   * @returns {function(*, *): {removeScope: string, newScope: string}}
    */
   setSelectedScope = delta => {
-    return (prevState, currProps) => {
+    return prevState => {
       return {
         ...prevState,
         newScope: '',
@@ -73,10 +73,10 @@ class ScopeDialog extends React.PureComponent {
   /**
    * Helper to ensure atomic update of state
    * @param delta
-   * @returns {function(*, *): {[p: string]: *}}
+   * @returns {function(*, *): {removeScope: string, newScope: string, scopes: T[]}}
    */
   removeScope = delta => {
-    return (prevState, currProps) => {
+    return prevState => {
       return {
         ...prevState,
         newScope: '',
@@ -89,10 +89,10 @@ class ScopeDialog extends React.PureComponent {
   /**
    * Helper to ensure atomic update of state
    * @param delta
-   * @returns {function(*, *): {[p: string]: *}}
+   * @returns {function(*): {removeScope: string, newScope: string, scopes: *[]}}
    */
   addScope = delta => {
-    return (prevState, currProps) => {
+    return prevState => {
       return {
         ...prevState,
         newScope: '',
@@ -219,7 +219,7 @@ class ScopeDialog extends React.PureComponent {
             {this.state.newScope !== '' && <AddButton color="primary" onClick={this.handleAddScope} />}
             {this.state.removeScope !== '' && (
               <DeleteButton
-                message={'Do you want to delete ' + this.state.removeScope + ' ?'}
+                message={'Delete scope: ' + this.state.removeScope + ' ?'}
                 onClick={this.handleDeleteScope}
               />
             )}
