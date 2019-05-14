@@ -39,7 +39,7 @@ function AlertDialog({ open, message, onClose, onConfirm }) {
         <DialogContentText id="alert-dialog-description">{message}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button color="primary" onClick={() => onConfirm(true)}>
+        <Button variant='outlined' color="primary" onClick={() => onConfirm(true)}>
           Accept
         </Button>
         <Button autoFocus variant="outlined" color="primary" onClick={() => onConfirm(false)}>
