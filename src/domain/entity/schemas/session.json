@@ -1,0 +1,22 @@
+{
+  "$id": "http://hgc.se/session.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["isAuth", "expires_in", "expiresAt"],
+  "additionalProperties": false,
+  "properties": {
+    "isAuth": {
+      "type": "boolean",
+      "default": false
+    },
+    "expires_in": {
+      "type": "number",
+      "default": 0
+    },
+    "expiresAt": {
+      "type": "object",
+      "format": "date-time",
+      "default": null
+    }
+  }
+}
