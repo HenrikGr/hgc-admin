@@ -1,16 +1,16 @@
 /**
  * @prettier
  * @description: XHR Service
+ * @module XHRService
  * @copyright (c) 2018 - present, HGC AB.
- * @licence This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
+ * @licence This source code is licensed under the MIT license
  */
 import axios from 'axios'
 import qs from 'qs'
 import Store from './Store'
 
 /**
- * Axios configuration
+ * HTTP client configuration
  * @type {{baseURL: string, contentType: string}}
  */
 const config = {
@@ -19,17 +19,34 @@ const config = {
 }
 
 /**
- * XHRService class using axios for services
+ * XHR response object
+ * @typedef {Promise} ResponseEntity
+ * @property {Object.<TokenEntity|ProfileEntity|UserEntity|ClientEntity|any|never>} data - response object
+ */
+
+/**
+ * XHRService class using axios HTTP client and
+ * does also provide an interface to persist data
+ * in sessionStorage and add that data to the HTTP
+ * header for every request. A typical use case is
+ * to store tokens in the sessionStore and look it
+ * up and add it to the HTT headers for requests
+ *
+ * @example
+ * const token = await post.getToken()
+ * setStoreItem(token)
+ *
+ * When consecutive request will be made,
+ * the request interceptor function will
+ * look it up and add it to the HTTP
+ * header,
+ *
  * @class
- * @public
  */
 class XHRService {
-  /**
-   * XHRService constructor
-   */
   constructor() {
     /**
-     * Session store
+     * Store instance providing an interface to sessionStorage
      * @type {Store}
      * @private
      */
@@ -42,8 +59,8 @@ class XHRService {
      */
     this._xhr = axios.create(config)
 
-    // Add request interceptor functions
-    this._xhr.interceptors.request.use(this.requestInterceptor, this.interceptorError)
+    // Intercept requests before they are handled by then or catch.
+    this._xhr.interceptors.request.use(this.requestInterceptorFulfilled, this.requestInterceptorError)
   }
 
   /**
@@ -51,12 +68,11 @@ class XHRService {
    * @param config
    * @returns {*}
    */
-  requestInterceptor = config => {
+  requestInterceptorFulfilled = config => {
     const token = this._store.getItem('token')
     if (token) {
       const { access_token, token_type } = token
       config.headers.common['Authorization'] = `${token_type} ${access_token}`
-      console.log('interceptor: adding access token')
     }
 
     return config
@@ -67,40 +83,43 @@ class XHRService {
    * @param error
    * @returns {Promise<never>}
    */
-  interceptorError = error => {
-    console.log('Interceptor error', error)
+  requestInterceptorError = error => {
     // Do something with request error
     return Promise.reject(error)
   }
 
-  // noinspection JSMethodCanBeStatic
   /**
-   * Set AuthorizationHeader
-   * @param {TokenEntity} token - token entity
+   * Persist token in store
+   * @param {TokenEntity} entity - token to be persisted
    * @public
    */
-  persistToken(token) {
-    this._store.setItem('token', token)
+  setStoreItem(entity) {
+    this._store.setItem('token', entity)
   }
 
-  // noinspection JSMethodCanBeStatic
   /**
-   * Remove token from AuthorizationHeader
+   * Remove token from store
    * @public
    */
-  removePersistedToken() {
+  removeStoreItem() {
     this._store.removeItem('token')
   }
 
-  getPersistedToken() {
+  /**
+   * Get persisted token from store
+   * @returns {TokenEntity}- the persisted token entity
+   * @public
+   */
+  getStoreItem() {
     return this._store.getItem('token')
   }
 
   /**
    * Find entities by query params
-   * @param {string} url - resource url to query
+   * @param {String} url - resource url to query
    * @param {Object} params - query parameters
-   * @returns {Promise<any | never>}
+   * @returns {Promise<ResponseEntity[]>} - an array of entities
+   * @throws {ValidationException} throws an error on failure
    * @public
    */
   find(url, params) {
@@ -112,8 +131,9 @@ class XHRService {
 
   /**
    * Get an entity
-   * @param {string} url - resource url including the resource identifier
-   * @returns {Promise<any | never>}
+   * @param {String} url - resource url including the resource identifier
+   * @returns {Promise<ResponseEntity>} - a response entity
+   * @throws {ValidationException} throws an error on failure
    * @public
    */
   get(url) {
@@ -125,8 +145,9 @@ class XHRService {
 
   /**
    * Delete entity
-   * @param {string} url - resource url including the resource identifier to be deleted
+   * @param {String} url - resource url including the resource identifier to be deleted
    * @returns {Promise<any | never>}
+   * @throws {ValidationException} throws an error on failure
    * @public
    */
   delete(url) {
@@ -137,20 +158,8 @@ class XHRService {
   }
 
   /**
-   *
-   * @param url
-   * @param conf
-   * @returns {Promise<any | never>}
-   */
-  head(url, conf = {}) {
-    return this._xhr
-      .head(url, conf)
-      .then(response => Promise.resolve(response.data))
-      .catch(error => Promise.reject(error))
-  }
-
-  /**
-   *
+   * In CORS, a pre-flight request with the OPTIONS method is sent, so that the server can respond
+   * whether it is acceptable to send the request with these parameters.
    * @param url
    * @param conf
    * @returns {Q.Promise<never> | * | Promise<T | never> | *}
@@ -164,9 +173,10 @@ class XHRService {
 
   /**
    * Create entity
-   * @param {string} url - resource url used to create a new entity
+   * @param {String} url - resource url used to create a new entity
    * @param {Object} entity - entity object
-   * @returns {Promise<any | never>}
+   * @returns {Promise<ResponseEntity>} - a response entity
+   * @throws {ValidationException} throws an error on failure
    * @public
    */
   post(url, entity) {
@@ -180,7 +190,8 @@ class XHRService {
    * Update entity
    * @param {string} url - resource url including resource identifier to update
    * @param {Object} entity - entity object to be updated
-   * @returns {Promise<any | never>}
+   * @returns {Promise<ResponseEntity>} - a response entity
+   * @throws {ValidationException} throws an error on failure
    * @public
    */
   put(url, entity) {
@@ -192,12 +203,15 @@ class XHRService {
 
   /**
    * Update entity
-   * @param {string} url - resource url including resource identifier to update
-   * @returns {Promise<any | never>}
+   * @param {String} url - resource url including resource identifier to update
+   * @param {Object} entity - entity object to be updated
+   * @returns {Promise<ResponseEntity>} - a response entity
+   * @throws {ValidationException} throws an error on failure
+   * @public
    */
-  patch(url) {
+  patch(url, entity) {
     return this._xhr
-      .patch(url)
+      .patch(url, entity)
       .then(response => Promise.resolve(response.data))
       .catch(error => Promise.reject(this.errorHandler(error)))
   }
