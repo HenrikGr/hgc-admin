@@ -19,12 +19,6 @@ const config = {
 }
 
 /**
- * XHR response object
- * @typedef {Promise} ResponseEntity
- * @property {Object.<TokenEntity|ProfileEntity|UserEntity|ClientEntity|any|never>} data - response object
- */
-
-/**
  * XHRService class using axios HTTP client and
  * does also provide an interface to persist data
  * in sessionStorage and add that data to the HTTP
@@ -118,7 +112,7 @@ class XHRService {
    * Find entities by query params
    * @param {String} url - resource url to query
    * @param {Object} params - query parameters
-   * @returns {Promise<ResponseEntity[]>} - an array of entities
+   * @returns {Promise<TokenEntity[]|ProfileEntity[]|UserEntity[]|ClientEntity[]|any|never>} - a response entity
    * @throws {ValidationException} throws an error on failure
    * @public
    */
@@ -132,7 +126,7 @@ class XHRService {
   /**
    * Get an entity
    * @param {String} url - resource url including the resource identifier
-   * @returns {Promise<ResponseEntity>} - a response entity
+   * @returns {Promise<TokenEntity|ProfileEntity|UserEntity|ClientEntity|any|never>} - a response entity
    * @throws {ValidationException} throws an error on failure
    * @public
    */
@@ -175,7 +169,7 @@ class XHRService {
    * Create entity
    * @param {String} url - resource url used to create a new entity
    * @param {Object} entity - entity object
-   * @returns {Promise<ResponseEntity>} - a response entity
+   * @returns {Promise<TokenEntity|ProfileEntity|UserEntity|ClientEntity|any|never>} - a response entity
    * @throws {ValidationException} throws an error on failure
    * @public
    */
@@ -190,7 +184,7 @@ class XHRService {
    * Update entity
    * @param {string} url - resource url including resource identifier to update
    * @param {Object} entity - entity object to be updated
-   * @returns {Promise<ResponseEntity>} - a response entity
+   * @returns {Promise<TokenEntity|ProfileEntity|UserEntity|ClientEntity|any|never>} - a response entity
    * @throws {ValidationException} throws an error on failure
    * @public
    */
@@ -205,7 +199,7 @@ class XHRService {
    * Update entity
    * @param {String} url - resource url including resource identifier to update
    * @param {Object} entity - entity object to be updated
-   * @returns {Promise<ResponseEntity>} - a response entity
+   * @returns {Promise<TokenEntity|ProfileEntity|UserEntity|ClientEntity|any|never>} - a response entity
    * @throws {ValidationException} throws an error on failure
    * @public
    */
