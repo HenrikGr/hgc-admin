@@ -25,10 +25,6 @@
  * @class
  */
 class Store extends Map {
-
-
-
-
   /**
    * Get value by key from sessionStorage
    * @param {String} key - key to be used getting value from sessionStorage
