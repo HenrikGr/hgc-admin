@@ -29,7 +29,6 @@ import credentialsSchema from '../entity/schemas/credentials'
 
 /**
  * SessionAPI class providing an interface to create, refresh and remove a session
- *
  * The class extends the XHRService class which is a HTTP client wrapper providing
  * access to a store interface for storage of tokens in the HTTP client
  *

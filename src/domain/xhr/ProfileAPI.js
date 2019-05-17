@@ -20,7 +20,6 @@ import profileSchema from '../entity/schemas/profile'
 
 /**
  * ProfileAPI class provide an interface to find, update and delete profile entities
- *
  * The class extends the XHRService class which is a HTTP client wrapper
  *
  * @example
@@ -61,7 +60,7 @@ class ProfileAPI extends XHRService {
   /**
    * Getter to retrieve the instance entity
    * @returns {ProfileEntity} - instance entity object
-   * @private
+   * @public
    */
   get profile() {
     return this._profile
@@ -70,7 +69,7 @@ class ProfileAPI extends XHRService {
   /**
    * Setter to set the instance entity
    * @param {ProfileEntity} entity - entity object to update instance entity
-   * @private
+   * @public
    */
   set profile(entity) {
     try {
