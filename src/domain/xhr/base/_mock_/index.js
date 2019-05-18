@@ -1,14 +1,13 @@
 /**
  * @prettier
- * @description: Storage mock plugin
+ * @description: Global object for the Storage mock plug-in
  * @copyright (c) 2018 - present, HGC AB.
- * @licence This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
+ * @licence This source code is licensed under the MIT license
  */
 import Storage from './Storage'
 
 /**
- * Set up global object
+ * The plug-in
  */
 export default function() {
   /**
