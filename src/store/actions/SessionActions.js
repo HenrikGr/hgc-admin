@@ -56,9 +56,13 @@ export function logIn({ username, password }) {
  */
 export function refreshSession() {
   return async function(dispatch) {
-    dispatch({ type: FETCH_START })
-    const token = await sessionAPI.refreshSession()
-    dispatch({ type: FETCH_REFRESH_SESSION_SUCCESS, payload: token })
+    try {
+      dispatch({ type: FETCH_START })
+      const token = await sessionAPI.refreshSession()
+      dispatch({ type: FETCH_REFRESH_SESSION_SUCCESS, payload: token })
+    } catch (err) {
+      dispatch({ type: FETCH_ERROR, payload: err })
+    }
   }
 }
 
