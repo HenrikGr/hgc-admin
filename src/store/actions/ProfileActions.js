@@ -1,11 +1,10 @@
 /**
  * @prettier
- * @description: Profile action creator services
+ * @description: Profile action creators
  * @copyright (c) 2018 - present, HGC AB.
- * @licence This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
+ * @licence This source code is licensed under the MIT license
  */
-import { profileMgr } from '../../domain/entity'
+import ProfileAPI from '../../domain/xhr/ProfileAPI'
 import {
   FETCH_START,
   FETCH_ERROR,
@@ -15,6 +14,11 @@ import {
   PROFILE_UPDATE_STATE
 } from '../constants'
 
+/**
+ * Profile API instance
+ * @type {ProfileAPI}
+ */
+const profileAPI = new ProfileAPI()
 
 /**
  * Update profile information via profile xhr API
@@ -26,7 +30,7 @@ function updateMe() {
     try {
       const { profile } = getState()
       dispatch({ type: FETCH_START })
-      const response = await profileMgr.updateMe(profile)
+      const response = await profileAPI.updateMe(profile)
       dispatch({ type: FETCH_SUCCESS })
       dispatch({ type: FETCH_PROFILE_SUCCESS, payload: response })
     } catch (err) {

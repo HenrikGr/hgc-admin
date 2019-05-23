@@ -13,7 +13,7 @@ import PropTypes from 'prop-types'
 // Presentation layer
 import LoginForm from '../components/forms/LoginForm'
 
-// SessionEntity action creator
+// SessionAction action creators
 import { logIn } from '../../store/actions/SessionActions'
 
 /**
@@ -27,9 +27,13 @@ class LoginPage extends React.PureComponent {
   static propTypes = {
     isAuth: PropTypes.bool.isRequired,
     isFetching: PropTypes.bool.isRequired,
-    logIn: PropTypes.func.isRequired
+    logIn: PropTypes.func.isRequired,
   }
 
+  /**
+   * Component state
+   * @type {{password: string, showPassword: boolean, redirectToReferrer: boolean, username: string}}
+   */
   state = {
     username: '',
     password: '',
@@ -94,7 +98,7 @@ class LoginPage extends React.PureComponent {
 /**
  * Map state data to props
  * @param {State} state - Global state tree
- * @returns {{isAuth: boolean, isFetching: (*|boolean|Boolean)}}
+ * @returns {{isAuth: boolean, isFetching: boolean}}
  */
 const mapStateToProps = state => ({
   isAuth: state.session.isAuth,
@@ -103,13 +107,10 @@ const mapStateToProps = state => ({
 
 /**
  * Map logIn action creator to props
- * @param {Function} dispatch - action creator dispatcher
- * @returns {{logIn: (function(*=): *)}}
+ * @type {{logIn: logIn}}
  */
-const mapDispatchToProps = dispatch => {
-  return {
-    logIn: credentials => dispatch(logIn(credentials))
-  }
+const mapDispatchToProps = {
+  logIn
 }
 
 export default connect(

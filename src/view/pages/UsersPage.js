@@ -23,7 +23,7 @@ import { connect } from 'react-redux'
 import DataGrid from '../components/datagrid/DataGrid'
 
 // Action creators
-import actions from '../../store/actions/UserActions'
+import { getUsers, createUser, updateUserById, deleteUserById } from '../../store/actions/UserActions'
 
 /**
  * Data model for the users data.
@@ -127,16 +127,16 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => {
   return {
     find: qp => {
-      dispatch(actions.getUsers(qp))
+      dispatch(getUsers(qp))
     },
     create: user => {
-      dispatch(actions.createUser(user))
+      dispatch(createUser(user))
     },
     update: (id, user) => {
-      dispatch(actions.updateUserById(id, user))
+      dispatch(updateUserById(id, user))
     },
     remove: id => {
-      dispatch(actions.deleteUserById(id))
+      dispatch(deleteUserById(id))
     }
   }
 }

@@ -1,6 +1,18 @@
+/**
+ * @prettier
+ * @description: Store class unit test files
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license
+ */
 import Store from '../Store'
 
+/**
+ * Store instance
+ * @type {Store}
+ */
 let store = new Store()
+
+
 let validToken = {
   access_token: '5d715b33253a5c513e2b5914cfd4c52791ccde3f',
   token_type: 'Bearer',
@@ -33,32 +45,11 @@ describe('Store class', () => {
     })
 
     test('works with store API set property', () => {
-      store.set('session', validToken)
-      store.set('credentials', validCredentials)
-      expect(Store.get('session')).toEqual(validToken)
-      expect(Store.get('credentials')).toEqual(validCredentials)
+      store.setItem('session', validToken)
+      store.setItem('credentials', validCredentials)
+      expect(store.getItem('session')).toEqual(validToken)
+      expect(store.getItem('credentials')).toEqual(validCredentials)
     })
 
-    test('works with store API changing key-value pairs(s)', () => {
-      store.set('session', validCredentials)
-      store.set('credentials', validToken)
-      expect(Store.get('session')).toEqual(validCredentials)
-      expect(Store.get('credentials')).toEqual(validToken)
-    })
-
-    test('works with store API deleting a key value pair', () => {
-      store.delete('session')
-      store.delete('credentials')
-      expect(Store.get('session')).toBeNull()
-      expect(Store.get('credentials')).toBeNull()
-    })
-
-    test('works with store API clear all value pair(s)', () => {
-      store.set('session', validCredentials)
-      store.set('credentials', validToken)
-      store.clear()
-      expect(Store.get('session')).toBeNull()
-      expect(Store.get('credentials')).toBeNull()
-    })
   })
 })

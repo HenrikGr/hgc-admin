@@ -1,11 +1,11 @@
 /**
  * @prettier
- * @description: ScopeEntity class
+ * @description: ScopeAPI class
  * @copyright (c) 2018 - present, HGC AB.
  * @licence This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import XHRService from './XHRService'
+import XHRService from './base/XHRService'
 
 /**
  * Scope entity
@@ -14,12 +14,12 @@ import XHRService from './XHRService'
  */
 
 /**
- * ScopeEntity class
+ * ScopeAPI class
  * @constructor
  */
-class ScopeEntity extends XHRService {
+class ScopeAPI extends XHRService {
   /**
-   * ScopeEntity constructor
+   * ScopeAPI constructor
    * @param {Object} options - constructor options
    * @param {string} options.url - resource url identifier
    */
@@ -60,4 +60,4 @@ class ScopeEntity extends XHRService {
   }
 }
 
-export default ScopeEntity
+export default new ScopeAPI()

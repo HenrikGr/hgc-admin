@@ -1,4 +1,4 @@
-import ValidationError from '../ValidationException'
+import ValidationError from '../ValidationError'
 import JSONValidator from '../JSONValidator'
 import schema from '../../schemas/mock'
 

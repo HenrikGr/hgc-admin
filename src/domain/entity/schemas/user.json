@@ -1,6 +1,7 @@
 {
   "$id": "http://hgc.se/user.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "user",
   "type": "object",
   "required": ["username", "scope", "admin", "active"],
   "additionalProperties": false,

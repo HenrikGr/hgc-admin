@@ -24,7 +24,7 @@ import DeleteButton from '../../components/buttons/DeleteButton'
 import CloseButton from '../../components/buttons/CloseButton'
 import SelectedList from '../../components/list/SelectedList'
 
-import { scopeMgr } from '../../../domain/entity'
+import scopeAPI from '../../../domain/xhr/ScopeAPI'
 
 /**
  * ScopeDialog component
@@ -106,7 +106,7 @@ class ScopeDialog extends React.PureComponent {
    * Event handler for the open dialog icon onClick event
    */
   handleClickOpen = () => {
-    scopeMgr.getAllScopes().then(data => {
+    scopeAPI.getAllScopes().then(data => {
       this.setState({ open: true, newScope: '', removeScope: '', scopes: data })
     })
   }
@@ -145,7 +145,7 @@ class ScopeDialog extends React.PureComponent {
    * Event handler for the add button onClick event
    */
   handleAddScope = () => {
-    scopeMgr
+    scopeAPI
       .createScope(this.state.newScope)
       .then(data => {
         this.setState(this.addScope(data.name), () => {
@@ -163,7 +163,7 @@ class ScopeDialog extends React.PureComponent {
   handleDeleteScope = () => {
     const { removeScope } = this.state
     if (removeScope !== '') {
-      scopeMgr
+      scopeAPI
         .deleteScope(removeScope)
         .then(() => {
           this.setState(this.removeScope(removeScope), () => {

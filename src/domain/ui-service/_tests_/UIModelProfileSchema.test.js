@@ -1,6 +1,6 @@
 import UIModel from '../UIModel'
 import profileSchema from '../../entity/schemas/profile'
-import ValidationError from '../../entity/validator/ValidationException'
+import ValidationError from '../../entity/validator/ValidationError'
 
 /**
  * The JSONValidator to be tested

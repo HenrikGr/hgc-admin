@@ -1,12 +1,9 @@
 /**
  * @prettier
- * @description: users action creator services
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
+ * @description: User action creators
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found
  */
-import { userMgr } from '../../domain/entity'
 import UserAPI from '../../domain/xhr/UserAPI'
 import {
   //VALIDATION_ERROR,
@@ -16,11 +13,17 @@ import {
   FETCH_SUCCESS,
   RESET_ERROR,
   USERS_GET_SUCCESS,
-  USERS_UPDATE_SUCCESS,
+  //USERS_UPDATE_SUCCESS,
   USER_CREATE_SUCCESS,
   USER_UPDATE_SUCCESS,
   USER_DELETE_SUCCESS
 } from '../constants'
+
+/**
+ * User API instance
+ * @type {UserAPI}
+ */
+const userAPI = new UserAPI()
 
 /**
  * Action creator - fetching users information
@@ -28,10 +31,10 @@ import {
  * @returns {Function}
  * @public
  */
-function getUsers(params) {
-  return function(dispatch) {
+export function getUsers(params) {
+  return async function(dispatch) {
     dispatch({ type: FETCH_START })
-    userMgr.findUsers(params)
+    userAPI.findUsers(params)
       .then(json => {
         dispatch({ type: FETCH_SUCCESS })
         dispatch({ type: USERS_GET_SUCCESS, payload: json })
@@ -48,10 +51,10 @@ function getUsers(params) {
  * @returns {Function}
  * @public
  */
-function createUser(user) {
+export async function createUser(user) {
   return function(dispatch) {
     dispatch({ type: FETCH_START })
-    userMgr.createUser(user)
+    userAPI.createUser(user)
       .then(json => {
         dispatch({ type: FETCH_SUCCESS })
         dispatch({ type: USER_CREATE_SUCCESS, payload: json })
@@ -69,10 +72,10 @@ function createUser(user) {
  * @returns {Function}
  * @public
  */
-function updateUserById(id, user) {
-  return function(dispatch) {
+export function updateUserById(id, user) {
+  return async function(dispatch) {
     dispatch({ type: FETCH_START })
-    userMgr.updateUser(id, user)
+    userAPI.updateUserById(id, user)
       .then(json => {
         dispatch({ type: FETCH_SUCCESS })
         dispatch({ type: USER_UPDATE_SUCCESS, payload: json })
@@ -89,35 +92,13 @@ function updateUserById(id, user) {
  * @returns {Function}
  * @public
  */
-function deleteUserById(id) {
-  return function(dispatch) {
+export function deleteUserById(id) {
+  return async function(dispatch) {
     dispatch({ type: FETCH_START })
-    userMgr.deleteUserById(id)
+    userAPI.deleteUserById(id)
       .then(() => {
         dispatch({ type: FETCH_SUCCESS })
         dispatch({ type: USER_DELETE_SUCCESS })
-      })
-      .catch(errors => {
-        dispatch({ type: FETCH_ERROR, payload: errors })
-      })
-  }
-}
-
-/**
- * Action creator - update users
- * @param {array} ids - array of services ids to be updated
- * @param {object} user- services user object to be stored on multiple user(s)
- * @returns {Function}
- * @public
- */
-function updateUsersByIds(ids, user) {
-  return function(dispatch) {
-    dispatch({ type: FETCH_START })
-    UserAPI
-      .put(ids, user)
-      .then(json => {
-        dispatch({ type: FETCH_SUCCESS })
-        dispatch({ type: USERS_UPDATE_SUCCESS, payload: json })
       })
       .catch(errors => {
         dispatch({ type: FETCH_ERROR, payload: errors })
@@ -130,24 +111,7 @@ function updateUsersByIds(ids, user) {
  * @returns {{type: string}}
  * @public
  */
-function resetError() {
+export function resetError() {
   return { type: RESET_ERROR }
 }
 
-/**
- * Interface constructor for users actions creators
- * @constructor
- * @private
- */
-function UsersActionFactory() {
-  return {
-    getUsers,
-    createUser,
-    updateUserById,
-    deleteUserById,
-    updateUsersByIds,
-    resetError
-  }
-}
-
-export default new UsersActionFactory()

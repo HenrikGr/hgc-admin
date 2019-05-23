@@ -1,6 +1,7 @@
 {
   "$id": "http://hgc.se/profile.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "profile",
   "type": "object",
   "required": ["firstName","lastName","email","phone"],
   "additionalProperties": false,

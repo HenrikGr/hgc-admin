@@ -44,7 +44,7 @@ const styles = theme => ({
  * @param {React.Props} props - component properties
  * @param {Object} props.classes - css to style the component
  * @param {String} props.formLabel - text label
- * @param {CredentialsEntity} props.entity - credentials entity
+ * @param {CredentialsEntityMgr} props.entity - credentials entity
  * @param {Boolean} props.showPassword - show password in plain text
  * @param {Boolean} props.disableSubmit - disable submit button on submit
  * @param {Function} props.onSubmit - called to submit the form

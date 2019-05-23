@@ -1,4 +1,4 @@
-import ValidationError from '../ValidationException'
+import ValidationError from '../ValidationError'
 
 /**
  * The JSONValidator to be tested

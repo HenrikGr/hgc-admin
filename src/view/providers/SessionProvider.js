@@ -9,10 +9,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-// SessionEntity context
+// SessionEntityMgr context
 import Session from './context/Session'
 
-// SessionEntity action creators
+// SessionEntityMgr action creators
 import { refreshSession, logIn, logOut } from '../../store/actions/SessionActions'
 
 /**
@@ -58,7 +58,7 @@ SessionProvider.propTypes = {
 /**
  * Map session entity state to props
  * @param {State} state - Global state tree
- * @returns {{session: SessionEntity}}
+ * @returns {{SessionEntity}}
  */
 const mapStateToProps = state => ({ session: state.session })
 

@@ -8,7 +8,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 
 // Generic custom components
 import TabsNavigator from '../../components/navigator/TabsNavigator'
@@ -18,7 +17,15 @@ import ClientToolbarActions from './ClientToolbarActions'
 import ClientForm from './ClientForm'
 
 // Client action creators used to update clients store
-import clientActions from '../../../store/actions/ClientActions'
+import {
+  findClientsByQuery,
+  createClient,
+  updateClient,
+  removeClient,
+  setSelectedClient,
+  updateClientState,
+  resetSelectedClient
+} from '../../../store/actions/ClientActions'
 
 // Client json schema to be used by form provider
 import clientSchema from '../../../domain/entity/schemas/client'
@@ -36,17 +43,13 @@ class ClientPage extends React.PureComponent {
      * Clients array
      */
     clients: PropTypes.array.isRequired,
-    /**
-     * Action creators
-     */
-    actions: PropTypes.object.isRequired
   }
 
   /**
    * Fetch clients by query params on mount
    */
   componentDidMount() {
-    this.props.actions.findClientsByQuery({ page: 0, sort: 'name' })
+    this.props.findClientsByQuery({ page: 0, sort: 'name' })
   }
 
   /**
@@ -58,7 +61,7 @@ class ClientPage extends React.PureComponent {
   handleChange = (prop, value) => {
     let updatedClient = { ...this.props.selectedClient }
     updatedClient[prop] = value
-    this.props.actions.updateClientState(updatedClient)
+    this.props.updateClientState(updatedClient)
   }
 
   /**
@@ -67,9 +70,9 @@ class ClientPage extends React.PureComponent {
    */
   handleSubmit = () => {
     if (this.props.selectedClient._id) {
-      this.props.actions.updateClient()
+      this.props.updateClient()
     } else {
-      this.props.actions.createClient()
+      this.props.createClient()
     }
   }
 
@@ -77,20 +80,20 @@ class ClientPage extends React.PureComponent {
    * Reset selected services
    */
   handleReset = () => {
-    this.props.actions.resetSelectedClient()
+    this.props.resetSelectedClient()
   }
 
   /**
    * Remove services
    */
   handleRemove = () => {
-    this.props.actions.removeClient()
+    this.props.removeClient()
   }
 
   handleSelect = (event, value) => {
     const { clients } = this.props
     const selectedClient = clients.filter(client => client._id === value)
-    this.props.actions.setSelectedClient(...selectedClient)
+    this.props.setSelectedClient(...selectedClient)
   }
 
   /**
@@ -136,11 +139,16 @@ function mapStateToProps(state) {
 
 /**
  * Map actions creators to actions prop
- * @param dispatch
- * @returns {{actions: ({findClientsByQuery, createClient, updateClient, removeClient, setSelectedClient, updateClientState, resetSelectedClient}|ActionCreator<any>|ActionCreatorsMapObject<any>)}}
+ * @type {{findClientsByQuery: findClientsByQuery, createClient: createClient, removeClient: removeClient, updateClientState: updateClientState, updateClient: updateClient, resetSelectedClient: resetSelectedClient, setSelectedClient: setSelectedClient}}
  */
-function mapDispatchToProps(dispatch) {
-  return { actions: bindActionCreators(clientActions, dispatch) }
+const mapDispatchToProps = {
+  findClientsByQuery,
+  createClient,
+  updateClient,
+  removeClient,
+  setSelectedClient,
+  updateClientState,
+  resetSelectedClient
 }
 
 // Inject state and action creators to presentation layer

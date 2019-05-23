@@ -23,7 +23,9 @@ import TextField from '@material-ui/core/TextField/index'
 import CloseButton from '../../components/buttons/CloseButton'
 import CreateButton from '../../components/buttons/CreateButton'
 
-import { clientMgr } from '../../../domain/entity'
+import ClientAPI from '../../../domain/xhr/ClientAPI'
+
+const clientAPI = new ClientAPI()
 
 /**
  * ClientSecretsDialog component
@@ -55,7 +57,7 @@ class ClientSecretsDialog extends React.PureComponent {
   }
 
   handleGetSecrets = () => {
-    clientMgr
+    clientAPI
       .getClientSecret(this.props.client.name)
       .then(data => {
         this.setState({
@@ -70,7 +72,7 @@ class ClientSecretsDialog extends React.PureComponent {
   }
 
   handleGenerateSecrets = () => {
-    clientMgr
+    clientAPI
       .generateClientSecret(this.props.client.name)
       .then(data => {
         this.setState({

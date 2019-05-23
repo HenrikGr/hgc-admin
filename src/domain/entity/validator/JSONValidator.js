@@ -2,35 +2,34 @@
  * @prettier
  * @description: JSONValidator services based on Ajv
  * @copyright (c) 2018 - present, HGC AB.
- * @licence This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
+ * @licence This source code is licensed under the MIT license
  */
 import Ajv from 'ajv'
 import { isNotEmpty, isNotEmptyArray, isPassword } from './customKeywords'
-import ValidationError from './ValidationException'
+import ValidationError from './ValidationError'
 
 /**
  * JSONValidator
- * - The validator validates JSON schema, parsing validation error messages on failures,
+ * The validator validates JSON schema, parsing validation error messages on failures,
  * provide default values for schema entities, etc
  * @constructor
  */
 class JSONValidator {
   /**
-   * Constructor
-   * @param {JSON} schema - JSON schema to be used for validation
+   * JSONValidator Constructor
+   * @param {Object} schema - JSON schema to be used for validation
    * @param {Object} options - configuration options for the validator
-   * @param {boolean} options.allErrors - ajv validator to report all errors at once
-   * @param {boolean} options.useDefaults - ajv validator to use default values from schemas
-   * @param {boolean} options.removeAdditional - ajv validator to remove additional properties
+   * @param {Boolean} options.allErrors - ajv validator to report all errors at once
+   * @param {Boolean} options.useDefaults - ajv validator to use default values from schemas
+   * @param {Boolean} options.removeAdditional - ajv validator to remove additional properties
    */
   constructor(
     schema,
     { allErrors = true, useDefaults = true, removeAdditional = true, coerceTypes = 'array' } = {}
   ) {
     /**
-     * Instance schema
-     * @type {JSON}
+     * Instance schema object
+     * @type {Object}
      * @private
      */
     this._schema = schema
@@ -59,14 +58,14 @@ class JSONValidator {
     this._defaultEntity = this._schema.type === 'object' ? {} : []
 
     /**
-     * Update the default entity by validating the instance
+     * Update the default entity object with default values from the schema
      */
     this._validator(this._defaultEntity)
   }
 
   /**
    * JSON Schema object
-   * @returns {JSON}
+   * @returns {Object}
    * @public
    */
   get schema() {

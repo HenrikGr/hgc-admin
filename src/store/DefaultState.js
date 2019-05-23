@@ -5,18 +5,35 @@
  * @licence This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { sessionMgr, profileMgr, clientMgr } from '../domain/entity/index'
+import ClientAPI from '../domain/xhr/ClientAPI'
+import ProfileAPI from '../domain/xhr/ProfileAPI'
+
+/**
+ * Profile API instance
+ * @type {ProfileAPI}
+ */
+const profileAPI = new ProfileAPI()
+
+/**
+ * Client API instance
+ * @type {ClientAPI}
+ */
+const clientAPI = new ClientAPI()
 
 /**
  * @description Global state tree
  * @typedef {Object} State
  * @property {String} status - Status logger text
  * @property {ValidationException} error - Application error state
- * @property {Boolean} isFetching - Loading indicator
- * @property {Session} session - Current user session
- * @property {Profile} profile - Current user profile
- * @property {Object} users - Users state
- * @property {Object} clients - Clients state
+ * @property {Boolean} isFetching - flag indicating fetching state
+ * @property {SessionEntity} session - Session entity
+ * @property {ProfileEntity} profile - Profile entity
+ * @property {Object} users - Users state object
+ * @property {UserEntity} users.entity - Users entity
+ * @property {UserEntity[]} users.entities - Array of user entities
+ * @property {Object} clients - Clients state object
+ * @property {ClientEntity} clients.entity - Client entity
+ * @property {ClientEntity[]} client.entities - Array of client entities
  */
 
 /**
@@ -25,32 +42,20 @@ import { sessionMgr, profileMgr, clientMgr } from '../domain/entity/index'
  */
 const defaultState = {
   status: 'Application started',
-  /**
-   * Error state
-   * @type {ValidationException}
-   */
   error: {},
   isFetching: false,
-  /**
-   * Session state
-   * @type {Session}
-   */
-  session: sessionMgr.getDefaultSession(),
-  /**
-   * Profile state
-   * @type {Profile}
-   */
-  profile: profileMgr.getDefaultProfile(),
+  session: {
+    isAuth: false,
+    expires_in: 0,
+    expiresAt: null
+  },
+  profile: profileAPI.profile,
   users: {
     entity: {},
     entities: []
   },
-  /**
-   * Client state
-   * @type {Object} - client state
-   */
   clients: {
-    entity: clientMgr.getDefaultClient(),
+    entity: clientAPI.client,
     entities: []
   }
 }

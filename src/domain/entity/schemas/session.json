@@ -1,6 +1,7 @@
 {
   "$id": "http://hgc.se/session.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "session",
   "type": "object",
   "required": ["isAuth", "expires_in", "expiresAt"],
   "additionalProperties": false,
