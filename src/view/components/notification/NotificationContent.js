@@ -1,14 +1,15 @@
 /**
  * @prettier
  * @description: Notification content component that renders the notification
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
+
+// material-ui
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import ErrorIcon from '@material-ui/icons/Error'
 import InfoIcon from '@material-ui/icons/Info'
@@ -57,7 +58,7 @@ const styles = theme => ({
   },
   iconVariant: {
     opacity: 0.9,
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing(1)
   },
   message: {
     display: 'flex',

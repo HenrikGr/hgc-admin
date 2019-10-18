@@ -18,20 +18,20 @@ const styles = theme => ({
     display: 'flex',
     flex: '1 0 auto',
     justifyContent: 'center',
-    marginTop: theme.spacing.unit * 8
+    marginTop: theme.spacing(8)
   },
   form: {
     display: 'inline-flex',
     flexFlow: 'column nowrap',
     justifyContent: 'center',
-    margin: theme.spacing.unit * 3,
+    margin: theme.spacing(3),
     width: '100%',
     [theme.breakpoints.up('sm')]: {
       width: '552px'
     }
   },
   button: {
-    margin: theme.spacing.unit
+    margin: theme.spacing(1)
   }
 })
 

@@ -1,14 +1,9 @@
 /**
  * @prettier
  * @description: HeaderIcon component
- *
- * The component is dependent on the user context state and if the user is authenticated
- * clicking on the home icon will route the user either to the dashboard or the home route
- *
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 import React from 'react'
 import PropTypes from 'prop-types'

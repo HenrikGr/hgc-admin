@@ -22,7 +22,7 @@ import AlertDialog from '../dialogs/AlertDialog'
  */
 const styles = theme => ({
   root: {
-    margin: theme.spacing.unit
+    margin: theme.spacing(1)
   }
 })
 

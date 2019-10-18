@@ -25,7 +25,7 @@ const styles = theme => ({
     flexDirection: 'column',
     justifyContent: 'center',
     maxWidth: '744px',
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing(3)
   },
   actions: {
     display: 'flex',

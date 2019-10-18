@@ -24,14 +24,14 @@ import { withStyles } from "@material-ui/core/styles";
 
 const styles = theme => ({
   formControl: {
-    margin: theme.spacing.unit
+    margin: theme.spacing(1)
   },
   chips: {
     display: 'flex',
     flexWrap: 'wrap',
   },
   chip: {
-    margin: theme.spacing.unit / 4,
+    margin: theme.spacing(1) / 4,
   },
 });
 

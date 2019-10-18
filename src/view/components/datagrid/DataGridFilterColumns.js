@@ -26,7 +26,7 @@ import { arrayEqual, arrayVisibleEqual } from '../../../utils/helper'
 
 const toolbarStyles = theme => ({
   root: {
-    paddingRight: theme.spacing.unit,
+    paddingRight: theme.spacing(1),
     color: theme.palette.text.secondary,
   },
   spacer: {

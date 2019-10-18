@@ -23,8 +23,8 @@ import DataGridFilterColumns from '../DataGridFilterColumns';
 
 const styles = theme => ({
   root: {
-    paddingRight: theme.spacing.unit,
-    marginTop: theme.spacing.unit * 8,
+    paddingRight: theme.spacing(1),
+    marginTop: theme.spacing(8),
     backgroundColor: theme.palette.background.paper,
   },
   highlight: {

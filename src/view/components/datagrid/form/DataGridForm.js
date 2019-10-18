@@ -29,16 +29,16 @@ const styles = theme => ({
     display: "flex",
     flexDirection: 'column',
     justifyContent: "center",
-    marginTop: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 2,
+    marginTop: theme.spacing(1),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
     width: "100%",
   },
   fieldContainer: {
     display: 'flex',
     flexWrap: 'wrap',
     flexDirection: 'column',
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing(3),
   },
 });
 

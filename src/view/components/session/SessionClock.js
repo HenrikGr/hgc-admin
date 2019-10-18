@@ -19,7 +19,7 @@ import { parseHHMMSS, formatDuration } from '../../../utils/helper'
 const styles = theme => ({
   root: {
     flex: '0 0 auto',
-    marginRight: theme.spacing.unit * 3
+    marginRight: theme.spacing(3)
   }
 })
 

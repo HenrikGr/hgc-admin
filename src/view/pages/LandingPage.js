@@ -23,7 +23,7 @@ const styles = theme => ({
     display: 'flex',
     flex: '1 0 auto',
     justifyContent: 'center',
-    marginTop: theme.spacing.unit * 8
+    marginTop: theme.spacing(8)
   },
 })
 

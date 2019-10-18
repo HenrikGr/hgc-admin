@@ -1,9 +1,8 @@
 /**
  * @prettier
- * @description: SessionEntityMgr store middleware
+ * @description: Session persist middleware
  * @copyright (c) 2018 - present, HGC AB.
- * @licence This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
+ * @licence This source code is licensed under the MIT license found
  */
 import { FETCH_SESSION_SUCCESS, FETCH_REFRESH_SESSION_SUCCESS, REMOVE_SESSION } from '../constants'
 

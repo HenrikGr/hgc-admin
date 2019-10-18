@@ -1,40 +1,51 @@
 /**
  * @prettier
- * @description: Link components to avoid property collisions
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
- * @see https://material-ui.com/demos/buttons/
+ * @description: Higher Order Component to provide code splitting, i.e asynchronous loading of components.
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 import React from 'react'
-import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
+import { Link as RouterLink } from 'react-router-dom'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 
-// Custom links
-export const HomeLink = props => <Link to="/" {...props} />
-export const DashboardLink = props => <Link to="/dashboard" {...props} />
-export const LogInLink = props => <Link to="/login" {...props} />
-export const ProfileLink = props => <Link to="/profile" {...props} />
-export const LogOutLink = props => <Link to="/" {...props} />
+// Custom links for use with react router
+export const HomeLink = React.forwardRef((props, ref) => <RouterLink to="/" {...props} />)
+export const DashboardLink = React.forwardRef((props, ref) => <RouterLink to="/dashboard" {...props} />)
+export const LogInLink = React.forwardRef((props, ref) => <RouterLink to="/login" {...props} />)
+export const ProfileLink = React.forwardRef((props, ref) => <RouterLink to="/profile" {...props} />)
+export const LogOutLink = React.forwardRef((props, ref) => <RouterLink to="/" {...props} />)
 
-/**
- * Used to avoid unexpected un mounting
- * @see https://material-ui.com/guides/composition/#component-property
- */
-export class ListItemLink extends React.Component {
-  renderLink = itemProps => <Link to={this.props.to} {...itemProps} />
-  render() {
-    const { icon, primary } = this.props
-    return (
-      <li>
-        <ListItem button component={this.renderLink}>
-          <ListItemIcon>{icon}</ListItemIcon>
-          <ListItemText primary={primary} />
-        </ListItem>
-      </li>
-    )
-  }
+
+export function ListItemLink(props) {
+  const { icon, primary, to } = props;
+
+  const renderLink = React.useMemo(
+    () =>
+      React.forwardRef((itemProps, ref) => (
+        // With react-router-dom@^6.0.0 use `ref` instead of `innerRef`
+        // See https://github.com/ReactTraining/react-router/issues/6056
+        <RouterLink to={to} {...itemProps} innerRef={ref} />
+      )),
+    [to],
+  );
+
+  return (
+    <li>
+      <ListItem button component={renderLink}>
+        {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
+        <ListItemText primary={primary} />
+      </ListItem>
+    </li>
+  );
 }
+
+ListItemLink.propTypes = {
+  icon: PropTypes.element,
+  primary: PropTypes.string.isRequired,
+  to: PropTypes.string.isRequired,
+};
+

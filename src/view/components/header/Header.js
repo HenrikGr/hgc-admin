@@ -1,10 +1,9 @@
 /**
  * @prettier
  * @description: Header component
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
+ * @copyright (c) 2018 - present, HGC AB.
+ * @licence This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 import React from 'react'
 import PropTypes from 'prop-types'
@@ -14,7 +13,6 @@ import Typography from '@material-ui/core/Typography'
 import { withStyles } from '@material-ui/core/styles'
 import HeaderMenu from './HeaderMenu'
 import HeaderIcon from './HeaderIcon'
-//import SessionCountDown from '../session/SessionCountDown'
 
 const styles = theme => ({
   root: {
@@ -22,8 +20,8 @@ const styles = theme => ({
   },
   title: {
     flex: '1 0 auto',
-    marginRight: theme.spacing.unit * 3
-  },
+    marginRight: theme.spacing(3)
+  }
 })
 
 /**
@@ -34,7 +32,6 @@ const styles = theme => ({
  * @constructor
  */
 function Header({ classes, title }) {
-
   return (
     <AppBar classes={{ root: classes.root }} position="fixed">
       <Toolbar>
