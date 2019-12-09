@@ -1,9 +1,9 @@
 {
   "name": "hgc-admin",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
-    "@material-ui/core": "^4.5.1",
+    "@material-ui/core": "^4.7.2",
     "@material-ui/icons": "^4.5.1",
     "ajv": "^6.10.2",
     "axios": "^0.19.0",
@@ -11,25 +11,25 @@
     "classnames": "^2.2.6",
     "express": "^4.17.1",
     "fbjs": "^1.0.0",
-    "helmet": "^3.21.1",
+    "helmet": "^3.21.2",
     "keycode": "^2.2.0",
     "prop-types": "15.7.2",
-    "qs": "^6.9.0",
-    "react": "^16.10.2",
-    "react-app-polyfill": "^1.0.4",
-    "react-dom": "^16.10.2",
-    "react-redux": "^7.1.1",
+    "qs": "^6.9.1",
+    "react": "^16.12.0",
+    "react-app-polyfill": "^1.0.5",
+    "react-dom": "^16.12.0",
+    "react-redux": "^7.1.3",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.2.0",
+    "react-scripts": "3.3.0",
     "redux": "^4.0.4",
     "redux-persist": "^6.0.0",
-    "worker-timers": "^5.0.30"
+    "worker-timers": "^5.0.36"
   },
   "devDependencies": {
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
-    "react-test-renderer": "^16.10.2",
+    "react-test-renderer": "^16.12.0",
     "redux-devtools-extension": "^2.13.8",
     "sinon": "^7.5.0"
   },
@@ -41,8 +41,8 @@
     "eject": "react-scripts eject"
   },
   "engines": {
-    "node": "10.15.3",
-    "npm": "6.4.1"
+    "node": "12.13.1",
+    "npm": "6.13.1"
   },
   "browserslist": [
     ">0.2%",

@@ -1,39 +1,43 @@
 import ValidationError from '../ValidationError'
 
-/**
- * The JSONValidator to be tested
- */
 describe('ValidationException', () => {
 
-  test('works with message and no details', () => {
-    const err = new ValidationError('Validation error')
-    expect(err.name).toEqual('Validation exception')
-    expect(err.message).toEqual('Validation error')
-    expect(err.details).toBeFalsy()
+  it('throws invariant error with no arguments', () => {
+    expect(() => {
+      const err = new ValidationError()
+    }).toThrowError(Error)
   })
 
-  test('works with message and ajv details', () => {
+  test('works with message arguments only', () => {
+    const err = new ValidationError('Message')
+
+    expect(err.name).toEqual('ValidationException')
+    expect(err.message).toEqual('Message')
+    expect(err.details).toBeUndefined()
+  })
+
+  test('works with message and details arguments, (multiple key value pairs as details)', () => {
     const details = {
       firstName: 'is required',
       lastName: 'should NOT be empty',
       email: 'is required',
       phone: 'is required'
     }
-    const err = new ValidationError('Validation error', details)
-    expect(err.name).toEqual('Validation exception')
-    expect(err.message).toEqual('Validation error')
-    expect(err.details).toEqual(details)
+    const err = new ValidationError('Messages', details)
+
+    expect(err.name).toEqual('ValidationException')
+    expect(err.message).toEqual('Messages')
+    expect(err.details).toStrictEqual(details)
   })
 
-  test('works with custom message and details', () => {
+  test('works with message and details argument, (single key value pair as details)', () => {
     const details = {
-      firstName: 'should be that',
-      email: 'is mandatory'
+      firstName: 'should be that'
     }
-    const err = new ValidationError('Custom validation message', details)
-    expect(err.name).toEqual('Validation exception')
-    expect(err.message).toEqual('Custom validation message')
-    expect(err.details).toEqual(details)
-  })
+    const err = new ValidationError('Message', details)
 
+    expect(err.name).toEqual('ValidationException')
+    expect(err.message).toEqual('Message')
+    expect(err.details).toStrictEqual(details)
+  })
 })

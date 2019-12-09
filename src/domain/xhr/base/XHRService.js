@@ -101,7 +101,7 @@ class XHRService {
 
   /**
    * Get persisted token from store
-   * @returns {TokenEntity}- the persisted token entity
+   * @returns {string|any} - the persisted token entity
    * @public
    */
   getStoreItem() {

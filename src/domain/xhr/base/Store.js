@@ -27,7 +27,7 @@ class Store extends Map {
   /**
    * Get value by key from sessionStorage
    * @param {String} key - key to be used getting value from sessionStorage
-   * @returns {Object} - parsed value from sessionStorage
+   * @returns {string|null|any}
    */
   getItem(key) {
     const value = sessionStorage.getItem(key)

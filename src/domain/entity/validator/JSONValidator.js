@@ -9,58 +9,68 @@ import { isNotEmpty, isNotEmptyArray, isPassword } from './customKeywords'
 import ValidationError from './ValidationError'
 
 /**
- * JSONValidator
- * The validator validates JSON schema, parsing validation error messages on failures,
+ * Validation of JSON Schemas
+ * The validator validates JSON schema parsing validation error messages on failures,
  * provide default values for schema entities, etc
- * @constructor
+ *
+ * @class
  */
 class JSONValidator {
   /**
    * JSONValidator Constructor
    * @param {Object} schema - JSON schema to be used for validation
-   * @param {Object} options - configuration options for the validator
-   * @param {Boolean} options.allErrors - ajv validator to report all errors at once
-   * @param {Boolean} options.useDefaults - ajv validator to use default values from schemas
-   * @param {Boolean} options.removeAdditional - ajv validator to remove additional properties
+   * @param {Object} options - options passed to the compiled validator function instance
+   * @param {Boolean} options.allErrors - report all errors at once
+   * @param {Boolean} options.useDefaults - use default values from schemas
+   * @param {Boolean} options.removeAdditional - remove additional properties
+   * @param {String} options.coerceTypes - coerce data types
    */
   constructor(
     schema,
     { allErrors = true, useDefaults = true, removeAdditional = true, coerceTypes = 'array' } = {}
   ) {
     /**
-     * Instance schema object
+     * Schema object instance
      * @type {Object}
      * @private
      */
     this._schema = schema
 
     /**
-     * Compiled instance validator
+     * Compiled validation function instance
+     *
+     * This function has properties errors and schema.
+     * Errors encountered during the last validation are assigned to errors property
+     * (it is assigned null if there was no errors). schema property contains the
+     * reference to the original schema
      * @type {ajv.ValidateFunction}
      * @private
      */
-    this._validator = new Ajv({
+    this._compiledValidator = new Ajv({
       allErrors: allErrors,
       useDefaults: useDefaults,
       removeAdditional: removeAdditional,
       coerceTypes: coerceTypes
     })
-      .addKeyword('isNotEmpty', isNotEmpty)
+      .addKeyword('isNotEmpty', isNotEmpty) // Add custom validation keyword to Ajv instance.
       .addKeyword('isNotEmptyArray', isNotEmptyArray)
       .addKeyword('isPassword', isPassword)
       .compile(this._schema)
 
     /**
-     * Default entity instance
-     * @type {Object | Array}
+     * Default entity property instance
+     * @type {Object|Array}
      * @private
      */
     this._defaultEntity = this._schema.type === 'object' ? {} : []
 
     /**
-     * Update the default entity object with default values from the schema
+     * Update the default entity property with default values from the schema
+     * The validator instance will update the defaultEntity property instance
      */
-    this._validator(this._defaultEntity)
+    if (useDefaults) {
+      this._compiledValidator(this._defaultEntity)
+    }
   }
 
   /**
@@ -74,7 +84,7 @@ class JSONValidator {
 
   /**
    * Default entity
-   * @returns {Object|Array}
+   * @returns {boolean|Object|Array}
    */
   get defaultEntity() {
     return this._defaultEntity
@@ -83,7 +93,7 @@ class JSONValidator {
   // noinspection JSMethodCanBeStatic
   /**
    * Get all error messages
-   * @param {*} error
+   * @param {Array<ErrorObject>|null|undefined} error
    * @returns {*}
    */
   getErrorMessages(error) {
@@ -112,12 +122,12 @@ class JSONValidator {
    * Validate entity object
    * @param {Object} entity - entity to be validated
    * @returns {Object} - entity on success and may also mutate the original entity (remove additional properties)
-   * @throws {ValidationError} - in validation failure
+   * @throws {ValidationException} - in validation failure
    */
   isValid(entity) {
-    this._validator(entity)
-    if (this._validator.errors && this._validator.errors.length) {
-      throw new ValidationError('Validation error', this.getErrorMessages(this._validator.errors))
+    this._compiledValidator(entity)
+    if (this._compiledValidator.errors && this._compiledValidator.errors.length) {
+      throw new ValidationError('Validation error', this.getErrorMessages(this._compiledValidator.errors))
     }
     return entity
   }
@@ -128,8 +138,8 @@ class JSONValidator {
    * @returns {Object|boolean} - the entity object if valid, otherwise false
    */
   validate(entity) {
-    this._validator(entity)
-    if (this._validator.errors && this._validator.errors.length) {
+    this._compiledValidator(entity)
+    if (this._compiledValidator.errors && this._compiledValidator.errors.length) {
       return false
     }
     return entity
