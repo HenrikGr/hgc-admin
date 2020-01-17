@@ -21,7 +21,7 @@ class JSONValidator {
    * @param {Object} schema - JSON schema to be used for validation
    * @param {Object} options - options passed to the compiled validator function instance
    * @param {Boolean} options.allErrors - report all errors at once
-   * @param {Boolean} options.useDefaults - use default values from schemas
+   * @param {Boolean} options.useDefaults - use default values from models
    * @param {Boolean} options.removeAdditional - remove additional properties
    * @param {String} options.coerceTypes - coerce data types
    */

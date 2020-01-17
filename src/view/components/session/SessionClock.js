@@ -24,7 +24,7 @@ const styles = theme => ({
 })
 
 /**
- * Function that gets a number from the token context and render it as
+ * Function that gets a number from the dao context and render it as
  * a readable time format
  * @param {object} classes - styles for the component
  * @param {number} expiresIn - number to format
@@ -58,5 +58,5 @@ SessionClock.propTypes = {
   expiresIn: PropTypes.number.isRequired
 }
 
-// Inject token context and styles
+// Inject dao context and styles
 export default withStyles(styles)(SessionClock)

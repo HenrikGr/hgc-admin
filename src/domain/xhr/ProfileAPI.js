@@ -20,7 +20,7 @@ import profileSchema from '../entity/schemas/profile'
 
 /**
  * ProfileAPI class provide an interface to find, update and delete profile entities
- * The class extends the XHRService class which is a HTTP client wrapper
+ * The class extends the XHRService class which is a HTTP dao wrapper
  *
  * @example
  * const profileAPI = new ProfileAPI()

@@ -20,7 +20,7 @@ app.use(helmet())
 // Serve static resources from build directory
 app.use(express.static('./build'))
 
-// Serve index.html on refresh and support client side routing
+// Serve index.html on refresh page
 app.get('/*', function(req, res) {
   res.sendFile('index.html', { root: 'build' })
 })

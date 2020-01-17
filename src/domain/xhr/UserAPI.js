@@ -20,7 +20,7 @@ import userSchema from '../entity/schemas/user'
 
 /**
  * UserAPI provides an interface to find, create, update and delete user entities
- * The class extends the XHRService class which is a HTTP client wrapper
+ * The class extends the XHRService class which is a HTTP dao wrapper
  *
  * @example
  * const userAPI = new UserAPI()

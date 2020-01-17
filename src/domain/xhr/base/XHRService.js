@@ -5,12 +5,13 @@
  * @copyright (c) 2018 - present, HGC AB.
  * @licence This source code is licensed under the MIT license
  */
-import axios from 'axios'
+
 import qs from 'qs'
 import Store from './Store'
+const axios = require('axios').default
 
 /**
- * HTTP client configuration
+ * HTTP dao configuration
  * @type {{baseURL: string, contentType: string}}
  */
 const config = {
@@ -19,7 +20,7 @@ const config = {
 }
 
 /**
- * XHRService class using axios HTTP client and
+ * XHRService class using axios HTTP dao and
  * does also provide an interface to persist data
  * in sessionStorage and add that data to the HTTP
  * header for every request. A typical use case is
@@ -27,8 +28,8 @@ const config = {
  * up and add it to the HTT headers for requests
  *
  * @example
- * const token = await post.getToken()
- * setStoreItem(token)
+ * const dao = await post.getToken()
+ * setStoreItem(dao)
  *
  * When consecutive request will be made,
  * the request interceptor function will
@@ -83,8 +84,8 @@ class XHRService {
   }
 
   /**
-   * Persist token in store
-   * @param {TokenEntity} entity - token to be persisted
+   * Persist dao in store
+   * @param {TokenEntity} entity - dao to be persisted
    * @public
    */
   setStoreItem(entity) {
@@ -92,7 +93,7 @@ class XHRService {
   }
 
   /**
-   * Remove token from store
+   * Remove dao from store
    * @public
    */
   removeStoreItem() {
@@ -100,8 +101,8 @@ class XHRService {
   }
 
   /**
-   * Get persisted token from store
-   * @returns {string|any} - the persisted token entity
+   * Get persisted dao from store
+   * @returns {string|any} - the persisted dao entity
    * @public
    */
   getStoreItem() {

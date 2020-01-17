@@ -13,7 +13,7 @@ import { FETCH_SESSION_SUCCESS, FETCH_REFRESH_SESSION_SUCCESS, REMOVE_SESSION } 
  */
 const sessionPersist = store => next => action => {
   // Get existing session from localStorage
-  let localState = localStorage.getItem('session-token')
+  let localState = localStorage.getItem('session-dao')
 
   // If exist parse the JSON to an object
   if (localState && typeof JSON.parse(localState) === 'object') {
@@ -25,10 +25,10 @@ const sessionPersist = store => next => action => {
   switch (action.type) {
     case FETCH_SESSION_SUCCESS:
     case FETCH_REFRESH_SESSION_SUCCESS:
-      localStorage.setItem('session-token', JSON.stringify(localState))
+      localStorage.setItem('session-dao', JSON.stringify(localState))
       break
     case REMOVE_SESSION:
-      localStorage.removeItem('session-token')
+      localStorage.removeItem('session-dao')
       break
 
     default:

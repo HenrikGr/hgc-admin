@@ -20,17 +20,17 @@ import credentialsSchema from '../entity/schemas/credentials'
 /**
  * Token entity
  * @typedef {Object} TokenEntity
- * @property {string} access_token - oauth access token
- * @property {string} token_type- token type
- * @property {number} expires_in - time in ms the token is valid
- * @property {string} refresh_token - refresh token to issue a new token
- * @property {string} scope - scope of token
+ * @property {string} access_token - oauth access dao
+ * @property {string} token_type- dao type
+ * @property {number} expires_in - time in ms the dao is valid
+ * @property {string} refresh_token - refresh dao to issue a new dao
+ * @property {string} scope - scope of dao
  */
 
 /**
  * SessionAPI class providing an interface to create, refresh and remove a session
- * The class extends the XHRService class which is a HTTP client wrapper providing
- * access to a store interface for storage of tokens in the HTTP client
+ * The class extends the XHRService class which is a HTTP dao wrapper providing
+ * access to a store interface for storage of tokens in the HTTP dao
  *
  * @example
  * const sessionAPI = new SessionAPI()
@@ -38,7 +38,7 @@ import credentialsSchema from '../entity/schemas/credentials'
  * const newSession = await sessionAPI.refreshSession()
  * sessionAPI.removeSession()
  *
- * Note that the session, aka token is persisted in
+ * Note that the session, aka dao is persisted in
  * some global state and refreshSession() method is
  * accessing that state
  *
@@ -101,8 +101,8 @@ class SessionAPI extends XHRService {
   }
 
   /**
-   * Transform a token to a session, validate the new session and store it as instance entity
-   * @param {TokenEntity} token - a token entity to be transformed
+   * Transform a dao to a session, validate the new session and store it as instance entity
+   * @param {TokenEntity} token - a dao entity to be transformed
    * @returns {SessionEntity} - a session entity
    * @private
    */
@@ -130,12 +130,13 @@ class SessionAPI extends XHRService {
       username,
       password,
       client_id: process.env.REACT_APP_CLIENT_ID,
+      client_secret: process.env.REACT_APP_CLIENT_SECRET,
       grant_type: 'password'
     }
   }
 
   /**
-   * Create a token by posting credentials with password grant
+   * Create a dao by posting credentials with password grant
    * @param {String} username - username
    * @param {String} password - password
    * @returns {Promise<SessionEntity>} - a promise resolved to a session entity
@@ -154,7 +155,7 @@ class SessionAPI extends XHRService {
   }
 
   /**
-   * Refresh session by posting a refresh token
+   * Refresh session by posting a refresh dao
    * @returns {Promise<SessionEntity>} - a promise resolved to a session entity
    * @throws {ValidationException} throws an error on failure
    * @public

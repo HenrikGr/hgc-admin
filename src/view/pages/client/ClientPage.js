@@ -36,7 +36,7 @@ import clientSchema from '../../../domain/entity/schemas/client'
 class ClientPage extends React.PureComponent {
   static propTypes = {
     /**
-     * Selected client
+     * Selected dao
      */
     selectedClient: PropTypes.object.isRequired,
     /**

@@ -45,7 +45,7 @@ export function findClientsByQuery(params) {
 }
 
 /**
- * Action creator - persist the client services in global state
+ * Action creator - persist the dao services in global state
  * @returns {Function}
  */
 export function createClient() {
@@ -63,13 +63,14 @@ export function createClient() {
 }
 
 /**
- * Action creator - persist client based on the client services stored in the global state
+ * Action creator - persist dao based on the dao services stored in the global state
  * @returns {Function}
  */
 export function updateClient() {
   return async function(dispatch, getState) {
     try {
       const { entity } = getState().clients
+      console.log('state: ', entity)
       dispatch({ type: FETCH_START })
       let response = await clientAPI.updateClientById(entity._id, entity)
       dispatch({ type: FETCH_SUCCESS })
@@ -81,7 +82,7 @@ export function updateClient() {
 }
 
 /**
- * Action creator - remove client based on the client services stored in the global state
+ * Action creator - remove dao based on the dao services stored in the global state
  * @returns {Function}
  * @public
  */
@@ -100,8 +101,8 @@ export function removeClient() {
 }
 
 /**
- * Action creator - set selected client services in global state
- * @param {Object} client - client services to be stored in the global state
+ * Action creator - set selected dao services in global state
+ * @param {Object} client - dao services to be stored in the global state
  * @returns {{type: string, payload: *}}
  */
 export function setSelectedClient(client) {
@@ -109,7 +110,7 @@ export function setSelectedClient(client) {
 }
 
 /**
- * Action creator - Reset the client services global state with default services
+ * Action creator - Reset the dao services global state with default services
  * @returns {{type: string}}
  */
 export function resetSelectedClient() {
@@ -117,8 +118,8 @@ export function resetSelectedClient() {
 }
 
 /**
- * Partial update selected client services from form inputs
- * @param {object} entity - object containing prop and value of the client services to be updated
+ * Partial update selected dao services from form inputs
+ * @param {object} entity - object containing prop and value of the dao services to be updated
  * @returns {{type: string, payload: *}}
  */
 export function updateClientState(entity) {

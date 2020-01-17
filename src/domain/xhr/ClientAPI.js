@@ -11,19 +11,19 @@ import clientSchema from '../entity/schemas/client'
 /**
  * Client entity
  * @typedef {Object} ClientEntity
- * @property {String} name - client name
- * @property {String} scope - client scope
- * @property {String} grants - client grants
- * @property {String} redirectUris - client redirect uri
+ * @property {String} name - dao name
+ * @property {String} scope - dao scope
+ * @property {String} grants - dao grants
+ * @property {String} redirectUris - dao redirect uri
  */
 
 /**
- * ClientAPI class provide an interface to find, create, update, delete client entities
- * The class extends the XHRService class which is a HTTP client wrapper
+ * ClientAPI class provide an interface to find, create, update, delete dao entities
+ * The class extends the XHRService class which is a HTTP dao wrapper
  *
  * @example
  * const clientAPI = new ClientAPI()
- * const client = await clientAPI.createClient(data)
+ * const dao = await clientAPI.createClient(data)
  * @extends XHRService
  */
 class ClientAPI extends XHRService {
@@ -78,7 +78,7 @@ class ClientAPI extends XHRService {
 
   /**
    * Find clients by query params
-   * @param {Object} params - query param to find client entities
+   * @param {Object} params - query param to find dao entities
    * @returns {Promise<ClientEntity[]>}
    * @throws {ValidationException} throws an error on failure
    * @public
@@ -93,8 +93,8 @@ class ClientAPI extends XHRService {
 
   /**
    * Create a new user
-   * @param {ClientEntity} client - client entity to be created
-   * @returns {Promise<ClientEntity>} - a promise resolved to the new client entity
+   * @param {ClientEntity} client - dao entity to be created
+   * @returns {Promise<ClientEntity>} - a promise resolved to the new dao entity
    * @throws {ValidationException} throws an error on failure
    * @public
    */
@@ -108,9 +108,9 @@ class ClientAPI extends XHRService {
   }
 
   /**
-   * Get a client entity by id
-   * @param {String} id - id of the client entity
-   * @returns {Promise<ClientEntity>} - a promise resolved to the new client entity
+   * Get a dao entity by id
+   * @param {String} id - id of the dao entity
+   * @returns {Promise<ClientEntity>} - a promise resolved to the new dao entity
    * @throws {ValidationException} throws an error on failure
    * @public
    */
@@ -124,10 +124,10 @@ class ClientAPI extends XHRService {
   }
 
   /**
-   * Update a client entity by id
-   * @param {String} id - id of the client entity
+   * Update a dao entity by id
+   * @param {String} id - id of the dao entity
    * @param {ClientEntity } client - the entity data to be updated
-   * @returns {Promise<ClientEntity>} - a promise resolved to the new client entity
+   * @returns {Promise<ClientEntity>} - a promise resolved to the new dao entity
    * @throws {ValidationException} throws an error on failure
    * @public
    */
@@ -141,8 +141,8 @@ class ClientAPI extends XHRService {
   }
 
   /**
-   * Delete a client entity by id
-   * @param {String} id - id of the client entity
+   * Delete a dao entity by id
+   * @param {String} id - id of the dao entity
    * @returns {Promise<any|never>}
    * @public
    */

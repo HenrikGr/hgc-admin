@@ -8,7 +8,7 @@
 import invariant from 'fbjs/lib/invariant'
 
 /**
- * Helper function to resolve references in schemas
+ * Helper function to resolve references in models
  * @param {string} reference
  * @param {object} schema
  * @returns {Object}

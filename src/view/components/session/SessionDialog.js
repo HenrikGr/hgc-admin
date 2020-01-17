@@ -1,8 +1,8 @@
 /**
  * @prettier
  * @description: Modal dialog that provides a means for the user to either
- * - refresh a token, extending the session,
- * - remove token, logging out.
+ * - refresh a dao, extending the session,
+ * - remove dao, logging out.
  * @author:   Henrik Grönvall
  * @version:  0.0.1
  * @copyright:  Copyright (c) 2017 HGC AB
@@ -42,7 +42,7 @@ const styles = theme => ({
 })
 
 /**
- * A modal dialog component to refresh or remove token
+ * A modal dialog component to refresh or remove dao
  * @class SessionDialog
  * @constructor
  * @public
@@ -64,12 +64,12 @@ class SessionDialog extends React.PureComponent {
      */
     open: PropTypes.bool,
     /**
-     * Callback function to refresh a token
+     * Callback function to refresh a dao
      * @private
      */
     onRefresh: PropTypes.func,
     /**
-     * Callback to remove a token
+     * Callback to remove a dao
      */
     onRemove: PropTypes.func
   }
@@ -111,5 +111,5 @@ class SessionDialog extends React.PureComponent {
 // We need an intermediary variable for handling the recursive nesting.
 const SessionDialogWrapped = withStyles(styles)(SessionDialog)
 
-// Inject token context
+// Inject dao context
 export default SessionDialogWrapped

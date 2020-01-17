@@ -42,13 +42,13 @@ class SessionCountDown extends React.PureComponent {
     interval: PropTypes.number,
 
     /**
-     * Refresh token threshold
+     * Refresh dao threshold
      * @public
      */
     refreshThreshold: PropTypes.number,
 
     /**
-     * Remove token threshold
+     * Remove dao threshold
      * @public
      */
     removeThreshold: PropTypes.number,
@@ -95,7 +95,7 @@ class SessionCountDown extends React.PureComponent {
   }
 
   /**
-   * Check for start and stop timer as well as refresh and remove token
+   * Check for start and stop timer as well as refresh and remove dao
    * @param {object} prevProps
    * @param {object} prevState
    */

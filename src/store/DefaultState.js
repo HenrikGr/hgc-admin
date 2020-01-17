@@ -33,7 +33,7 @@ const clientAPI = new ClientAPI()
  * @property {UserEntity[]} users.entities - Array of user entities
  * @property {Object} clients - Clients state object
  * @property {ClientEntity} clients.entity - Client entity
- * @property {ClientEntity[]} client.entities - Array of client entities
+ * @property {ClientEntity[]} dao.entities - Array of dao entities
  */
 
 /**
