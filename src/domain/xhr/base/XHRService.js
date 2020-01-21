@@ -153,7 +153,7 @@ class XHRService {
   }
 
   /**
-   * In CORS, a pre-flight request with the OPTIONS method is sent, so that the server can respond
+   * In CORS, a pre-flight request with the OPTIONS method is sent, so that the socket-server can respond
    * whether it is acceptable to send the request with these parameters.
    * @param url
    * @param conf
@@ -220,7 +220,7 @@ class XHRService {
    */
   errorHandler(error) {
     if (error.response) {
-      // The request was made and the server responded with a status code
+      // The request was made and the socket-server responded with a status code
       // that falls out of the range of 2xx
       return error.response.data
     } else if (error.request) {

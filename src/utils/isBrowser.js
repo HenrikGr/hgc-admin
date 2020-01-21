@@ -9,7 +9,7 @@
 
 /**
  * Determine if we are in a browser
- * or a server environment
+ * or a socket-server environment
  * @type {Boolean}
  * @private
  */

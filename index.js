@@ -1,10 +1,8 @@
 /**
  * @prettier
- * @description: Server serving web app
- * @author:   Henrik Grönvall
- * @version:  0.0.1
- * @copyright:  Copyright (c) 2017 HGC AB
- * @license: The MIT License (MIT)
+ * @copyright (c) 2020 - present, HGC-AB
+ * @licence This source code is licensed under the MIT license described and found in the
+ * LICENSE file in the root directory of this source tree.
  */
 const express = require('express')
 const helmet = require('helmet')
@@ -25,8 +23,8 @@ app.get('/*', function(req, res) {
   res.sendFile('index.html', { root: 'build' })
 })
 
-// start server on the specified port and binding host
+// start socket-server on the specified port and binding host
 app.listen(appEnv.port, '0.0.0.0', function() {
-  // print a message when the server starts listening
-  console.info('server starting on ' + appEnv.url)
+  // print a message when the socket-server starts listening
+  console.info('socket-server starting on ' + appEnv.url)
 })

@@ -5,7 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^4.8.3",
     "@material-ui/icons": "^4.5.1",
-    "ajv": "^6.10.2",
+    "ajv": "^6.11.0",
     "axios": "^0.19.1",
     "cfenv": "^1.2.2",
     "classnames": "^2.2.6",
@@ -49,5 +49,6 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "optionalDependencies": {}
 }
