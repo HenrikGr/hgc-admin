@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": false,
   "dependencies": {
-    "@material-ui/core": "^4.8.3",
-    "@material-ui/icons": "^4.5.1",
+    "@material-ui/core": "^4.9.2",
+    "@material-ui/icons": "^4.9.1",
     "ajv": "^6.11.0",
-    "axios": "^0.19.1",
+    "axios": "^0.19.2",
     "cfenv": "^1.2.2",
     "classnames": "^2.2.6",
     "express": "^4.17.1",
@@ -16,22 +16,22 @@
     "prop-types": "15.7.2",
     "qs": "^6.9.1",
     "react": "^16.12.0",
-    "react-app-polyfill": "^1.0.5",
+    "react-app-polyfill": "^1.0.6",
     "react-dom": "^16.12.0",
     "react-redux": "^7.1.3",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.3.0",
+    "react-scripts": "3.3.1",
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
-    "worker-timers": "^5.1.8"
+    "worker-timers": "^5.1.9"
   },
   "devDependencies": {
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "react-test-renderer": "^16.12.0",
     "redux-devtools-extension": "^2.13.8",
-    "sinon": "^8.1.0"
+    "sinon": "^8.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
