@@ -19,7 +19,7 @@ class ClientSecretAPI extends XHRService {
 
   async get(name) {
     try {
-      return await super.find('/api/clients/secret/' + name)
+      return await super.find('/clients/secret/' + name)
     } catch (err) {
       throw err
     }
@@ -27,7 +27,7 @@ class ClientSecretAPI extends XHRService {
 
   async patch(name) {
     try {
-      return await super.patch('/api/clients/secret/' + name)
+      return await super.patch('/clients/secret/' + name)
     } catch (err) {
       throw err
     }

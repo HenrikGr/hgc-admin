@@ -36,6 +36,7 @@ const styles = {
  * @constructor
  */
 const DefaultLayout = ({ component: Component, classes, ...rest }) => {
+  console.log('LAYOUT', rest)
   return (
     <Route
       {...rest}

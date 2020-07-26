@@ -32,7 +32,7 @@ class ClientAPI extends XHRService {
    * @param {Object} options - constructor options
    * @param {String} options.url - resource url identifier
    */
-  constructor({ url = '/api/clients/'} = {}) {
+  constructor({ url = '/clients/'} = {}) {
     super()
     /**
      * Resource url for clients

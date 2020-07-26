@@ -33,7 +33,7 @@ class UserAPI extends XHRService {
    * @param {Object} options - constructor options
    * @param {String} options.url - resource url identifier
    */
-  constructor({ url = '/api/users/' } = {}) {
+  constructor({ url = '/users/' } = {}) {
     super()
     /**
      * Resource url for users

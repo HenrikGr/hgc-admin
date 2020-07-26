@@ -26,5 +26,5 @@ app.get('/*', function(req, res) {
 // start socket-server on the specified port and binding host
 app.listen(appEnv.port, '0.0.0.0', function() {
   // print a message when the socket-server starts listening
-  console.info('socket-server starting on ' + appEnv.url)
+  console.info('server starting on ' + appEnv.port + ': ' + appEnv.url)
 })

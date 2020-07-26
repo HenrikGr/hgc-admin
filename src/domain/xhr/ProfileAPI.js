@@ -35,7 +35,7 @@ class ProfileAPI extends XHRService {
    * @param {Object} options - constructor options
    * @param {string} options.url - resource url identifier
    */
-  constructor({ url = '/api/profiles/' } = {}) {
+  constructor({ url = '/profiles/' } = {}) {
     super()
     /**
      * Re3source url for tokens

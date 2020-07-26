@@ -40,9 +40,9 @@ export function logIn({ username, password }) {
     try {
       dispatch({ type: FETCH_START })
       const session = await sessionAPI.createSession(username, password)
-      const profile = await profileAPI.findOrCreateMe()
+      //const profile = await profileAPI.findOrCreateMe()
       dispatch({ type: FETCH_SESSION_SUCCESS, payload: session })
-      dispatch({ type: FETCH_PROFILE_SUCCESS, payload: profile })
+      //dispatch({ type: FETCH_PROFILE_SUCCESS, payload: profile })
     } catch (err) {
       dispatch({ type: FETCH_ERROR, payload: err })
     }

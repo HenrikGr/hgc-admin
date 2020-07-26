@@ -9,42 +9,8 @@ import JSONValidator from '../entity/validator/JSONValidator'
 import tokenSchema from '../entity/schemas/token'
 import credentialsSchema from '../entity/schemas/credentials'
 
-/**
- * Session entity object
- * @typedef {Object} SessionEntity - session entity object
- * @property {Boolean} isAuth - User authenticated
- * @property {Number} expires_in - Milliseconds for the session to be valid
- * @property {Date} expiresAt - Date when session is expired
- */
 
-/**
- * Token entity
- * @typedef {Object} TokenEntity
- * @property {string} access_token - oauth access dao
- * @property {string} token_type- dao type
- * @property {number} expires_in - time in ms the dao is valid
- * @property {string} refresh_token - refresh dao to issue a new dao
- * @property {string} scope - scope of dao
- */
-
-/**
- * SessionAPI class providing an interface to create, refresh and remove a session
- * The class extends the XHRService class which is a HTTP dao wrapper providing
- * access to a store interface for storage of tokens in the HTTP dao
- *
- * @example
- * const sessionAPI = new SessionAPI()
- * const session = await sessionAPI.createSession(username, password)
- * const newSession = await sessionAPI.refreshSession()
- * sessionAPI.removeSession()
- *
- * Note that the session, aka dao is persisted in
- * some global state and refreshSession() method is
- * accessing that state
- *
- * @extends XHRService
- */
-class SessionAPI extends XHRService {
+class PasswordGrant extends XHRService {
   /**
    * Session API constructor
    * @param {Object} options - configuration options

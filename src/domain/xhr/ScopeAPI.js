@@ -23,7 +23,7 @@ class ScopeAPI extends XHRService {
    * @param {Object} options - constructor options
    * @param {string} options.url - resource url identifier
    */
-  constructor({ url = '/api/scopes' } = {}) {
+  constructor({ url = '/scopes' } = {}) {
     super()
 
     /**
