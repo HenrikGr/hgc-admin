@@ -1,9 +1,0 @@
-applications:
-  - path: .
-    name: hgc-admin
-    memory: 256M
-    instances: 1
-    timeout: 180
-    buildpacks:
-    - sdk-for-nodejs
-    disk_quota: 1024M
