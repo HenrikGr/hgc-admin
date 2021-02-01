@@ -1,7 +1,21 @@
 {
   "name": "hgc-admin",
   "version": "0.1.0",
-  "private": false,
+  "description": "OAuth2 Admin client",
+  "main": "index.js",
+  "author": "Henrik Grönvall <hgc-ab@outlook.com>",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/henrikgr/hgc-admin"
+  },
+  "bugs": {
+    "url": "https://github.com/henrikgr/hgc-admin/issues"
+  },
+  "keywords": [
+    "React SPA",
+    "Admin Client"
+  ],
+  "license": "MIT",
   "dependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
